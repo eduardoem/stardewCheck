@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stardew Valley - Checklist Maestro</title>
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#7fb3d5">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         :root { --sv-bg: #fdf6e3; --sv-header: #d1e8e2; --sv-text: #5d4037; --sv-border: #d7ccc8; --sv-accent: #ffdfba; --cb-border: #888; }
@@ -160,11 +162,11 @@
         function save(el) {
             el.parentElement.classList.toggle('completed', el.checked);
             const status = Array.from(document.querySelectorAll('.form-check-input')).map(i => ({id: i.id, c: i.checked}));
-            localStorage.setItem('sdv_master_v1', JSON.stringify(status));
+            localStorage.setItem('sdv_pwa_v1', JSON.stringify(status));
         }
 
         function load() {
-            const data = JSON.parse(localStorage.getItem('sdv_master_v1') || '[]');
+            const data = JSON.parse(localStorage.getItem('sdv_pwa_v1') || '[]');
             data.forEach(d => {
                 const el = document.getElementById(d.id);
                 if(el) { el.checked = d.c; if(d.c) el.parentElement.classList.add('completed'); }
@@ -179,12 +181,19 @@
         }
 
         function reset() {
-            if(confirm("¿Borrar todo el progreso?")) { localStorage.removeItem('sdv_master_v1'); location.reload(); }
+            if(confirm("¿Borrar todo el progreso?")) { localStorage.removeItem('sdv_pwa_v1'); location.reload(); }
         }
 
         function toggleTheme() {
             const t = document.body.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
             document.body.setAttribute('data-bs-theme', t);
+        }
+
+        // Registro de Service Worker para instalación
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('https://cdn.jsdelivr.net/npm/pwa-helper-components/pwa-install.js').catch(() => {});
+            });
         }
 
         render();
