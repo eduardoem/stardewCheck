@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stardew Valley - Checklist Oficial</title>
+    <title>Stardew Valley - Checklist Completo Centro Cívico</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         :root { --sv-bg: #fdf6e3; --sv-header: #d1e8e2; --sv-text: #5d4037; --sv-border: #d7ccc8; --sv-accent: #ffdfba; --cb-border: #888; }
@@ -13,9 +13,9 @@
         .room-card { border: 1px solid var(--sv-border); border-radius: 10px; margin-bottom: 20px; overflow: hidden; background: var(--sv-bg); }
         .room-header { background-color: var(--sv-header); color: #2c3e50; padding: 12px 20px; cursor: pointer; font-weight: bold; display: flex; justify-content: space-between; }
         .bundle-title { color: #8d6e63; font-weight: 700; margin-top: 10px; border-bottom: 2px solid var(--sv-accent); }
-        .form-check-input { border: 2px solid var(--cb-border) !important; cursor: pointer; width: 1.2em; height: 1.2em; }
+        .form-check-input { border: 2px solid var(--cb-border) !important; cursor: pointer; width: 1.1em; height: 1.1em; margin-top: 0.3em; }
         .form-check-input:checked { background-color: #7fb3d5; border-color: #5499c7 !important; }
-        .info-captura { font-size: 0.75rem; color: #6c757d; }
+        .info-captura { font-size: 0.75rem; color: #6c757d; display: block; line-height: 1.2; }
         .completed { text-decoration: line-through; opacity: 0.5; }
         .sticky-toolbar { position: sticky; top: 0; z-index: 1000; background: var(--sv-bg); padding: 15px 0; border-bottom: 1px solid var(--sv-border); }
         .btn-pastel { background-color: #b2d8d8; border: none; color: #2c3e50; }
@@ -24,17 +24,17 @@
 <body data-bs-theme="light">
 
     <nav class="navbar navbar-dark shadow-sm">
-        <div class="container"><span class="navbar-brand mb-0 h1">Stardew Checklist Centro Cívico</span>
-        <button class="btn btn-sm btn-outline-light" onclick="toggleTheme()">🌓 Modo</button></div>
+        <div class="container"><span class="navbar-brand mb-0 h1">Stardew Checklist Completo</span>
+        <button class="btn btn-sm btn-outline-light" onclick="toggleTheme()">🌓 Alternar Modo</button></div>
     </nav>
 
     <div class="sticky-toolbar">
         <div class="container">
             <div class="row g-2">
-                <div class="col-md-6"><input type="text" id="searchInput" class="form-control" placeholder="Buscar..." oninput="filter()"></div>
-                <div class="col-6 col-md-2"><button class="btn btn-pastel w-100 btn-sm" onclick="toggleAll(true)">Expandir</button></div>
-                <div class="col-6 col-md-2"><button class="btn btn-secondary w-100 btn-sm" onclick="toggleAll(false)">Colapsar</button></div>
-                <div class="col-md-2"><button class="btn btn-danger w-100 btn-sm" onclick="reset()">Reset</button></div>
+                <div class="col-md-6"><input type="text" id="searchInput" class="form-control shadow-sm" placeholder="Buscar por sala, lote o objeto..." oninput="filter()"></div>
+                <div class="col-6 col-md-2"><button class="btn btn-pastel w-100 btn-sm shadow-sm" onclick="toggleAll(true)">Expandir</button></div>
+                <div class="col-6 col-md-2"><button class="btn btn-secondary w-100 btn-sm shadow-sm" onclick="toggleAll(false)">Colapsar</button></div>
+                <div class="col-md-2"><button class="btn btn-danger w-100 btn-sm shadow-sm" onclick="reset()">Reset</button></div>
             </div>
         </div>
     </div>
@@ -47,7 +47,17 @@
                 { nombre: "Recolección Primaveral", items: [{n: "Rábano silvestre"}, {n: "Narciso"}, {n: "Puerro"}, {n: "Diente de león"}] },
                 { nombre: "Recolección Veraniega", items: [{n: "Uva"}, {n: "Baya especiada"}, {n: "Guisante dulce"}] },
                 { nombre: "Recolección Otoñal", items: [{n: "Avellana"}, {n: "Seta común"}, {n: "Ciruela silvestre"}, {n: "Mora"}] },
-                { nombre: "Recolección Invernal", items: [{n: "Raíz invernal"}, {n: "Fruta de cristal"}, {n: "Ñame nival"}, {n: "Azafrán"}] }
+                { nombre: "Recolección Invernal", items: [{n: "Raíz invernal"}, {n: "Fruta de cristal"}, {n: "Ñame nival"}, {n: "Azafrán"}] },
+                { nombre: "Construcción", items: [{n: "Madera (99)"}, {n: "Madera (99)"}, {n: "Piedra (99)"}, {n: "Madera noble (10)"}] },
+                { nombre: "Recolección Exótica", items: [{n: "Coco"}, {n: "Fruta de cactus"}, {n: "Zanahoria de cueva"}, {n: "Seta roja"}, {n: "Seta lila"}, {n: "Jarabe de arce"}, {n: "Resina de roble"}, {n: "Brea de pino"}, {n: "Colmenilla"}] }
+            ]},
+            { sala: "Alacena", lotes: [
+                { nombre: "Cultivos de Primavera", items: [{n: "Chirivía"}, {n: "Judía verde"}, {n: "Coliflor"}, {n: "Patata"}] },
+                { nombre: "Cultivos de Verano", items: [{n: "Tomate"}, {n: "Chile"}, {n: "Arándano"}, {n: "Melón"}] },
+                { nombre: "Cultivos de Otoño", items: [{n: "Maíz"}, {n: "Berenjena"}, {n: "Calabaza"}, {n: "Ñame"}] },
+                { nombre: "Cultivos de Calidad", items: [{n: "Chirivía (5 Oro)"}, {n: "Melón (5 Oro)"}, {n: "Calabaza (5 Oro)"}, {n: "Maíz (5 Oro)"}] },
+                { nombre: "Animales", items: [{n: "Leche grande"}, {n: "Huevo grande (blanco)"}, {n: "Huevo grande (marrón)"}, {n: "Leche de cabra grande"}, {n: "Lana"}, {n: "Huevo de pato"}] },
+                { nombre: "Artesanal", items: [{n: "Aceite de trufa"}, {n: "Tela"}, {n: "Queso de cabra"}, {n: "Queso"}, {n: "Miel"}, {n: "Mermelada"}, {n: "Manzana"}, {n: "Albaricoque"}, {n: "Naranja"}, {n: "Melocotón"}, {n: "Granada"}, {n: "Cereza"}] }
             ]},
             { sala: "Pecera", lotes: [
                 { nombre: "Peces Fluviales", items: [
@@ -77,12 +87,31 @@
                     {n: "Langosta", i: "Océano"}, {n: "Cangrejo de río", i: "Agua dulce"}, {n: "Cangrejo", i: "Océano/Minas"},
                     {n: "Berberecho", i: "Playa"}, {n: "Mejillón", i: "Playa"}, {n: "Gamba", i: "Océano"},
                     {n: "Caracol", i: "Agua dulce"}, {n: "Bígaro", i: "Agua dulce"}, {n: "Ostra", i: "Playa"}, {n: "Almeja", i: "Playa"}
+                ]},
+                { nombre: "Especialidad de Pesca", items: [
+                    {n: "Pez globo", i: "Océano | 12:00 PM – 4:00 PM | Verano | Soleado"},
+                    {n: "Pez fantasma", i: "Minas | Cualquier hora"},
+                    {n: "Lenguado", i: "Océano | Cualquier hora | Primavera y Verano"},
+                    {n: "Muyu", i: "Bosque Secreto | Cualquier hora"}
                 ]}
             ]},
-            { sala: "Alacena", lotes: [
-                { nombre: "Cultivos de Primavera", items: [{n: "Chirivía"}, {n: "Judía verde"}, {n: "Coliflor"}, {n: "Patata"}] },
-                { nombre: "Cultivos de Verano", items: [{n: "Tomate"}, {n: "Chile"}, {n: "Arándano"}, {n: "Melón"}] },
-                { nombre: "Cultivos de Otoño", items: [{n: "Maíz"}, {n: "Berenjena"}, {n: "Calabaza"}, {n: "Ñame"}] }
+            { sala: "Caldera", lotes: [
+                { nombre: "Herrero", items: [{n: "Barra de cobre"}, {n: "Barra de hierro"}, {n: "Barra de oro"}] },
+                { nombre: "Geólogo", items: [{n: "Cuarzo"}, {n: "Cristal de tierra"}, {n: "Lágrima helada"}, {n: "Cuarzo de fuego"}] },
+                { nombre: "Aventurero", items: [{n: "Baba (99)"}, {n: "Ala de murciélago (10)"}, {n: "Esencia solar"}, {n: "Esencia del vacío"}] }
+            ]},
+            { sala: "Tablón de Anuncios", lotes: [
+                { nombre: "Chef", items: [{n: "Trufa"}, {n: "Amapola"}, {n: "Maki"}, {n: "Huevo frito"}, {n: "Helecho"}, {n: "Cangrejo"}] },
+                { nombre: "Tinte", items: [{n: "Seta roja"}, {n: "Erizo de mar"}, {n: "Girasol"}, {n: "Pluma de pato"}, {n: "Agua marina"}, {n: "Col lombarda"}] },
+                { nombre: "Investigación", items: [{n: "Seta lila"}, {n: "Baya de nieve"}, {n: "Jengibre"}, {n: "Hueso de dinosaurio"}] },
+                { nombre: "Forraje", items: [{n: "Arroz"}, {n: "Trigo"}, {n: "Maíz"}] },
+                { nombre: "Enólogo", items: [{n: "Vino"}, {n: "Zumo de remolacha"}, {n: "Encurtidos"}, {n: "Mermelada"}] }
+            ]},
+            { sala: "Caja Fuerte", lotes: [
+                { nombre: "2.500", items: [{n: "2.500 oro"}] },
+                { nombre: "5.000", items: [{n: "5.000 oro"}] },
+                { nombre: "10.000", items: [{n: "10.000 oro"}] },
+                { nombre: "25.000", items: [{n: "25.000 oro"}] }
             ]}
         ];
 
@@ -99,8 +128,8 @@
                                     <div class="form-check item-wrap" data-item="${item.n.toLowerCase()}">
                                         <input class="form-check-input" type="checkbox" id="${item.n.replace(/[^\w]/g, '')}" onchange="save(this)">
                                         <label class="form-check-label" for="${item.n.replace(/[^\w]/g, '')}">
-                                            <strong>${item.n}</strong><br>
-                                            ${item.i ? `<small class="info-captura">${item.i}</small>` : ''}
+                                            <strong>${item.n}</strong>
+                                            ${item.i ? `<span class="info-captura">${item.i}</span>` : ''}
                                         </label>
                                     </div>
                                 `).join('')}
@@ -115,11 +144,18 @@
         function filter() {
             const q = document.getElementById('searchInput').value.toLowerCase();
             document.querySelectorAll('.room-card').forEach(rc => {
+                let rV = rc.dataset.sala.includes(q);
                 let anyVisible = false;
-                rc.querySelectorAll('.item-wrap').forEach(iw => {
-                    let isMatch = iw.dataset.item.includes(q) || rc.dataset.sala.includes(q);
-                    iw.parentElement.style.display = isMatch ? 'block' : 'none'; // Corregido el selector
-                    if(isMatch) anyVisible = true;
+                rc.querySelectorAll('.bundle-wrap').forEach(bw => {
+                    let bV = bw.dataset.lote.includes(q);
+                    let itemsInBundle = false;
+                    bw.querySelectorAll('.item-wrap').forEach(iw => {
+                        let iV = iw.dataset.item.includes(q) || bV || rV;
+                        iw.style.display = iV ? 'block' : 'none';
+                        if(iV) itemsInBundle = true;
+                    });
+                    bw.style.display = itemsInBundle ? 'block' : 'none';
+                    if(itemsInBundle) anyVisible = true;
                 });
                 rc.style.display = anyVisible ? 'block' : 'none';
             });
@@ -128,11 +164,11 @@
         function save(el) {
             el.parentElement.classList.toggle('completed', el.checked);
             const status = Array.from(document.querySelectorAll('.form-check-input')).map(i => ({id: i.id, c: i.checked}));
-            localStorage.setItem('sdv_storage_gh', JSON.stringify(status));
+            localStorage.setItem('sdv_full_v4', JSON.stringify(status));
         }
 
         function load() {
-            const data = JSON.parse(localStorage.getItem('sdv_storage_gh') || '[]');
+            const data = JSON.parse(localStorage.getItem('sdv_full_v4') || '[]');
             data.forEach(d => {
                 const el = document.getElementById(d.id);
                 if(el) { el.checked = d.c; if(d.c) el.parentElement.classList.add('completed'); }
@@ -147,7 +183,7 @@
         }
 
         function reset() {
-            if(confirm("¿Borrar todas las marcas?")) { localStorage.removeItem('sdv_storage_gh'); location.reload(); }
+            if(confirm("¿Esta seguro de borrar todas las marcas? Si | No")) { localStorage.removeItem('sdv_full_v4'); location.reload(); }
         }
 
         function toggleTheme() {
