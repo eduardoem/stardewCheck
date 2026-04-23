@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stardew Valley - Checklist Maestro</title>
+    <title>Stardew Valley - Checklist Maestro con Progreso</title>
     <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#7fb3d5">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -13,7 +13,7 @@
         body { background-color: var(--sv-bg); color: var(--sv-text); font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.3s ease; }
         .navbar { background-color: #7fb3d5 !important; border-bottom: 3px solid #5499c7; }
         .room-card { border: 1px solid var(--sv-border); border-radius: 10px; margin-bottom: 20px; overflow: hidden; background: var(--sv-bg); }
-        .room-header { background-color: var(--sv-header); color: #2c3e50; padding: 12px 20px; cursor: pointer; font-weight: bold; display: flex; justify-content: space-between; }
+        .room-header { background-color: var(--sv-header); color: #2c3e50; padding: 12px 20px; cursor: pointer; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
         .bundle-title { color: #8d6e63; font-weight: 700; margin-top: 10px; border-bottom: 2px solid var(--sv-accent); }
         .form-check-input { border: 2px solid var(--cb-border) !important; cursor: pointer; width: 1.1em; height: 1.1em; }
         .form-check-input:checked { background-color: #7fb3d5; border-color: #5499c7 !important; }
@@ -21,13 +21,14 @@
         .completed { text-decoration: line-through; opacity: 0.5; }
         .sticky-toolbar { position: sticky; top: 0; z-index: 1000; background: var(--sv-bg); padding: 15px 0; border-bottom: 1px solid var(--sv-border); }
         .btn-pastel { background-color: #b2d8d8; border: none; color: #2c3e50; }
+        .progress-badge { font-size: 0.85rem; padding: 5px 10px; border-radius: 20px; background: #7fb3d5; color: white; min-width: 60px; text-align: center; }
     </style>
 </head>
 <body data-bs-theme="light">
 
     <nav class="navbar navbar-dark shadow-sm">
         <div class="container"><span class="navbar-brand mb-0 h1">Stardew Checklist Maestro</span>
-        <button class="btn btn-sm btn-outline-light" onclick="toggleTheme()">🌓 Alternar Modo</button></div>
+        <button class="btn btn-sm btn-outline-light" onclick="toggleTheme()">🌓 Modo</button></div>
     </nav>
 
     <div class="sticky-toolbar">
@@ -119,8 +120,11 @@
             const area = document.getElementById('render-area');
             area.innerHTML = wikiData.map((sala, sIdx) => `
                 <div class="room-card shadow-sm" data-sala="${sala.sala.toLowerCase()}">
-                    <div class="room-header" data-bs-toggle="collapse" data-bs-target="#col-${sIdx}">${sala.sala} <span>▼</span></div>
-                    <div id="col-${sIdx}" class="collapse show p-3">
+                    <div class="room-header" data-bs-toggle="collapse" data-bs-target="#col-${sIdx}">
+                        <div>${sala.sala}</div>
+                        <div class="progress-badge" id="badge-${sIdx}">0%</div>
+                    </div>
+                    <div id="col-${sIdx}" class="collapse show p-3 room-content" data-room-index="${sIdx}">
                         <div class="row">${sala.lotes.map(lote => `
                             <div class="col-md-6 mb-3 bundle-wrap" data-lote="${lote.nombre.toLowerCase()}">
                                 <div class="bundle-title mb-2">${lote.nombre}</div>
@@ -139,6 +143,37 @@
                 </div>
             `).join('');
             load();
+            updateAllProgress();
+        }
+
+        function updateProgress(roomIdx) {
+            const container = document.querySelector(`[data-room-index="${roomIdx}"]`);
+            const total = container.querySelectorAll('.form-check-input').length;
+            const checked = container.querySelectorAll('.form-check-input:checked').length;
+            const percent = Math.round((checked / total) * 100);
+            document.getElementById(`badge-${roomIdx}`).innerText = `${percent}%`;
+        }
+
+        function updateAllProgress() {
+            wikiData.forEach((_, idx) => updateProgress(idx));
+        }
+
+        function save(el) {
+            const content = el.closest('.room-content');
+            const roomIdx = content.dataset.roomIndex;
+            el.parentElement.classList.toggle('completed', el.checked);
+            
+            const status = Array.from(document.querySelectorAll('.form-check-input')).map(i => ({id: i.id, c: i.checked}));
+            localStorage.setItem('sdv_progress_v1', JSON.stringify(status));
+            updateProgress(roomIdx);
+        }
+
+        function load() {
+            const data = JSON.parse(localStorage.getItem('sdv_progress_v1') || '[]');
+            data.forEach(d => {
+                const el = document.getElementById(d.id);
+                if(el) { el.checked = d.c; if(d.c) el.parentElement.classList.add('completed'); }
+            });
         }
 
         function filter() {
@@ -159,20 +194,6 @@
             });
         }
 
-        function save(el) {
-            el.parentElement.classList.toggle('completed', el.checked);
-            const status = Array.from(document.querySelectorAll('.form-check-input')).map(i => ({id: i.id, c: i.checked}));
-            localStorage.setItem('sdv_pwa_v1', JSON.stringify(status));
-        }
-
-        function load() {
-            const data = JSON.parse(localStorage.getItem('sdv_pwa_v1') || '[]');
-            data.forEach(d => {
-                const el = document.getElementById(d.id);
-                if(el) { el.checked = d.c; if(d.c) el.parentElement.classList.add('completed'); }
-            });
-        }
-
         function toggleAll(exp) {
             document.querySelectorAll('.collapse').forEach(b => {
                 const bsCollapse = bootstrap.Collapse.getOrCreateInstance(b, {toggle: false});
@@ -181,7 +202,7 @@
         }
 
         function reset() {
-            if(confirm("¿Borrar todo el progreso?")) { localStorage.removeItem('sdv_pwa_v1'); location.reload(); }
+            if(confirm("¿Borrar todo el progreso?")) { localStorage.removeItem('sdv_progress_v1'); location.reload(); }
         }
 
         function toggleTheme() {
@@ -189,7 +210,6 @@
             document.body.setAttribute('data-bs-theme', t);
         }
 
-        // Registro de Service Worker para instalación
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('https://cdn.jsdelivr.net/npm/pwa-helper-components/pwa-install.js').catch(() => {});
