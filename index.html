@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stardew Valley - Checklist Lotes Estándar</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --sv-bg: #fdf6e3;
+            --sv-header: #d1e8e2;
+            --sv-text: #5d4037;
+            --sv-border: #d7ccc8;
+            --sv-accent: #ffdfba;
+            --cb-border: #999;
+        }
+
+        [data-bs-theme="dark"] {
+            --sv-bg: #2d2d2d;
+            --sv-header: #3e4a59;
+            --sv-text: #e0e0e0;
+            --sv-border: #555;
+            --sv-accent: #5d4037;
+            --cb-border: #666;
+        }
+
+        body {
+            background-color: var(--sv-bg);
+            color: var(--sv-text);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .navbar { 
+            background-color: #7fb3d5 !important; 
+            border-bottom: 3px solid #5499c7; 
+        }
+
+        .room-card {
+            border: 1px solid var(--sv-border);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            background: var(--sv-bg);
+        }
+
+        .room-header {
+            background-color: var(--sv-header);
+            color: #2c3e50;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .bundle-title {
+            color: #8d6e63;
+            font-weight: 700;
+            margin-top: 10px;
+            border-bottom: 2px solid var(--sv-accent);
+        }
+
+        .form-check-input {
+            border: 1.5px solid var(--cb-border) !important;
+            cursor: pointer;
+            margin-top: 0.3rem;
+        }
+
+        .form-check-input:checked {
+            background-color: #7fb3d5;
+            border-color: #5499c7 !important;
+        }
+
+        .info-captura {
+            font-size: 0.75rem;
+            line-height: 1.1;
+            margin-bottom: 8px;
+        }
+
+        .completed { 
+            text-decoration: line-through; 
+            opacity: 0.5; 
+        }
+
+        .sticky-toolbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: var(--sv-bg);
+            padding: 15px 0;
+            border-bottom: 1px solid var(--sv-border);
+        }
+
+        .btn-pastel { 
+            background-color: #b2d8d8; 
+            border: none; 
+            color: #2c3e50; 
+        }
+        
+        .btn-pastel:hover { background-color: #a2c8c8; }
+    </style>
+</head>
+<body data-bs-theme="light">
+
+    <nav class="navbar navbar-dark shadow-sm">
+        <div class="container d-flex justify-content-between">
+            <span class="navbar-brand mb-0 h1">Stardew Checklist Wiki</span>
+            <button class="btn btn-sm btn-outline-light" onclick="toggleTheme()">🌓 Alternar Modo</button>
+        </div>
+    </nav>
+
+    <div class="sticky-toolbar">
+        <div class="container">
+            <div class="row g-2 align-items-center">
+                <div class="col-md-5">
+                    <input type="text" id="searchInput" class="form-control shadow-sm" placeholder="Buscar sala, lote o item..." oninput="filter()">
+                </div>
+                <div class="col-md-2 col-6">
+                    <button class="btn btn-pastel w-100 btn-sm shadow-sm" onclick="toggleAll(true)">Expandir todo</button>
+                </div>
+                <div class="col-md-2 col-6">
+                    <button class="btn btn-secondary w-100 btn-sm shadow-sm" onclick="toggleAll(false)">Colapsar todo</button>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-danger w-100 btn-sm shadow-sm" onclick="reset()">Reset Checklist</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-4 pb-5" id="render-area"></div>
+
+    <script>
+        const wikiData = [
+            {
+                sala: "Sala de Manualidades",
+                lotes: [
+                    { nombre: "Lote Recolección Primaveral", items: [{n: "Rábano silvestre"}, {n: "Narciso"}, {n: "Puerro"}, {n: "Diente de león"}] },
+                    { nombre: "Lote Recolección Veraniega", items: [{n: "Uva"}, {n: "Baya especiada"}, {n: "Guisante dulce"}] },
+                    { nombre: "Lote Recolección Otoñal", items: [{n: "Avellana"}, {n: "Seta común"}, {n: "Ciruela silvestre"}, {n: "Mora"}] },
+                    { nombre: "Lote Recolección Invernal", items: [{n: "Raíz invernal"}, {n: "Fruta de cristal"}, {n: "Ñame nival"}, {n: "Azafrán"}] },
+                    { nombre: "Lote Construcción", items: [{n: "Madera (99)"}, {n: "Madera (99)"}, {n: "Piedra (99)"}, {n: "Madera noble (10)"}] },
+                    { nombre: "Lote Recolección Exótica", items: [{n: "Coco"}, {n: "Fruta de cactus"}, {n: "Zanahoria de cueva"}, {n: "Seta roja"}, {n: "Seta lila"}, {n: "Jarabe de arce"}, {n: "Resina de roble"}, {n: "Brea de pino"}, {n: "Colmenilla"}] }
+                ]
+            },
+            {
+                sala: "Alacena",
+                lotes: [
+                    { nombre: "Lote Cultivos de Primavera", items: [{n: "Chirivía"}, {n: "Judía verde"}, {n: "Coliflor"}, {n: "Patata"}] },
+                    { nombre: "Lote Cultivos de Verano", items: [{n: "Tomate"}, {n: "Chile"}, {n: "Arándano"}, {n: "Melón"}] },
+                    { nombre: "Lote Cultivos de Otoño", items: [{n: "Maíz"}, {n: "Berenjena"}, {n: "Calabaza"}, {n: "Ñame"}] },
+                    { nombre: "Lote Cultivos de Calidad", items: [{n: "Chirivía (5 Oro)"}, {n: "Melón (5 Oro)"}, {n: "Calabaza (5 Oro)"}, {n: "Maíz (5 Oro)"}] },
+                    { nombre: "Lote Animales", items: [{n: "Leche grande"}, {n: "Huevo grande (blanco)"}, {n: "Huevo grande (marrón)"}, {n: "Leche de cabra grande"}, {n: "Lana"}, {n: "Huevo de pato"}] },
+                    { nombre: "Lote Artesanal", items: [{n: "Aceite de trufa"}, {n: "Tela"}, {n: "Queso de cabra"}, {n: "Queso"}, {n: "Miel"}, {n: "Mermelada"}, {n: "Manzana"}, {n: "Albaricoque"}, {n: "Naranja"}, {n: "Melocotón"}, {n: "Granada"}, {n: "Cereza"}] }
+                ]
+            },
+            {
+                sala: "Pecera",
+                lotes: [
+                    { nombre: "Lote Peces Fluviales", items: [
+                        {n: "Pez sol", i: "Ríos | 6:00 AM – 7:00 PM | Prim. y Ver. | Soleado"},
+                        {n: "Pez gato", i: "Ríos | 6:00 AM – 12:00 AM | Prim. y Oto. | Lluvia"},
+                        {n: "Sábalo", i: "Ríos | 9:00 AM – 2:00 AM | Prim. Ver. y Oto. | Lluvia"},
+                        {n: "Trucha tigre", i: "Ríos | 6:00 AM – 7:00 PM | Oto. e Inv. | Cualquier clima"}
+                    ]},
+                    { nombre: "Lote Peces de Lago", items: [
+                        {n: "Perca", i: "Lagos | 6:00 AM – 7:00 PM | Todas las estaciones"},
+                        {n: "Carpa", i: "Lagos | Cualquier hora | Prim. Ver. y Oto."},
+                        {n: "Siluro", i: "Lagos | Cualquier hora | Todas las estaciones"},
+                        {n: "Esturión", i: "Lagos | 6:00 AM – 7:00 PM | Verano e Invierno"}
+                    ]},
+                    { nombre: "Lote Peces Marinos", items: [
+                        {n: "Sardina", i: "Océano | 6:00 AM – 7:00 PM | Prim. Oto. e Inv."},
+                        {n: "Atún", i: "Océano | 6:00 AM – 7:00 PM | Verano e Invierno"},
+                        {n: "Pargo colorado", i: "Océano | 6:00 AM – 7:00 PM | Verano y Otoño | Lluvia"},
+                        {n: "Tilapia", i: "Océano | 6:00 AM – 2:00 PM | Verano y Otoño"}
+                    ]},
+                    { nombre: "Lote Peces Nocturnos", items: [
+                        {n: "Lucio", i: "Río/Lago | 12:00 PM – 2:00 AM | Otoño | Lluvia"},
+                        {n: "Besugo", i: "Ríos | 6:00 PM – 2:00 AM | Todas las estaciones"},
+                        {n: "Anguila", i: "Océano | 4:00 PM – 2:00 AM | Prim. y Oto. | Lluvia"}
+                    ]},
+                    { nombre: "Lote Trampa para Cangrejos", items: [
+                        {n: "Langosta", i: "Océano"}, {n: "Cangrejo de río", i: "Agua dulce"}, {n: "Cangrejo", i: "Océano/Minas"},
+                        {n: "Berberecho", i: "Océano/Playa"}, {n: "Mejillón", i: "Océano/Playa"}, {n: "Gamba", i: "Océano"},
+                        {n: "Caracol", i: "Agua dulce"}, {n: "Bígaro", i: "Agua dulce"}, {n: "Ostra", i: "Océano/Playa"}, {n: "Almeja", i: "Océano/Playa"}
+                    ]}
+                ]
+            },
+            {
+                sala: "Caldera",
+                lotes: [
+                    { nombre: "Lote Herrero", items: [{n: "Barra de cobre"}, {n: "Barra de hierro"}, {n: "Barra de oro"}] },
+                    { nombre: "Lote Geólogo", items: [{n: "Cuarzo"}, {n: "Cristal de tierra"}, {n: "Lágrima helada"}, {n: "Cuarzo de fuego"}] },
+                    { nombre: "Lote Aventurero", items: [{n: "Baba (99)"}, {n: "Ala de murciélago (10)"}, {n: "Esencia solar"}, {n: "Esencia del vacío"}] }
+                ]
+            },
+            {
+                sala: "Tablón de Anuncios",
+                lotes: [
+                    { nombre: "Lote Chef", items: [{n: "Trufa"}, {n: "Amapola"}, {n: "Maki"}, {n: "Huevo frito"}, {n: "Helecho"}, {n: "Cangrejo"}] },
+                    { nombre: "Lote Tinte", items: [{n: "Seta roja"}, {n: "Erizo de mar"}, {n: "Girasol"}, {n: "Pluma de pato"}, {n: "Agua marina"}, {n: "Col lombarda"}] },
+                    { nombre: "Lote Investigación", items: [{n: "Seta lila"}, {n: "Baya de nieve"}, {n: "Jengibre"}, {n: "Hueso de dinosaurio"}] },
+                    { nombre: "Lote Forraje", items: [{n: "Arroz"}, {n: "Trigo"}, {n: "Maíz"}] }
+                ]
+            },
+            {
+                sala: "Caja Fuerte",
+                lotes: [
+                    { nombre: "Lote 2.500", items: [{n: "2.500 oro"}] },
+                    { nombre: "Lote 5.000", items: [{n: "5.000 oro"}] },
+                    { nombre: "Lote 10.000", items: [{n: "10.000 oro"}] },
+                    { nombre: "Lote 25.000", items: [{n: "25.000 oro"}] }
+                ]
+            }
+        ];
+
+        function render() {
+            const area = document.getElementById('render-area');
+            area.innerHTML = wikiData.map((sala, sIdx) => `
+                <div class="room-card shadow-sm" data-sala="${sala.sala.toLowerCase()}">
+                    <div class="room-header" data-bs-toggle="collapse" data-bs-target="#col-${sIdx}">
+                        ${sala.sala} <span>▼</span>
+                    </div>
+                    <div id="col-${sIdx}" class="collapse show p-3 room-body">
+                        <div class="row">
+                            ${sala.lotes.map(lote => `
+                                <div class="col-md-6 mb-3 bundle-wrap" data-lote="${lote.nombre.toLowerCase()}">
+                                    <div class="bundle-title mb-2">${lote.nombre}</div>
+                                    ${lote.items.map(item => `
+                                        <div class="form-check item-wrap" data-item="${item.n.toLowerCase()}">
+                                            <input class="form-check-input" type="checkbox" id="${item.n.replace(/[^\w]/g, '')}" onchange="save(this)">
+                                            <label class="form-check-label" for="${item.n.replace(/[^\w]/g, '')}">
+                                                <strong>${item.n}</strong>
+                                                ${item.i ? `<br><small class="text-muted info-captura">${item.i}</small>` : ''}
+                                            </label>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            load();
+        }
+
+        function filter() {
+            const q = document.getElementById('searchInput').value.toLowerCase();
+            document.querySelectorAll('.room-card').forEach(rc => {
+                let rV = rc.dataset.sala.includes(q);
+                let anyB = false;
+                rc.querySelectorAll('.bundle-wrap').forEach(bw => {
+                    let bV = bw.dataset.lote.includes(q);
+                    let anyI = false;
+                    bw.querySelectorAll('.item-wrap').forEach(iw => {
+                        let iV = iw.dataset.item.includes(q) || bV || rV;
+                        iw.style.display = iV ? 'block' : 'none';
+                        if(iV) anyI = true;
+                    });
+                    bw.style.display = anyI ? 'block' : 'none';
+                    if(anyI) anyB = true;
+                });
+                rc.style.display = anyB ? 'block' : 'none';
+            });
+        }
+
+        function save(el) {
+            el.nextElementSibling.classList.toggle('completed', el.checked);
+            const status = Array.from(document.querySelectorAll('.form-check-input')).map(i => ({id: i.id, c: i.checked}));
+            localStorage.setItem('sdv_final_v3', JSON.stringify(status));
+        }
+
+        function load() {
+            const data = JSON.parse(localStorage.getItem('sdv_final_v3') || '[]');
+            data.forEach(d => {
+                const el = document.getElementById(d.id);
+                if(el) {
+                    el.checked = d.c;
+                    if(d.c) el.nextElementSibling.classList.add('completed');
+                }
+            });
+        }
+
+        function toggleAll(exp) {
+            document.querySelectorAll('.room-body').forEach(b => {
+                const bsCollapse = bootstrap.Collapse.getOrCreateInstance(b, {toggle: false});
+                exp ? bsCollapse.show() : bsCollapse.hide();
+            });
+        }
+
+        function reset() {
+            if(confirm("¿Esta seguro de borrar todas las marcas? Si | No")) {
+                localStorage.removeItem('sdv_final_v3');
+                location.reload();
+            }
+        }
+
+        function toggleTheme() {
+            const t = document.body.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
+            document.body.setAttribute('data-bs-theme', t);
+        }
+
+        render();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
