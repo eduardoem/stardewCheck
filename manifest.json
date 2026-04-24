@@ -8,7 +8,7 @@
   "theme_color": "#7fb3d5",
   "icons": [
     {
-      "src": "./icon-sdv.png",
+      "src": "./gallinita.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
