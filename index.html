@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stardew Valley - Checklist Maestro con Progreso</title>
+    <title>Stardew Valley - Checklist Maestro Definitivo</title>
     <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#7fb3d5">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -34,7 +34,7 @@
     <div class="sticky-toolbar">
         <div class="container">
             <div class="row g-2">
-                <div class="col-md-6"><input type="text" id="searchInput" class="form-control" placeholder="Buscar..." oninput="filter()"></div>
+                <div class="col-md-6"><input type="text" id="searchInput" class="form-control" placeholder="Buscar ítems o lotes..." oninput="filter()"></div>
                 <div class="col-6 col-md-2"><button class="btn btn-pastel w-100 btn-sm" onclick="toggleAll(true)">Expandir</button></div>
                 <div class="col-6 col-md-2"><button class="btn btn-secondary w-100 btn-sm" onclick="toggleAll(false)">Colapsar</button></div>
                 <div class="col-md-2"><button class="btn btn-danger w-100 btn-sm" onclick="reset()">Reset</button></div>
@@ -65,15 +65,15 @@
             { sala: "Pecera", lotes: [
                 { nombre: "Peces Fluviales", items: [
                     {n: "Pez sol", i: "Ríos | 6am-7pm | Prim/Ver | Sol"},
-                    {n: "Pez gato", i: "Ríos | 6am-12am | Prim/Oto | Lluvia"},
+                    {n: "Pez gato", i: "Ríos/Bosque Secreto | 6am-12am | Prim/Oto | Lluvia"},
                     {n: "Sábalo", i: "Ríos | 9am-2am | Prim/Ver/Oto | Lluvia"},
                     {n: "Trucha tigre", i: "Ríos | 6am-7pm | Oto/Inv"}
                 ]},
                 { nombre: "Peces de Lago", items: [
-                    {n: "Perca", i: "Lago | 6am-7pm | Todo el año"},
-                    {n: "Carpa", i: "Lago | Siempre | Prim/Ver/Oto"},
-                    {n: "Siluro", i: "Lago | Siempre | Todo el año"},
-                    {n: "Esturión", i: "Lago | 6am-7pm | Ver/Inv"}
+                    {n: "Perca", i: "Lago Montaña | 6am-7pm | Siempre"},
+                    {n: "Carpa", i: "Lago Montaña | Siempre | Prim/Ver/Oto"},
+                    {n: "Siluro", i: "Lago Montaña | Siempre | Siempre"},
+                    {n: "Esturión", i: "Lago Montaña | 6am-7pm | Ver/Inv"}
                 ]},
                 { nombre: "Peces Marinos", items: [
                     {n: "Sardina", i: "Océano | 6am-7pm | Prim/Oto/Inv"},
@@ -83,11 +83,11 @@
                 ]},
                 { nombre: "Peces Nocturnos", items: [
                     {n: "Lucio", i: "Río/Lago | 12pm-2am | Otoño | Lluvia"},
-                    {n: "Besugo", i: "Ríos | 6pm-2am | Todo el año"},
+                    {n: "Besugo", i: "Ríos | 6pm-2am | Siempre"},
                     {n: "Anguila", i: "Océano | 4pm-2am | Prim/Oto | Lluvia"}
                 ]},
                 { nombre: "Trampa para Cangrejos", items: [
-                    {n: "Langosta"}, {n: "Cangrejo de río"}, {n: "Cangrejo"}, {n: "Berberecho"}, {n: "Mejillón"}, {n: "Gamba"}, {n: "Caracol"}, {n: "Bígaro"}, {n: "Ostra"}, {n: "Almeja"}
+                    {n: "Langosta", i: "Trampa (Océano)"}, {n: "Cangrejo de río", i: "Trampa (Agua dulce)"}, {n: "Cangrejo", i: "Trampa/Minas"}, {n: "Berberecho", i: "Trampa/Recolección Playa"}, {n: "Mejillón", i: "Trampa/Recolección Playa"}, {n: "Gamba", i: "Trampa (Océano)"}, {n: "Caracol", i: "Trampa (Agua dulce)"}, {n: "Bígaro", i: "Trampa (Agua dulce)"}, {n: "Ostra", i: "Trampa/Recolección Playa"}, {n: "Almeja", i: "Trampa/Recolección Playa"}
                 ]},
                 { nombre: "Especialidad de Pesca", items: [
                     {n: "Pez globo", i: "Océano | 12pm-4pm | Verano | Sol"},
@@ -104,7 +104,12 @@
             { sala: "Tablón de Anuncios", lotes: [
                 { nombre: "Chef", items: [{n: "Trufa"}, {n: "Amapola"}, {n: "Maki"}, {n: "Huevo frito"}, {n: "Helecho"}, {n: "Cangrejo"}] },
                 { nombre: "Tinte", items: [{n: "Seta roja"}, {n: "Erizo de mar"}, {n: "Girasol"}, {n: "Pluma de pato"}, {n: "Agua marina"}, {n: "Col lombarda"}] },
-                { nombre: "Investigación", items: [{n: "Seta lila"}, {n: "Baya de nieve"}, {n: "Jengibre"}, {n: "Hueso de dinosaurio"}, {n: "Geoda"}] },
+                { nombre: "Estudio de Campo", items: [
+                    {n: "Seta lila", i: "Minas/Cueva/Granja Forestal (Otoño)"}, 
+                    {n: "Concha de nautilo", i: "Playa (Invierno)"}, 
+                    {n: "Barbo", i: "Lago Montaña/Ríos (Siempre)"}, 
+                    {n: "Geoda de hielo", i: "Minas (Pisos 41-79)"}
+                ]},
                 { nombre: "Forraje", items: [{n: "Arroz"}, {n: "Trigo"}, {n: "Maíz"}] },
                 { nombre: "Enólogo", items: [{n: "Vino"}, {n: "Zumo de remolacha"}, {n: "Encurtidos"}, {n: "Mermelada"}] }
             ]},
@@ -148,9 +153,10 @@
 
         function updateProgress(roomIdx) {
             const container = document.querySelector(`[data-room-index="${roomIdx}"]`);
+            if (!container) return;
             const total = container.querySelectorAll('.form-check-input').length;
             const checked = container.querySelectorAll('.form-check-input:checked').length;
-            const percent = Math.round((checked / total) * 100);
+            const percent = total > 0 ? Math.round((checked / total) * 100) : 0;
             document.getElementById(`badge-${roomIdx}`).innerText = `${percent}%`;
         }
 
@@ -162,14 +168,13 @@
             const content = el.closest('.room-content');
             const roomIdx = content.dataset.roomIndex;
             el.parentElement.classList.toggle('completed', el.checked);
-            
             const status = Array.from(document.querySelectorAll('.form-check-input')).map(i => ({id: i.id, c: i.checked}));
-            localStorage.setItem('sdv_progress_v1', JSON.stringify(status));
+            localStorage.setItem('sdv_final_audit_v1', JSON.stringify(status));
             updateProgress(roomIdx);
         }
 
         function load() {
-            const data = JSON.parse(localStorage.getItem('sdv_progress_v1') || '[]');
+            const data = JSON.parse(localStorage.getItem('sdv_final_audit_v1') || '[]');
             data.forEach(d => {
                 const el = document.getElementById(d.id);
                 if(el) { el.checked = d.c; if(d.c) el.parentElement.classList.add('completed'); }
@@ -202,7 +207,7 @@
         }
 
         function reset() {
-            if(confirm("¿Borrar todo el progreso?")) { localStorage.removeItem('sdv_progress_v1'); location.reload(); }
+            if(confirm("¿Borrar todo el progreso?")) { localStorage.removeItem('sdv_final_audit_v1'); location.reload(); }
         }
 
         function toggleTheme() {
