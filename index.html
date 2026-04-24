@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stardew Valley - Checklist Maestro Definitivo</title>
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <title>Stardew Valley - Checklist Maestro con Progreso</title>
     <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#7fb3d5">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -168,62 +167,4 @@
         function save(el) {
             const content = el.closest('.room-content');
             const roomIdx = content.dataset.roomIndex;
-            el.parentElement.classList.toggle('completed', el.checked);
-            const status = Array.from(document.querySelectorAll('.form-check-input')).map(i => ({id: i.id, c: i.checked}));
-            localStorage.setItem('sdv_final_audit_v1', JSON.stringify(status));
-            updateProgress(roomIdx);
-        }
-
-        function load() {
-            const data = JSON.parse(localStorage.getItem('sdv_final_audit_v1') || '[]');
-            data.forEach(d => {
-                const el = document.getElementById(d.id);
-                if(el) { el.checked = d.c; if(d.c) el.parentElement.classList.add('completed'); }
-            });
-        }
-
-        function filter() {
-            const q = document.getElementById('searchInput').value.toLowerCase();
-            document.querySelectorAll('.room-card').forEach(rc => {
-                let anyVisible = false;
-                rc.querySelectorAll('.bundle-wrap').forEach(bw => {
-                    let itemsInBundle = false;
-                    bw.querySelectorAll('.item-wrap').forEach(iw => {
-                        let iV = iw.dataset.item.includes(q) || bw.dataset.lote.includes(q) || rc.dataset.sala.includes(q);
-                        iw.style.display = iV ? 'block' : 'none';
-                        if(iV) itemsInBundle = true;
-                    });
-                    bw.style.display = itemsInBundle ? 'block' : 'none';
-                    if(itemsInBundle) anyVisible = true;
-                });
-                rc.style.display = anyVisible ? 'block' : 'none';
-            });
-        }
-
-        function toggleAll(exp) {
-            document.querySelectorAll('.collapse').forEach(b => {
-                const bsCollapse = bootstrap.Collapse.getOrCreateInstance(b, {toggle: false});
-                exp ? bsCollapse.show() : bsCollapse.hide();
-            });
-        }
-
-        function reset() {
-            if(confirm("¿Borrar todo el progreso?")) { localStorage.removeItem('sdv_final_audit_v1'); location.reload(); }
-        }
-
-        function toggleTheme() {
-            const t = document.body.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
-            document.body.setAttribute('data-bs-theme', t);
-        }
-
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('https://cdn.jsdelivr.net/npm/pwa-helper-components/pwa-install.js').catch(() => {});
-            });
-        }
-
-        render();
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+            el.parentElement.classList.toggle('completed',
