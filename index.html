@@ -34,13 +34,21 @@
     <div class="sticky-toolbar">
         <div class="container">
             <div class="row g-2">
-                <div class="col-md-6"><input type="text" id="searchInput" class="form-control" placeholder="Buscar por ítem o lote..." oninput="filter()"></div>
-                <div class="col-6 col-md-3"><button class="btn btn-info w-100 btn-sm text-white" onclick="toggleAll(true)">Expandir</button></div>
-                <div class="col-6 col-md-3"><button class="btn btn-danger w-100 btn-sm" onclick="reset()">Reset Datos</button></div>
+                <div class="col-12 mb-1">
+                    <input type="text" id="searchInput" class="form-control" placeholder="Buscar por ítem o lote..." oninput="filter()">
+                </div>
+                <div class="col-4">
+                    <button class="btn btn-info w-100 btn-sm text-white" onclick="toggleAll(true)">Expandir</button>
+                </div>
+                <div class="col-4">
+                    <button class="btn btn-secondary w-100 btn-sm" onclick="toggleAll(false)">Contraer</button>
+                </div>
+                <div class="col-4">
+                    <button class="btn btn-danger w-100 btn-sm" onclick="reset()">Reset</button>
+                </div>
             </div>
         </div>
     </div>
-
     <div class="container" id="app"></div>
 
     <script>
