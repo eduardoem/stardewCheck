@@ -12,7 +12,17 @@
         [data-bs-theme="dark"] { --sv-bg: #2d2d2d; --sv-header: #3e4a59; --sv-text: #e0e0e0; --sv-border: #555; --sv-accent: #5d4037; }
         body { background-color: var(--sv-bg); color: var(--sv-text); font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.3s ease; min-height: 100vh; padding-bottom: 50px; }
         .navbar { background-color: #7fb3d5 !important; border-bottom: 3px solid #5499c7; }
-        .room-card { border: 1px solid var(--sv-border); border-radius: 10px; margin-bottom: 20px; overflow: hidden; background: var(--sv-bg); box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: none; }
+        
+        /* CORRECCIÓN: Se eliminó display:none para que las tarjetas sean visibles */
+        .room-card { 
+            border: 1px solid var(--sv-border); 
+            border-radius: 10px; 
+            margin-bottom: 20px; 
+            overflow: hidden; 
+            background: var(--sv-bg); 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+        }
+
         .room-header { background-color: var(--sv-header); color: #2c3e50; padding: 15px 20px; cursor: pointer; font-weight: bold; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--sv-border); }
         .bundle-title { color: #8d6e63; font-weight: 700; margin-top: 15px; border-bottom: 2px solid var(--sv-accent); padding-bottom: 5px; }
         .form-check { padding: 8px 12px; border-radius: 5px; transition: background 0.2s; }
@@ -49,6 +59,7 @@
             </div>
         </div>
     </div>
+
     <div class="container" id="app"></div>
 
     <script>
@@ -155,7 +166,8 @@
                 const total = room.querySelectorAll('.form-check-input').length;
                 const checked = room.querySelectorAll('.form-check-input:checked').length;
                 const percent = Math.round((checked / total) * 100);
-                document.getElementById(`badge-${idx}`).innerText = `${percent}%`;
+                const badge = document.getElementById(`badge-${idx}`);
+                if (badge) badge.innerText = `${percent}%`;
             });
         }
 
@@ -174,16 +186,24 @@
                     if (bundleMatch) roomMatch = true;
                 });
                 card.style.display = roomMatch ? 'block' : 'none';
+                
+                // Si hay búsqueda, expandir automáticamente para ver resultados
+                const roomBody = card.querySelector('[id^="room-"]');
+                if (q.length > 0 && roomMatch) {
+                    roomBody.style.display = 'block';
+                }
             });
         }
 
         function toggleCollapse(idx) {
             const el = document.getElementById(`room-${idx}`);
-            el.style.display = el.style.display === 'none' ? 'block' : 'none';
+            el.style.display = (el.style.display === 'none') ? 'block' : 'none';
         }
 
         function toggleAll(show) {
-            document.querySelectorAll('[id^="room-"]').forEach(el => el.style.display = show ? 'block' : 'none');
+            document.querySelectorAll('[id^="room-"]').forEach(el => {
+                el.style.display = show ? 'block' : 'none';
+            });
         }
 
         function reset() {
@@ -199,7 +219,6 @@
         }
 
         document.addEventListener('DOMContentLoaded', initApp);
-        // Fallback en caso de que DOMContentLoaded ya haya pasado
         if (document.readyState === "complete" || document.readyState === "interactive") { initApp(); }
     </script>
 </body>
