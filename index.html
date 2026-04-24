@@ -3,192 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stardew Valley - Guía de Pesca Maestra</title>
+    <title>Stardew Valley - Guía de Pesca PDF</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#7fb3d5">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        :root { --sv-bg: #fdf6e3; --sv-header: #d1e8e2; --sv-text: #5d4037; --sv-border: #d7ccc8; --sv-accent: #ffdfba; }
-        [data-bs-theme="dark"] { --sv-bg: #2d2d2d; --sv-header: #3e4a59; --sv-text: #e0e0e0; --sv-border: #555; --sv-accent: #5d4037; }
-        [data-bs-theme="dark"] .room-header span:first-child { color: #ffffff !important; }
-        
-        body { background-color: var(--sv-bg); color: var(--sv-text); font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.3s ease; min-height: 100vh; padding-bottom: 50px; }
+        :root { --sv-bg: #fdf6e3; --sv-header: #d1e8e2; --sv-text: #5d4037; --sv-border: #d7ccc8; }
+        [data-bs-theme="dark"] { --sv-bg: #2d2d2d; --sv-header: #3e4a59; --sv-text: #e0e0e0; --sv-border: #555; }
+        body { background-color: var(--sv-bg); color: var(--sv-text); font-family: system-ui, -apple-system, sans-serif; padding-bottom: 50px; }
         .navbar { background-color: #7fb3d5 !important; border-bottom: 3px solid #5499c7; }
-        .room-card { border: 1px solid var(--sv-border); border-radius: 10px; margin-bottom: 15px; overflow: hidden; background: var(--sv-bg); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .room-header { background-color: var(--sv-header); color: #2c3e50; padding: 12px 20px; cursor: pointer; font-weight: bold; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--sv-border); }
-        
-        .fish-item { padding: 12px; border-bottom: 1px solid var(--sv-border); transition: background 0.2s; }
-        .fish-item:last-child { border-bottom: none; }
-        .fish-item:hover { background: rgba(0,0,0,0.02); }
-        .fish-info { font-size: 0.85rem; color: #6d4c41; margin-left: 32px; line-height: 1.4; }
-        [data-bs-theme="dark"] .fish-info { color: #bcaaa4; }
-        
-        .form-check-input { scale: 1.3; margin-top: 0.3rem; cursor: pointer; }
-        .form-check-label { font-weight: 600; cursor: pointer; font-size: 1.05rem; }
-        .completed { opacity: 0.5; background: rgba(0,0,0,0.05); }
+        .room-card { border: 1px solid var(--sv-border); border-radius: 10px; margin-bottom: 15px; background: var(--sv-bg); overflow: hidden; }
+        .room-header { background-color: var(--sv-header); padding: 12px 20px; cursor: pointer; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+        .fish-item { padding: 12px 15px; border-bottom: 1px solid var(--sv-border); display: flex; align-items: flex-start; }
+        .fish-content { margin-left: 15px; }
+        .form-check-input { width: 24px; height: 24px; border: 2px solid #8d6e63 !important; flex-shrink: 0; }
+        .completed { opacity: 0.5; background: rgba(0,0,0,0.03); }
         .strikethrough { text-decoration: line-through; }
-
-        .sticky-toolbar { position: sticky; top: 0; z-index: 1000; background: var(--sv-bg); padding: 10px 0; border-bottom: 2px solid var(--sv-border); margin-bottom: 20px; }
-        .progress-badge { font-size: 0.8rem; padding: 4px 10px; border-radius: 20px; background: #5499c7; color: white; }
-        .legendary-header { background-color: #f8bbd0 !important; color: #880e4f !important; }
-        [data-bs-theme="dark"] .legendary-header { background-color: #880e4f !important; color: #f8bbd0 !important; }
+        .sticky-toolbar { position: sticky; top: 0; z-index: 1000; background: var(--sv-bg); padding: 10px 0; border-bottom: 2px solid var(--sv-border); }
     </style>
 </head>
 <body data-bs-theme="light">
 
     <nav class="navbar navbar-dark">
-        <div class="container"><span class="navbar-brand mb-0 h1">Guía de Pesca Stardew Wiki</span>
+        <div class="container"><span class="navbar-brand mb-0 h1">Guía de Pesca (Literal PDF)</span>
         <button class="btn btn-sm btn-outline-light" onclick="toggleTheme()">🌓 Modo</button></div>
     </nav>
 
     <div class="sticky-toolbar">
         <div class="container">
             <div class="row g-2">
-                <div class="col-12 mb-1">
-                    <input type="text" id="searchInput" class="form-control" placeholder="Buscar pez, lugar o clima..." oninput="filter()">
-                </div>
-                <div class="col-4"><button class="btn btn-info w-100 btn-sm text-white" onclick="toggleAll(true)">Expandir</button></div>
-                <div class="col-4"><button class="btn btn-secondary w-100 btn-sm" onclick="toggleAll(false)">Colapsar</button></div>
-                <div class="col-4"><button class="btn btn-danger w-100 btn-sm" onclick="reset()">Reset</button></div>
+                <div class="col-12 mb-1"><input type="text" id="searchInput" class="form-control" placeholder="Buscar pez..." oninput="filter()"></div>
+                <div class="col-6"><button class="btn btn-secondary w-100 btn-sm" onclick="toggleAll(false)">Colapsar Todo</button></div>
+                <div class="col-6"><button class="btn btn-danger w-100 btn-sm" onclick="reset()">Reset</button></div>
             </div>
         </div>
     </div>
 
-    <div class="container" id="app"></div>
+    <div class="container mt-3" id="app"></div>
 
     <script>
         const fishData = [
-            { cat: "Primavera", peces: [
-                { n: "Pez sol", l: "Río", h: "6am - 7pm", c: "Soleado", b: "Mixto" },
-                { n: "Pez gato", l: "Río/Pantano", h: "6am - 2am", c: "Lluvia", b: "Agresivo" },
-                { n: "Sábalo", l: "Río", h: "9am - 2am", c: "Lluvia", b: "Inquieto" },
-                { n: "Trucha tigre", l: "Río", h: "6am - 7pm", c: "Cualquiera", b: "Dardos" },
-                { n: "Perca", l: "Lago de la montaña", h: "Cualquiera", c: "Cualquiera", b: "Hundimiento" },
-                { n: "Carpa", l: "Lago de la montaña", h: "Cualquiera", c: "Cualquiera", b: "Tranquilo" },
-                { n: "Siluro", l: "Lago de la montaña", h: "6pm - 2am", c: "Cualquiera", b: "Dardos" },
-                { n: "Sardina", l: "Océano", h: "6am - 7pm", c: "Cualquiera", b: "Dardos" },
-                { n: "Pargo colorado", l: "Océano", h: "6am - 7pm", c: "Lluvia", b: "Inquieto" },
-                { n: "Besugo", l: "Río", h: "6pm - 2am", c: "Cualquiera", b: "Suave" }
-            ]},
-            { cat: "Verano", peces: [
-                { n: "Pez globo", l: "Océano", h: "12pm - 4pm", c: "Soleado", b: "Flotador" },
-                { n: "Atún", l: "Océano", h: "6am - 7pm", c: "Cualquiera", b: "Suave" },
-                { n: "Tilapia", l: "Océano", h: "6am - 2pm", c: "Cualquiera", b: "Mixto" },
-                { n: "Esturión", l: "Lago de la montaña", h: "6am - 7pm", c: "Cualquiera", b: "Dardos" },
-                { n: "Muyu", l: "Bosque Secreto", h: "Cualquiera", c: "Cualquiera", b: "Hundimiento" },
-                { n: "Pulpo", l: "Océano", h: "6am - 1pm", c: "Cualquiera", b: "Hundimiento" },
-                { n: "Súper pepino", l: "Océano", h: "6pm - 2am", c: "Cualquiera", b: "Dardos" }
-            ]},
-            { cat: "Otoño", peces: [
-                { n: "Salmón", l: "Río", h: "6am - 7pm", c: "Cualquiera", b: "Inquieto" },
-                { n: "Perca de ojos dorados", l: "Río/Lago", h: "12pm - 2am", c: "Lluvia", b: "Suave" },
-                { n: "Anguila", l: "Océano", h: "4pm - 2am", c: "Lluvia", b: "Suave" },
-                { n: "Pepino de mar", l: "Océano", h: "6am - 7pm", c: "Cualquiera", b: "Hundimiento" }
-            ]},
-            { cat: "Invierno", peces: [
-                { n: "Calamar", l: "Océano", h: "6pm - 2am", c: "Cualquiera", b: "Hundimiento" },
-                { n: "Lingcod", l: "Río/Lago", h: "Cualquiera", c: "Cualquiera", b: "Agresivo" },
-                { n: "Lucio", l: "Río/Lago", h: "Cualquiera", c: "Cualquiera", b: "Dardos" }
-            ]},
-            { cat: "Especiales / Minas", peces: [
-                { n: "Pez fantasma", l: "Minas (Piso 20, 60, 100)", h: "Cualquiera", c: "Cualquiera", b: "Mixto" },
-                { n: "Pez piedra", l: "Minas (Piso 20)", h: "Cualquiera", c: "Cualquiera", b: "Hundimiento" },
-                { n: "Pez hielo", l: "Minas (Piso 60)", h: "Cualquiera", c: "Cualquiera", b: "Hundimiento" },
-                { n: "Anguila de lava", l: "Minas (Piso 100)", h: "Cualquiera", c: "Cualquiera", b: "Mixto" },
-                { n: "Pequeño barbo", l: "Estanque del bosque", h: "Cualquiera", c: "Cualquiera", b: "Dardos" },
-                { n: "Pez del desierto", l: "Desierto", h: "6am - 10pm", c: "Cualquiera", b: "Suave" }
-            ]},
-            { cat: "Leyendas", peces: [
-                { n: "Leyenda", l: "Lago montaña (Cerca de tronco)", h: "Cualquiera", c: "Lluvia (Primavera)", b: "Nivel 10 Pesca - Muy Agresivo" },
-                { n: "Pez carmesí", l: "Océano (Muelle este)", h: "Cualquiera", c: "Cualquiera (Verano)", b: "Nivel 5 Pesca - Agresivo" },
-                { n: "Rapiña", l: "Río (Cerca casa Leah)", h: "Cualquiera", c: "Cualquiera (Invierno)", b: "Nivel 6 Pesca - Dardos" },
-                { n: "Pez glaciar", l: "Bosque (Isla sur)", h: "Cualquiera", c: "Cualquiera (Invierno)", b: "Nivel 6 Pesca - Dardos" },
-                { n: "Pez mutante", l: "Alcantarillas", h: "Cualquiera", c: "Cualquiera", b: "Mixto" }
-            ]}
+            { cat: "Río", peces: ["Paz sol", "Pez gato", "Sabalo", "Trucha tigre", "Besugo", "Lucio", "Bacalao largo", "Salmón"] },
+            { cat: "Océano", peces: ["Sardina", "Atún", "Pargo colorado", "Tilapia", "Pez globo", "Pulpo", "Superpepino", "Anguilla", "Pepino de mar", "Calamar"] },
+            { cat: "Lago de la montaña", peces: ["Perca", "Carpa", "Siluro", "Esturión", "Lucio"] },
+            { cat: "Especiales", peces: ["Muyu", "Pez fantasma", "Paz carambano", "Anguilla de lava", "Pez piedra", "Lenguado"] },
+            { cat: "Leyendas", peces: ["Leyenda", "Paz carmesi", "Rape", "Pez glacial", "Carpa mutante"] }
         ];
 
         function initApp() {
             const container = document.getElementById('app');
-            let html = '';
-            fishData.forEach((cat, cIdx) => {
-                const isLegend = cat.cat === "Leyendas";
-                html += `
-                <div class="room-card" data-cat="${cat.cat.toLowerCase()}">
-                    <div class="room-header ${isLegend ? 'legendary-header' : ''}" onclick="toggleCollapse(${cIdx})">
+            container.innerHTML = fishData.map((cat, idx) => `
+                <div class="room-card">
+                    <div class="room-header" onclick="toggleCollapse(${idx})">
                         <span>${cat.cat}</span>
-                        <span class="progress-badge" id="badge-${cIdx}">0%</span>
+                        <span class="badge bg-info" id="badge-${idx}">0%</span>
                     </div>
-                    <div id="cat-${cIdx}" style="display: none">
+                    <div id="cat-${idx}" style="display: none">
                         ${cat.peces.map(p => {
-                            const id = p.n.replace(/[^\w]/g, '') + cIdx;
+                            const id = p.replace(/\s/g, '') + idx;
                             return `
-                            <div class="fish-item form-check" data-search="${p.n} ${p.l} ${p.c}">
+                            <div class="fish-item">
                                 <input class="form-check-input" type="checkbox" id="${id}" onchange="save()">
-                                <label class="form-check-label" for="${id}">
-                                    <span class="fish-name">${p.n}</span>
-                                </label>
-                                <div class="fish-info">
-                                    📍 <b>Lugar:</b> ${p.l} | ⏰ <b>Hora:</b> ${p.h}<br>
-                                    ☁️ <b>Clima:</b> ${p.c} | 🐟 <b>Estilo:</b> ${p.b}
+                                <div class="fish-content">
+                                    <label class="fw-bold" for="${id}">${p}</label>
                                 </div>
                             </div>`;
                         }).join('')}
                     </div>
-                </div>`;
-            });
-            container.innerHTML = html;
+                </div>`).join('');
             load();
-            updateProgress();
         }
 
         function save() {
             const status = {};
             document.querySelectorAll('.form-check-input').forEach(cb => {
                 status[cb.id] = cb.checked;
-                const parent = cb.closest('.fish-item');
-                parent.classList.toggle('completed', cb.checked);
-                parent.querySelector('.fish-name').classList.toggle('strikethrough', cb.checked);
+                cb.closest('.fish-item').classList.toggle('completed', cb.checked);
             });
-            localStorage.setItem('sdv_fish_v3', JSON.stringify(status));
+            localStorage.setItem('sdv_fish_pdf', JSON.stringify(status));
             updateProgress();
         }
 
         function load() {
-            const data = JSON.parse(localStorage.getItem('sdv_fish_v3') || '{}');
+            const data = JSON.parse(localStorage.getItem('sdv_fish_pdf') || '{}');
             Object.keys(data).forEach(id => {
                 const cb = document.getElementById(id);
                 if (cb) {
                     cb.checked = data[id];
-                    const parent = cb.closest('.fish-item');
-                    parent.classList.toggle('completed', data[id]);
-                    parent.querySelector('.fish-name').classList.toggle('strikethrough', data[id]);
+                    cb.closest('.fish-item').classList.toggle('completed', data[id]);
                 }
             });
+            updateProgress();
         }
 
         function updateProgress() {
             fishData.forEach((_, idx) => {
-                const section = document.getElementById(`cat-${idx}`);
-                if (!section) return;
-                const total = section.querySelectorAll('.form-check-input').length;
-                const checked = section.querySelectorAll('.form-check-input:checked').length;
-                const percent = Math.round((checked / total) * 100);
-                document.getElementById(`badge-${idx}`).innerText = `${percent}%`;
-            });
-        }
-
-        function filter() {
-            const q = document.getElementById('searchInput').value.toLowerCase();
-            document.querySelectorAll('.room-card').forEach(card => {
-                let matchInCard = false;
-                card.querySelectorAll('.fish-item').forEach(item => {
-                    const text = item.dataset.search.toLowerCase();
-                    const match = text.includes(q);
-                    item.style.display = match ? 'block' : 'none';
-                    if (match) matchInCard = true;
-                });
-                card.style.display = matchInCard ? 'block' : 'none';
-                if (q.length > 0 && matchInCard) card.querySelector('[id^="cat-"]').style.display = 'block';
+                const el = document.getElementById(`cat-${idx}`);
+                const total = el.querySelectorAll('input').length;
+                const checked = el.querySelectorAll('input:checked').length;
+                document.getElementById(`badge-${idx}`).innerText = Math.round((checked/total)*100) + '%';
             });
         }
 
@@ -202,16 +115,12 @@
         }
 
         function reset() {
-            if(confirm("¿Restablecer progreso de pesca?")) {
-                localStorage.removeItem('sdv_fish_v3');
-                location.reload();
-            }
+            if(confirm("¿Borrar progreso?")) { localStorage.removeItem('sdv_fish_pdf'); location.reload(); }
         }
 
         function toggleTheme() {
-            const body = document.body;
-            const current = body.getAttribute('data-bs-theme');
-            body.setAttribute('data-bs-theme', current === 'dark' ? 'light' : 'dark');
+            const b = document.body;
+            b.setAttribute('data-bs-theme', b.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark');
         }
 
         document.addEventListener('DOMContentLoaded', initApp);
