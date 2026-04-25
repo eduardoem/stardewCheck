@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stardew Valley - Guía de Pesca Temporadas</title>
+    <title>Guía de Pesca - Stardew Valley (Literal PDF)</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#7fb3d5">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -12,8 +12,8 @@
         [data-bs-theme="dark"] { --sv-bg: #2d2d2d; --sv-header: #3e4a59; --sv-text: #e0e0e0; --sv-border: #555; }
         body { background-color: var(--sv-bg); color: var(--sv-text); font-family: system-ui, sans-serif; padding-bottom: 50px; }
         .navbar { background-color: #7fb3d5 !important; border-bottom: 3px solid #5499c7; }
-        .room-card { border: 1px solid var(--sv-border); border-radius: 10px; margin-bottom: 15px; background: var(--sv-bg); overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .room-header { background-color: var(--sv-header); padding: 12px 20px; cursor: pointer; font-weight: bold; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--sv-border); }
+        .room-card { border: 1px solid var(--sv-border); border-radius: 10px; margin-bottom: 15px; background: var(--sv-bg); overflow: hidden; }
+        .room-header { background-color: var(--sv-header); padding: 12px 20px; cursor: pointer; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
         .fish-item { padding: 12px 15px; border-bottom: 1px solid var(--sv-border); display: flex; align-items: flex-start; }
         .fish-item:last-child { border-bottom: none; }
         .fish-content { margin-left: 15px; flex-grow: 1; }
@@ -21,7 +21,6 @@
         [data-bs-theme="dark"] .fish-info { color: #bcaaa4; }
         .form-check-input { width: 24px; height: 24px; border: 2px solid #8d6e63 !important; flex-shrink: 0; cursor: pointer; }
         .completed { opacity: 0.5; background: rgba(0,0,0,0.03); }
-        .strikethrough { text-decoration: line-through; }
         .sticky-toolbar { position: sticky; top: 0; z-index: 1000; background: var(--sv-bg); padding: 10px 0; border-bottom: 2px solid var(--sv-border); margin-bottom: 20px; }
         .progress-badge { font-size: 0.8rem; padding: 4px 10px; border-radius: 20px; background: #5499c7; color: white; }
     </style>
@@ -29,17 +28,16 @@
 <body data-bs-theme="light">
 
     <nav class="navbar navbar-dark">
-        <div class="container"><span class="navbar-brand mb-0 h1">Guía de Pesca por Temporadas</span>
+        <div class="container"><span class="navbar-brand mb-0 h1">Guía de Pesca (Literal PDF)</span>
         <button class="btn btn-sm btn-outline-light" onclick="toggleTheme()">🌓 Modo</button></div>
     </nav>
 
     <div class="sticky-toolbar">
         <div class="container">
             <div class="row g-2">
-                <div class="col-12 mb-1"><input type="text" id="searchInput" class="form-control" placeholder="Buscar pez, lugar o clima..." oninput="filter()"></div>
-                <div class="col-4"><button class="btn btn-info w-100 btn-sm text-white" onclick="toggleAll(true)">Expandir</button></div>
-                <div class="col-4"><button class="btn btn-secondary w-100 btn-sm" onclick="toggleAll(false)">Colapsar</button></div>
-                <div class="col-4"><button class="btn btn-danger w-100 btn-sm" onclick="reset()">Reset</button></div>
+                <div class="col-12 mb-1"><input type="text" id="searchInput" class="form-control" placeholder="Buscar por nombre o lugar..." oninput="filter()"></div>
+                <div class="col-6"><button class="btn btn-secondary w-100 btn-sm" onclick="toggleAll(false)">Colapsar Todo</button></div>
+                <div class="col-6"><button class="btn btn-danger w-100 btn-sm" onclick="reset()">Reset</button></div>
             </div>
         </div>
     </div>
@@ -49,10 +47,10 @@
     <script>
         const fishData = [
             { cat: "Primavera", peces: [
-                { n: "Paz sol", l: "Río", h: "6am - 7pm", c: "Soleado" },
-                { n: "Pez gato", l: "Río / Bosque secreto", h: "6am - 2am", c: "Lluvia" },
+                { n: "Pez sol", l: "Río", h: "6am - 7pm", c: "Soleado" },
+                { n: "Paz gato", l: "Río / Bosque secreto", h: "6am - 2am", c: "Lluvia" },
                 { n: "Sabalo", l: "Río", h: "9am - 2am", c: "Lluvia" },
-                { n: "Trucha tigre", l: "Río", h: "6am - 7pm", c: "Cualquiera" },
+                { n: "Lubina", l: "Río / Lago / Estanque", h: "Cualquiera", c: "Cualquiera" },
                 { n: "Perca", l: "Lago montaña", h: "Cualquiera", c: "Cualquiera" },
                 { n: "Carpa", l: "Lago montaña / Alcantarillas", h: "Cualquiera", c: "Cualquiera" },
                 { n: "Siluro", l: "Lago montaña", h: "6pm - 2am", c: "Cualquiera" },
@@ -63,44 +61,46 @@
             ]},
             { cat: "Verano", peces: [
                 { n: "Pez globo", l: "Océano", h: "12pm - 4pm", c: "Soleado" },
-                { n: "Atún", l: "Océano / Isla Jengibre", h: "6am - 7pm", c: "Cualquiera" },
-                { n: "Tilapia", l: "Océano / Isla Jengibre", h: "6am - 2pm", c: "Cualquiera" },
+                { n: "Atún", l: "Océano", h: "6am - 7pm", c: "Cualquiera" },
+                { n: "Tilapia", l: "Océano", h: "6am - 2pm", c: "Cualquiera" },
                 { n: "Esturión", l: "Lago montaña", h: "6am - 7pm", c: "Cualquiera" },
                 { n: "Muyu", l: "Bosque secreto", h: "Cualquiera", c: "Cualquiera" },
-                { n: "Pulpo", l: "Océano / Mercado nocturno", h: "6am - 1pm", c: "Cualquiera" },
-                { n: "Superpepino", l: "Océano / Mercado nocturno", h: "6pm - 2am", c: "Cualquiera" },
+                { n: "Pulpo", l: "Océano", h: "6am - 1pm", c: "Cualquiera" },
+                { n: "Superpepino", l: "Océano", h: "6pm - 2am", c: "Cualquiera" },
                 { n: "Dorado", l: "Río", h: "6am - 7pm", c: "Soleado" },
                 { n: "Trucha arcoiris", l: "Río / Lago montaña", h: "6am - 7pm", c: "Soleado" },
-                { n: "Lucio", l: "Río / Lago / Estanque", h: "Cualquiera", c: "Cualquiera" }
+                { n: "Lucio", l: "Río / Lago", h: "Cualquiera", c: "Cualquiera" }
             ]},
             { cat: "Otoño", peces: [
                 { n: "Salmón", l: "Río", h: "6am - 7pm", c: "Cualquiera" },
-                { n: "Lucioperca", l: "Río / Lago", h: "12pm - 2am", c: "Lluvia" },
+                { n: "Lubina", l: "Río / Lago / Estanque", h: "Cualquiera", c: "Cualquiera" },
                 { n: "Anguilla", l: "Océano", h: "4pm - 2am", c: "Lluvia" },
                 { n: "Pepino de mar", l: "Océano", h: "6am - 7pm", c: "Cualquiera" },
-                { n: "Barbo", l: "Río / Lago / Estanque", h: "Cualquiera", c: "Cualquiera" },
-                { n: "Cachuelo", l: "Río / Lago / Estanque", h: "Cualquiera", c: "Cualquiera" }
+                { n: "Trucha tigre", l: "Río", h: "6am - 7pm", c: "Cualquiera" },
+                { n: "Barbo", l: "Río / Lago", h: "Cualquiera", c: "Cualquiera" },
+                { n: "Cachuelo", l: "Río / Lago", h: "Cualquiera", c: "Cualquiera" }
             ]},
             { cat: "Invierno", peces: [
                 { n: "Calamar", l: "Océano", h: "6pm - 2am", c: "Cualquiera" },
                 { n: "Bacalao largo", l: "Río / Lago", h: "Cualquiera", c: "Cualquiera" },
                 { n: "Sauri", l: "Río / Estanque", h: "Cualquiera", c: "Cualquiera" },
                 { n: "Aranque", l: "Océano", h: "Cualquiera", c: "Cualquiera" },
-                { n: "Atün blanco", l: "Océano", h: "Cualquiera", c: "Cualquiera" }
+                { n: "Atün blanco", l: "Océano", h: "Cualquiera", c: "Cualquiera" },
+                { n: "Trucha tigre", l: "Río", h: "6am - 7pm", c: "Cualquiera" }
             ]},
-            { cat: "Especiales / Minas", peces: [
-                { n: "Pez fantasma", l: "Minas (Piso 20, 60, 100)", h: "Cualquiera", c: "Cualquiera" },
-                { n: "Pez piedra", l: "Minas (Piso 20)", h: "Cualquiera", c: "Cualquiera" },
-                { n: "Paz carambano", l: "Minas (Piso 60)", h: "Cualquiera", c: "Cualquiera" },
-                { n: "Anguilla de lava", l: "Minas (Piso 100)", h: "Cualquiera", c: "Cualquiera" },
-                { n: "Lenguado", l: "El desierto", h: "6am - 10pm", c: "Cualquiera" }
+            { cat: "Especiales", peces: [
+                { n: "Pez fantasma", l: "Minas (20, 60, 100)", h: "Cualquiera", c: "Cualquiera" },
+                { n: "Pez piedra", l: "Minas (20)", h: "Cualquiera", c: "Cualquiera" },
+                { n: "Paz carambano", l: "Minas (60)", h: "Cualquiera", c: "Cualquiera" },
+                { n: "Anguilla de lava", l: "Minas (100)", h: "Cualquiera", c: "Cualquiera" },
+                { n: "Lenguado", l: "Desierto", h: "6am - 10pm", c: "Cualquiera" }
             ]},
             { cat: "Leyendas", peces: [
                 { n: "Leyenda", l: "Lago montaña", h: "Cualquiera", c: "Lluvia (Primavera)" },
-                { n: "Paz carmesi", l: "Océano (Muelle este)", h: "Cualquiera", c: "Cualquiera (Verano)" },
-                { n: "Rape", l: "Río (Norte de la ciudad)", h: "Cualquiera", c: "Cualquiera (Otoño)" },
-                { n: "Pez glacial", l: "Río (Bosque Tizón)", h: "Cualquiera", c: "Cualquiera (Invierno)" },
-                { n: "Carpa mutante", l: "Las cloacas", h: "Cualquiera", c: "Cualquiera" }
+                { n: "Paz carmesi", l: "Océano", h: "Cualquiera", c: "Verano" },
+                { n: "Rape", l: "Río (Norte)", h: "Cualquiera", c: "Otoño" },
+                { n: "Pez glacial", l: "Río (Bosque)", h: "Cualquiera", c: "Invierno" },
+                { n: "Carpa mutante", l: "Cloacas", h: "Cualquiera", c: "Cualquiera" }
             ]}
         ];
 
@@ -113,17 +113,14 @@
                         <span class="progress-badge" id="badge-${cIdx}">0%</span>
                     </div>
                     <div id="cat-${cIdx}" style="display: none">
-                        ${cat.peces.map(p => {
-                            const id = p.n.replace(/[^\w]/g, '') + cIdx;
+                        ${cat.peces.map((p, pIdx) => {
+                            const id = `f-${cIdx}-${pIdx}`;
                             return `
-                            <div class="fish-item" data-search="${p.n} ${p.l} ${p.c}">
+                            <div class="fish-item" data-search="${p.n} ${p.l}">
                                 <input class="form-check-input" type="checkbox" id="${id}" onchange="save()">
                                 <div class="fish-content">
                                     <label class="fw-bold" for="${id}">${p.n}</label>
-                                    <div class="fish-info">
-                                        📍 <b>Lugar:</b> ${p.l} | ⏰ <b>Hora:</b> ${p.h}<br>
-                                        ☁️ <b>Clima:</b> ${p.c}
-                                    </div>
+                                    <div class="fish-info">📍 ${p.l} | ⏰ ${p.h} | ☁️ ${p.c}</div>
                                 </div>
                             </div>`;
                         }).join('')}
@@ -138,12 +135,12 @@
                 status[cb.id] = cb.checked;
                 cb.closest('.fish-item').classList.toggle('completed', cb.checked);
             });
-            localStorage.setItem('sdv_fish_v_pdf', JSON.stringify(status));
+            localStorage.setItem('sdv_fish_v6_final', JSON.stringify(status));
             updateProgress();
         }
 
         function load() {
-            const data = JSON.parse(localStorage.getItem('sdv_fish_v_pdf') || '{}');
+            const data = JSON.parse(localStorage.getItem('sdv_fish_v6_final') || '{}');
             Object.keys(data).forEach(id => {
                 const cb = document.getElementById(id);
                 if (cb) {
@@ -187,7 +184,7 @@
         }
 
         function reset() {
-            if(confirm("¿Restablecer progreso?")) { localStorage.removeItem('sdv_fish_v_pdf'); location.reload(); }
+            if(confirm("¿Restablecer progreso?")) { localStorage.removeItem('sdv_fish_v6_final'); location.reload(); }
         }
 
         function toggleTheme() {
