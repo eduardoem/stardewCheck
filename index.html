@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guía de Pesca - Estricto Pág 1-6</title>
+    <title>Guía de Pesca - Pág 1-6 (Corregida)</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         :root { --sv-bg: #fdf6e3; --sv-panel: #ffffff; --sv-text: #5d4037; --sv-border: #d7ccc8; --sv-accent: #7fb3d5; }
@@ -14,13 +14,11 @@
         .card-season { background: var(--sv-panel); border: 2px solid var(--sv-border); border-radius: 12px; margin-bottom: 15px; overflow: hidden; }
         .season-header { background: rgba(0,0,0,0.05); padding: 12px 18px; cursor: pointer; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
         
-        /* Forzar colapso inicial */
         .cat-content { display: none; border-top: 1px solid var(--sv-border); }
-        
-        .fish-row { display: flex; align-items: center; padding: 10px 15px; border-bottom: 1px solid var(--sv-border); }
+        .fish-row { display: flex; align-items: center; padding: 10px 15px; border-bottom: 1px solid var(--sv-border); transition: background 0.2s; }
         .fish-row:last-child { border-bottom: none; }
-        .fish-row.completed { background: rgba(0,255,0,0.03); opacity: 0.6; }
-        .form-check-input { width: 22px; height: 22px; margin-right: 15px; cursor: pointer; }
+        .fish-row.completed { background: rgba(40, 167, 69, 0.1); opacity: 0.7; }
+        .form-check-input { width: 24px; height: 24px; margin-right: 15px; cursor: pointer; }
         .fish-details { font-size: 0.8rem; opacity: 0.8; }
         .sticky-tools { position: sticky; top: 0; z-index: 100; background: var(--sv-bg); padding: 10px 0; border-bottom: 1px solid var(--sv-border); }
     </style>
@@ -36,7 +34,7 @@
 
 <div class="sticky-tools mb-3">
     <div class="container">
-        <input type="text" id="search" class="form-control mb-2" placeholder="Buscar pez..." oninput="app.render()">
+        <input type="text" id="search" class="form-control mb-2" placeholder="Buscar pez..." oninput="app.filter()">
         <div class="d-flex gap-2">
             <button class="btn btn-sm btn-secondary w-100" onclick="app.toggleAll(false)">Colapsar</button>
             <button class="btn btn-sm btn-secondary w-100" onclick="app.toggleAll(true)">Expandir</button>
@@ -48,7 +46,6 @@
 <div class="container" id="main-container"></div>
 
 <script>
-// Información limitada estrictamente a las tablas de las páginas 1 a 6
 const FISH_DATA = [
     { season: "Primavera", fish: [
         { n: "Anchoa", l: "Océano", h: "Cualquiera", c: "Cualquiera" },
@@ -101,53 +98,71 @@ const FISH_DATA = [
 ];
 
 const app = {
-    progress: JSON.parse(localStorage.getItem('sdv_fish_v4_strict') || '{}'),
+    progress: JSON.parse(localStorage.getItem('sdv_fish_v5_mobile')) || {},
 
-    init() { this.render(); },
-
-    render() {
+    init() {
         const container = document.getElementById('main-container');
-        const query = document.getElementById('search').value.toLowerCase();
-        
-        container.innerHTML = FISH_DATA.map((cat, cIdx) => {
-            const filteredFish = cat.fish.filter(f => 
-                f.n.toLowerCase().includes(query) || f.l.toLowerCase().includes(query)
-            );
-            if (filteredFish.length === 0 && query !== "") return '';
-
-            const done = cat.fish.filter(f => this.progress[`${cIdx}-${f.n}`]).length;
-            const percent = Math.round((done / cat.fish.length) * 100);
-
-            return `
-            <div class="card-season">
+        container.innerHTML = FISH_DATA.map((cat, cIdx) => `
+            <div class="card-season" data-cat-id="${cIdx}">
                 <div class="season-header" onclick="app.toggleCat(${cIdx})">
                     <span>${cat.season}</span>
-                    <span class="badge bg-primary rounded-pill">${percent}%</span>
+                    <span class="badge bg-primary rounded-pill progress-text">0%</span>
                 </div>
                 <div id="cat-${cIdx}" class="cat-content">
-                    ${filteredFish.map(f => {
-                        const id = `${cIdx}-${f.n}`;
-                        const isDone = this.progress[id] || false;
+                    ${cat.fish.map((f, fIdx) => {
+                        const id = `${cIdx}-${fIdx}`;
+                        const isDone = !!this.progress[id];
                         return `
-                        <div class="fish-row ${isDone ? 'completed' : ''}">
-                            <input class="form-check-input" type="checkbox" 
-                                   ${isDone ? 'checked' : ''} 
-                                   onchange="app.toggleFish('${id}')">
+                        <div class="fish-row ${isDone ? 'completed' : ''}" data-fish-name="${f.n.toLowerCase()}" data-fish-loc="${f.l.toLowerCase()}">
+                            <input class="form-check-input" type="checkbox" id="${id}" 
+                                   ${isDone ? 'checked' : ''} onchange="app.updateFish('${id}')">
                             <div class="flex-grow-1">
-                                <div class="fw-bold">${f.n}</div>
+                                <label class="fw-bold d-block" for="${id}">${f.n}</label>
                                 <div class="fish-details">📍 ${f.l} | ⏰ ${f.h} | ☁️ ${f.c}</div>
                             </div>
                         </div>`;
                     }).join('')}
                 </div>
-            </div>`;
-        }).join('');
+            </div>`).join('');
+        this.updateAllProgress();
     },
 
-    toggleFish(id) {
-        this.progress[id] = !this.progress[id];
-        localStorage.setItem('sdv_fish_v4_strict', JSON.stringify(this.progress));
-        this.render();
+    updateFish(id) {
+        const cb = document.getElementById(id);
+        const row = cb.closest('.fish-row');
+        const catIdx = id.split('-')[0];
+        
+        this.progress[id] = cb.checked;
+        localStorage.setItem('sdv_fish_v5_mobile', JSON.stringify(this.progress));
+        
+        row.classList.toggle('completed', cb.checked);
+        this.updateCatProgress(catIdx);
+    },
+
+    updateCatProgress(idx) {
+        const catEl = document.querySelector(`[data-cat-id="${idx}"]`);
+        const total = catEl.querySelectorAll('.form-check-input').length;
+        const checked = catEl.querySelectorAll('.form-check-input:checked').length;
+        catEl.querySelector('.progress-text').innerText = Math.round((checked / total) * 100) + '%';
+    },
+
+    updateAllProgress() {
+        FISH_DATA.forEach((_, idx) => this.updateCatProgress(idx));
+    },
+
+    filter() {
+        const q = document.getElementById('search').value.toLowerCase();
+        document.querySelectorAll('.card-season').forEach(card => {
+            let hasVisible = false;
+            card.querySelectorAll('.fish-row').forEach(row => {
+                const visible = row.dataset.fishName.includes(q) || row.dataset.fishLoc.includes(q);
+                row.style.display = visible ? 'flex' : 'none';
+                if (visible) hasVisible = true;
+            });
+            card.style.display = hasVisible ? 'block' : 'none';
+            // Si hay búsqueda, expandir automáticamente
+            if (q.length > 0 && hasVisible) card.querySelector('.cat-content').style.display = 'block';
+        });
     },
 
     toggleCat(idx) {
@@ -160,10 +175,10 @@ const app = {
     },
 
     reset() {
-        if(confirm("¿Reiniciar progreso?")) {
+        if(confirm("¿Borrar progreso?")) {
             this.progress = {};
-            localStorage.removeItem('sdv_fish_v4_strict');
-            this.render();
+            localStorage.removeItem('sdv_fish_v5_mobile');
+            location.reload();
         }
     }
 };
