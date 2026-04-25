@@ -3,196 +3,191 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guía de Pesca - Stardew Valley (Literal PDF)</title>
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#7fb3d5">
+    <title>Stardew Valley - Guía de Pesca (Págs 1-6)</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        :root { --sv-bg: #fdf6e3; --sv-header: #d1e8e2; --sv-text: #5d4037; --sv-border: #d7ccc8; }
-        [data-bs-theme="dark"] { --sv-bg: #2d2d2d; --sv-header: #3e4a59; --sv-text: #e0e0e0; --sv-border: #555; }
-        body { background-color: var(--sv-bg); color: var(--sv-text); font-family: system-ui, sans-serif; padding-bottom: 50px; }
-        .navbar { background-color: #7fb3d5 !important; border-bottom: 3px solid #5499c7; }
-        .room-card { border: 1px solid var(--sv-border); border-radius: 10px; margin-bottom: 15px; background: var(--sv-bg); overflow: hidden; }
-        .room-header { background-color: var(--sv-header); padding: 12px 20px; cursor: pointer; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
-        .fish-item { padding: 12px 15px; border-bottom: 1px solid var(--sv-border); display: flex; align-items: flex-start; }
-        .fish-item:last-child { border-bottom: none; }
-        .fish-content { margin-left: 15px; flex-grow: 1; }
-        .fish-info { font-size: 0.85rem; color: #6d4c41; line-height: 1.4; margin-top: 3px; }
-        [data-bs-theme="dark"] .fish-info { color: #bcaaa4; }
-        .form-check-input { width: 24px; height: 24px; border: 2px solid #8d6e63 !important; flex-shrink: 0; cursor: pointer; }
-        .completed { opacity: 0.5; background: rgba(0,0,0,0.03); }
-        .sticky-toolbar { position: sticky; top: 0; z-index: 1000; background: var(--sv-bg); padding: 10px 0; border-bottom: 2px solid var(--sv-border); margin-bottom: 20px; }
-        .progress-badge { font-size: 0.8rem; padding: 4px 10px; border-radius: 20px; background: #5499c7; color: white; }
+        :root { --sv-bg: #fdf6e3; --sv-panel: #ffffff; --sv-text: #5d4037; --sv-border: #d7ccc8; --sv-accent: #7fb3d5; }
+        [data-bs-theme="dark"] { --sv-bg: #1a1a1a; --sv-panel: #2d2d2d; --sv-text: #e0e0e0; --sv-border: #444; --sv-accent: #2980b9; }
+        
+        body { background-color: var(--sv-bg); color: var(--sv-text); transition: all 0.3s; padding-bottom: 30px; }
+        .navbar { background-color: var(--sv-accent) !important; border-bottom: 4px solid rgba(0,0,0,0.1); }
+        .card-season { background: var(--sv-panel); border: 2px solid var(--sv-border); border-radius: 12px; margin-bottom: 20px; overflow: hidden; }
+        .season-header { background: rgba(0,0,0,0.05); padding: 15px; cursor: pointer; font-weight: bold; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--sv-border); }
+        .fish-row { display: flex; align-items: center; padding: 10px 15px; border-bottom: 1px solid var(--sv-border); }
+        .fish-row:last-child { border-bottom: none; }
+        .fish-row.completed { background: rgba(0,255,0,0.05); opacity: 0.7; }
+        .form-check-input { width: 22px; height: 22px; margin-right: 15px; cursor: pointer; border-color: var(--sv-accent); }
+        .fish-details { font-size: 0.85rem; opacity: 0.8; }
+        .sticky-tools { position: sticky; top: 0; z-index: 100; background: var(--sv-bg); padding: 10px 0; border-bottom: 1px solid var(--sv-border); }
     </style>
 </head>
 <body data-bs-theme="light">
 
-    <nav class="navbar navbar-dark">
-        <div class="container"><span class="navbar-brand mb-0 h1">Guía de Pesca (Literal PDF)</span>
-        <button class="btn btn-sm btn-outline-light" onclick="toggleTheme()">🌓 Modo</button></div>
-    </nav>
+<nav class="navbar navbar-dark mb-3">
+    <div class="container">
+        <span class="navbar-brand fw-bold">Wiki Pesca (Literal PDF 1-6)</span>
+        <button class="btn btn-sm btn-outline-light" onclick="toggleMode()">🌓 Modo</button>
+    </div>
+</nav>
 
-    <div class="sticky-toolbar">
-        <div class="container">
-            <div class="row g-2">
-                <div class="col-12 mb-1"><input type="text" id="searchInput" class="form-control" placeholder="Buscar por nombre o lugar..." oninput="filter()"></div>
-                <div class="col-6"><button class="btn btn-secondary w-100 btn-sm" onclick="toggleAll(false)">Colapsar Todo</button></div>
-                <div class="col-6"><button class="btn btn-danger w-100 btn-sm" onclick="reset()">Reset</button></div>
-            </div>
+<div class="sticky-tools mb-4">
+    <div class="container">
+        <input type="text" id="search" class="form-control mb-2" placeholder="🔍 Buscar pez o lugar..." oninput="app.render()">
+        <div class="d-flex gap-2">
+            <button class="btn btn-sm btn-secondary w-100" onclick="app.toggleAll(false)">Colapsar</button>
+            <button class="btn btn-sm btn-secondary w-100" onclick="app.toggleAll(true)">Expandir</button>
+            <button class="btn btn-sm btn-danger w-50" onclick="app.reset()">Reset</button>
         </div>
     </div>
+</div>
 
-    <div class="container" id="app"></div>
+<div class="container" id="main-container"></div>
 
-    <script>
-        const fishData = [
-            { cat: "Primavera", peces: [
-                { n: "Pez sol", l: "Río", h: "6am - 7pm", c: "Soleado" },
-                { n: "Paz gato", l: "Río / Bosque secreto", h: "6am - 2am", c: "Lluvia" },
-                { n: "Sabalo", l: "Río", h: "9am - 2am", c: "Lluvia" },
-                { n: "Lubina", l: "Río / Lago / Estanque", h: "Cualquiera", c: "Cualquiera" },
-                { n: "Perca", l: "Lago montaña", h: "Cualquiera", c: "Cualquiera" },
-                { n: "Carpa", l: "Lago montaña / Alcantarillas", h: "Cualquiera", c: "Cualquiera" },
-                { n: "Siluro", l: "Lago montaña", h: "6pm - 2am", c: "Cualquiera" },
-                { n: "Sardina", l: "Océano", h: "6am - 7pm", c: "Cualquiera" },
-                { n: "Pargo colorado", l: "Océano", h: "6am - 7pm", c: "Lluvia" },
-                { n: "Besugo", l: "Río", h: "6pm - 2am", c: "Cualquiera" },
-                { n: "Anchoa", l: "Océano", h: "Cualquiera", c: "Cualquiera" }
-            ]},
-            { cat: "Verano", peces: [
-                { n: "Pez globo", l: "Océano", h: "12pm - 4pm", c: "Soleado" },
-                { n: "Atún", l: "Océano", h: "6am - 7pm", c: "Cualquiera" },
-                { n: "Tilapia", l: "Océano", h: "6am - 2pm", c: "Cualquiera" },
-                { n: "Esturión", l: "Lago montaña", h: "6am - 7pm", c: "Cualquiera" },
-                { n: "Muyu", l: "Bosque secreto", h: "Cualquiera", c: "Cualquiera" },
-                { n: "Pulpo", l: "Océano", h: "6am - 1pm", c: "Cualquiera" },
-                { n: "Superpepino", l: "Océano", h: "6pm - 2am", c: "Cualquiera" },
-                { n: "Dorado", l: "Río", h: "6am - 7pm", c: "Soleado" },
-                { n: "Trucha arcoiris", l: "Río / Lago montaña", h: "6am - 7pm", c: "Soleado" },
-                { n: "Lucio", l: "Río / Lago", h: "Cualquiera", c: "Cualquiera" }
-            ]},
-            { cat: "Otoño", peces: [
-                { n: "Salmón", l: "Río", h: "6am - 7pm", c: "Cualquiera" },
-                { n: "Lubina", l: "Río / Lago / Estanque", h: "Cualquiera", c: "Cualquiera" },
-                { n: "Anguilla", l: "Océano", h: "4pm - 2am", c: "Lluvia" },
-                { n: "Pepino de mar", l: "Océano", h: "6am - 7pm", c: "Cualquiera" },
-                { n: "Trucha tigre", l: "Río", h: "6am - 7pm", c: "Cualquiera" },
-                { n: "Barbo", l: "Río / Lago", h: "Cualquiera", c: "Cualquiera" },
-                { n: "Cachuelo", l: "Río / Lago", h: "Cualquiera", c: "Cualquiera" }
-            ]},
-            { cat: "Invierno", peces: [
-                { n: "Calamar", l: "Océano", h: "6pm - 2am", c: "Cualquiera" },
-                { n: "Bacalao largo", l: "Río / Lago", h: "Cualquiera", c: "Cualquiera" },
-                { n: "Sauri", l: "Río / Estanque", h: "Cualquiera", c: "Cualquiera" },
-                { n: "Aranque", l: "Océano", h: "Cualquiera", c: "Cualquiera" },
-                { n: "Atün blanco", l: "Océano", h: "Cualquiera", c: "Cualquiera" },
-                { n: "Trucha tigre", l: "Río", h: "6am - 7pm", c: "Cualquiera" }
-            ]},
-            { cat: "Especiales", peces: [
-                { n: "Pez fantasma", l: "Minas (20, 60, 100)", h: "Cualquiera", c: "Cualquiera" },
-                { n: "Pez piedra", l: "Minas (20)", h: "Cualquiera", c: "Cualquiera" },
-                { n: "Paz carambano", l: "Minas (60)", h: "Cualquiera", c: "Cualquiera" },
-                { n: "Anguilla de lava", l: "Minas (100)", h: "Cualquiera", c: "Cualquiera" },
-                { n: "Lenguado", l: "Desierto", h: "6am - 10pm", c: "Cualquiera" }
-            ]},
-            { cat: "Leyendas", peces: [
-                { n: "Leyenda", l: "Lago montaña", h: "Cualquiera", c: "Lluvia (Primavera)" },
-                { n: "Paz carmesi", l: "Océano", h: "Cualquiera", c: "Verano" },
-                { n: "Rape", l: "Río (Norte)", h: "Cualquiera", c: "Otoño" },
-                { n: "Pez glacial", l: "Río (Bosque)", h: "Cualquiera", c: "Invierno" },
-                { n: "Carpa mutante", l: "Cloacas", h: "Cualquiera", c: "Cualquiera" }
-            ]}
-        ];
+<script>
+// Información extraída de las tablas de las páginas 1 a 6 del PDF
+const FISH_DATA = [
+    { season: "Primavera", fish: [
+        { n: "Anchoa", l: "Océano", h: "Cualquiera", c: "Cualquiera" },
+        { n: "Sardina", l: "Océano", h: "6am - 7pm", c: "Cualquiera" },
+        { n: "Besugo", l: "Río", h: "6pm - 2am", c: "Cualquiera" },
+        { n: "Lubina", l: "Río / Estanque", h: "Cualquiera", c: "Cualquiera" },
+        { n: "Cachuelo", l: "Río / Lago / Estanque", h: "Cualquiera", c: "Cualquiera" },
+        { n: "Carpa", l: "Lago / Estanque / Cloacas", h: "Cualquiera", c: "Cualquiera" },
+        { n: "Pez gato", l: "Río / Estanque / Pantano", h: "6am - 12am", c: "Lluvia" },
+        { n: "Pez sol", l: "Río", h: "6am - 7pm", c: "Sol / Viento" },
+        { n: "Aranque", l: "Océano", h: "Cualquiera", c: "Cualquiera" },
+        { n: "Anguila", l: "Océano", h: "4pm - 2am", c: "Lluvia" },
+        { n: "Sábalo", l: "Río", h: "9am - 2am", c: "Lluvia" },
+        { n: "Fletán", l: "Océano", h: "6am-11am / 7pm-2am", c: "Cualquiera" }
+    ]},
+    { season: "Verano", fish: [
+        { n: "Pez globo", l: "Océano / Isla Jengibre", h: "12pm - 4pm", c: "Sol" },
+        { n: "Atún", l: "Océano / Isla Jengibre", h: "6am - 7pm", c: "Cualquiera" },
+        { n: "Trucha arcoiris", l: "Río / Lago", h: "6am - 7pm", c: "Sol" },
+        { n: "Pez gato", l: "Estanque Bosque Secreto", h: "6am - 12am", c: "Lluvia" },
+        { n: "Pulpo", l: "Océano", h: "6am - 1pm", c: "Cualquiera" },
+        { n: "Superpepino", l: "Océano / Isla Jengibre", h: "6pm - 2am", c: "Cualquiera" },
+        { n: "Esturión", l: "Lago montaña", h: "6am - 7pm", c: "Cualquiera" },
+        { n: "Tilapia", l: "Océano / Isla Jengibre", h: "6am - 2pm", c: "Cualquiera" },
+        { n: "Dorado", l: "Río (Bosque)", h: "6am - 7pm", c: "Cualquiera" },
+        { n: "Sábalo", l: "Río", h: "9am - 2am", c: "Lluvia" },
+        { n: "Fletán", l: "Océano", h: "6am-11am / 7pm-2am", c: "Cualquiera" }
+    ]},
+    { season: "Otoño", fish: [
+        { n: "Salmón", l: "Río", h: "6am - 7pm", c: "Cualquiera" },
+        { n: "Lucio", l: "Río / Lago / Estanque", h: "Cualquiera", c: "Cualquiera" },
+        { n: "Anguila", l: "Océano", h: "4pm - 2am", c: "Lluvia" },
+        { n: "Pepino de mar", l: "Océano", h: "6am - 7pm", c: "Cualquiera" },
+        { n: "Trucha tigre", l: "Río", h: "6am - 7pm", c: "Cualquiera" },
+        { n: "Atún blanco", l: "Océano", h: "6am - 11am / 6pm - 2am", c: "Cualquiera" },
+        { n: "Sábalo", l: "Río", h: "9am - 2am", c: "Lluvia" }
+    ]},
+    { season: "Invierno", fish: [
+        { n: "Calamar", l: "Océano", h: "6pm - 2am", c: "Cualquiera" },
+        { n: "Pez carámbano", l: "Minas (Piso 60)", h: "Cualquiera", c: "Cualquiera" },
+        { n: "Trucha tigre", l: "Río", h: "6am - 7pm", c: "Cualquiera" },
+        { n: "Bacalao largo", l: "Río / Lago", h: "Cualquiera", c: "Cualquiera" },
+        { n: "Fletán", l: "Océano", h: "6am-11am / 7pm-2am", c: "Cualquiera" }
+    ]},
+    { season: "Especiales y Minas", fish: [
+        { n: "Pez fantasma", l: "Minas (20, 60)", h: "Cualquiera", c: "Cualquiera" },
+        { n: "Pez piedra", l: "Minas (Piso 20)", h: "Cualquiera", c: "Cualquiera" },
+        { n: "Anguila de lava", l: "Minas (Piso 100)", h: "Cualquiera", c: "Cualquiera" },
+        { n: "Lenguado", l: "Desierto", h: "6am - 8pm", c: "Cualquiera" },
+        { n: "Carpa escorpión", l: "Desierto", h: "6am - 8pm", c: "Cualquiera" },
+        { n: "Mutante / Sombrío", l: "Cloacas / Pantano", h: "Cualquiera", c: "Cualquiera" }
+    ]},
+    { season: "Mercado Nocturno / Leyendas", fish: [
+        { n: "Calamar medianoche", l: "Submarino", h: "5pm - 2am", c: "Invierno 15-17" },
+        { n: "Pez asustado", l: "Submarino", h: "5pm - 2am", c: "Invierno 15-17" },
+        { n: "Pez gota", l: "Submarino", h: "5pm - 2am", c: "Invierno 15-17" },
+        { n: "Leyenda", l: "Lago Montaña", h: "Cualquiera", c: "Primavera + Lluvia" },
+        { n: "Pez carmesí", l: "Océano", h: "Cualquiera", c: "Verano" },
+        { n: "Rape", l: "Pueblo Pelícano", h: "Cualquiera", c: "Otoño" },
+        { n: "Pez glacial", l: "Bosque Tizón", h: "Cualquiera", c: "Invierno" },
+        { n: "Carpa mutante", l: "Cloacas", h: "Cualquiera", c: "Cualquiera" }
+    ]}
+];
 
-        function initApp() {
-            const container = document.getElementById('app');
-            container.innerHTML = fishData.map((cat, cIdx) => `
-                <div class="room-card">
-                    <div class="room-header" onclick="toggleCollapse(${cIdx})">
-                        <span>${cat.cat}</span>
-                        <span class="progress-badge" id="badge-${cIdx}">0%</span>
-                    </div>
-                    <div id="cat-${cIdx}" style="display: none">
-                        ${cat.peces.map((p, pIdx) => {
-                            const id = `f-${cIdx}-${pIdx}`;
-                            return `
-                            <div class="fish-item" data-search="${p.n} ${p.l}">
-                                <input class="form-check-input" type="checkbox" id="${id}" onchange="save()">
-                                <div class="fish-content">
-                                    <label class="fw-bold" for="${id}">${p.n}</label>
-                                    <div class="fish-info">📍 ${p.l} | ⏰ ${p.h} | ☁️ ${p.c}</div>
-                                </div>
-                            </div>`;
-                        }).join('')}
-                    </div>
-                </div>`).join('');
-            load();
+const app = {
+    progress: JSON.parse(localStorage.getItem('sdv_fish_v2') || '{}'),
+
+    init() {
+        this.render();
+    },
+
+    render() {
+        const container = document.getElementById('main-container');
+        const query = document.getElementById('search').value.toLowerCase();
+        
+        container.innerHTML = FISH_DATA.map((cat, cIdx) => {
+            const filteredFish = cat.fish.filter(f => 
+                f.n.toLowerCase().includes(query) || f.l.toLowerCase().includes(query)
+            );
+
+            if (filteredFish.length === 0 && query !== "") return '';
+
+            const total = cat.fish.length;
+            const done = cat.fish.filter(f => this.progress[`${cIdx}-${f.n}`]).length;
+            const percent = Math.round((done/total)*100);
+
+            return `
+            <div class="card-season">
+                <div class="season-header" onclick="app.toggleCat(${cIdx})">
+                    <span>${cat.season}</span>
+                    <span class="badge bg-primary">${percent}%</span>
+                </div>
+                <div id="cat-${cIdx}" class="cat-content">
+                    ${filteredFish.map(f => {
+                        const id = `${cIdx}-${f.n}`;
+                        const isDone = this.progress[id] || false;
+                        return `
+                        <div class="fish-row ${isDone ? 'completed' : ''}">
+                            <input class="form-check-input" type="checkbox" 
+                                   ${isDone ? 'checked' : ''} 
+                                   onchange="app.toggleFish('${id}')">
+                            <div>
+                                <div class="fw-bold">${f.n}</div>
+                                <div class="fish-details">📍 ${f.l} | ⏰ ${f.h} | ☁️ ${f.c}</div>
+                            </div>
+                        </div>`;
+                    }).join('')}
+                </div>
+            </div>`;
+        }).join('');
+    },
+
+    toggleFish(id) {
+        this.progress[id] = !this.progress[id];
+        localStorage.setItem('sdv_fish_v2', JSON.stringify(this.progress));
+        this.render();
+    },
+
+    toggleCat(idx) {
+        const el = document.getElementById(`cat-${idx}`);
+        el.style.display = (el.style.display === 'none') ? 'block' : 'none';
+    },
+
+    toggleAll(show) {
+        document.querySelectorAll('.cat-content').forEach(el => el.style.display = show ? 'block' : 'none');
+    },
+
+    reset() {
+        if(confirm("¿Borrar todo el progreso?")) {
+            this.progress = {};
+            localStorage.removeItem('sdv_fish_v2');
+            this.render();
         }
+    }
+};
 
-        function save() {
-            const status = {};
-            document.querySelectorAll('.form-check-input').forEach(cb => {
-                status[cb.id] = cb.checked;
-                cb.closest('.fish-item').classList.toggle('completed', cb.checked);
-            });
-            localStorage.setItem('sdv_fish_v6_final', JSON.stringify(status));
-            updateProgress();
-        }
+function toggleMode() {
+    const b = document.body;
+    b.setAttribute('data-bs-theme', b.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark');
+}
 
-        function load() {
-            const data = JSON.parse(localStorage.getItem('sdv_fish_v6_final') || '{}');
-            Object.keys(data).forEach(id => {
-                const cb = document.getElementById(id);
-                if (cb) {
-                    cb.checked = data[id];
-                    cb.closest('.fish-item').classList.toggle('completed', data[id]);
-                }
-            });
-            updateProgress();
-        }
+document.addEventListener('DOMContentLoaded', () => app.init());
+</script>
 
-        function updateProgress() {
-            fishData.forEach((_, idx) => {
-                const el = document.getElementById(`cat-${idx}`);
-                const total = el.querySelectorAll('input').length;
-                const checked = el.querySelectorAll('input:checked').length;
-                document.getElementById(`badge-${idx}`).innerText = Math.round((checked/total)*100) + '%';
-            });
-        }
-
-        function filter() {
-            const q = document.getElementById('searchInput').value.toLowerCase();
-            document.querySelectorAll('.room-card').forEach((card, idx) => {
-                let match = false;
-                card.querySelectorAll('.fish-item').forEach(item => {
-                    const found = item.dataset.search.toLowerCase().includes(q);
-                    item.style.display = found ? 'flex' : 'none';
-                    if (found) match = true;
-                });
-                card.style.display = match ? 'block' : 'none';
-                if (q.length > 0 && match) document.getElementById(`cat-${idx}`).style.display = 'block';
-            });
-        }
-
-        function toggleCollapse(idx) {
-            const el = document.getElementById(`cat-${idx}`);
-            el.style.display = el.style.display === 'none' ? 'block' : 'none';
-        }
-
-        function toggleAll(show) {
-            document.querySelectorAll('[id^="cat-"]').forEach(el => el.style.display = show ? 'block' : 'none');
-        }
-
-        function reset() {
-            if(confirm("¿Restablecer progreso?")) { localStorage.removeItem('sdv_fish_v6_final'); location.reload(); }
-        }
-
-        function toggleTheme() {
-            const b = document.body;
-            b.setAttribute('data-bs-theme', b.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark');
-        }
-
-        document.addEventListener('DOMContentLoaded', initApp);
-    </script>
 </body>
 </html>
