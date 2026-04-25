@@ -3,23 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guía de Pesca - Pág 1-6 (Corregida)</title>
+    <title>Guía de Pesca - Solo Lotes (Centro Cívico)</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         :root { --sv-bg: #fdf6e3; --sv-panel: #ffffff; --sv-text: #5d4037; --sv-border: #d7ccc8; --sv-accent: #7fb3d5; }
         [data-bs-theme="dark"] { --sv-bg: #1a1a1a; --sv-panel: #2d2d2d; --sv-text: #e0e0e0; --sv-border: #444; --sv-accent: #2980b9; }
-        
         body { background-color: var(--sv-bg); color: var(--sv-text); font-family: system-ui, sans-serif; padding-bottom: 30px; }
         .navbar { background-color: var(--sv-accent) !important; border-bottom: 4px solid rgba(0,0,0,0.1); }
         .card-season { background: var(--sv-panel); border: 2px solid var(--sv-border); border-radius: 12px; margin-bottom: 15px; overflow: hidden; }
         .season-header { background: rgba(0,0,0,0.05); padding: 12px 18px; cursor: pointer; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
-        
         .cat-content { display: none; border-top: 1px solid var(--sv-border); }
         .fish-row { display: flex; align-items: center; padding: 10px 15px; border-bottom: 1px solid var(--sv-border); transition: background 0.2s; }
-        .fish-row:last-child { border-bottom: none; }
         .fish-row.completed { background: rgba(40, 167, 69, 0.1); opacity: 0.7; }
         .form-check-input { width: 24px; height: 24px; margin-right: 15px; cursor: pointer; }
         .fish-details { font-size: 0.8rem; opacity: 0.8; }
+        .lote-tag { color: #d35400; font-weight: bold; font-size: 0.75rem; }
         .sticky-tools { position: sticky; top: 0; z-index: 100; background: var(--sv-bg); padding: 10px 0; border-bottom: 1px solid var(--sv-border); }
     </style>
 </head>
@@ -27,14 +25,14 @@
 
 <nav class="navbar navbar-dark mb-2">
     <div class="container">
-        <span class="navbar-brand fw-bold">Wiki Pesca (Págs 1-6)</span>
+        <span class="navbar-brand fw-bold">Peces de Lotes (Centro Cívico)</span>
         <button class="btn btn-sm btn-outline-light" onclick="toggleTheme()">🌓 Modo</button>
     </div>
 </nav>
 
 <div class="sticky-tools mb-3">
     <div class="container">
-        <input type="text" id="search" class="form-control mb-2" placeholder="Buscar pez..." oninput="app.filter()">
+        <input type="text" id="search" class="form-control mb-2" placeholder="Buscar pez o lote..." oninput="app.filter()">
         <div class="d-flex gap-2">
             <button class="btn btn-sm btn-secondary w-100" onclick="app.toggleAll(false)">Colapsar</button>
             <button class="btn btn-sm btn-secondary w-100" onclick="app.toggleAll(true)">Expandir</button>
@@ -47,58 +45,46 @@
 
 <script>
 const FISH_DATA = [
-    { season: "Primavera", fish: [
-        { n: "Anchoa", l: "Océano", h: "Cualquiera", c: "Cualquiera" },
-        { n: "Sardina", l: "Océano", h: "6am - 7pm", c: "Cualquiera" },
-        { n: "Besugo", l: "Río", h: "6pm - 2am", c: "Cualquiera" },
-        { n: "Lubina", l: "Río / Estanque / Lago", h: "Cualquiera", c: "Cualquiera" },
-        { n: "Cachuelo", l: "Río / Lago", h: "Cualquiera", c: "Cualquiera" },
-        { n: "Carpa", l: "Lago / Cloacas", h: "Cualquiera", c: "Cualquiera" },
-        { n: "Pez gato", l: "Río / Pantano", h: "6am - 12am", c: "Lluvia" },
-        { n: "Pez sol", l: "Río", h: "6am - 7pm", c: "Soleado" },
-        { n: "Anguila", l: "Océano", h: "4pm - 2am", c: "Lluvia" },
-        { n: "Sábalo", l: "Río", h: "9am - 2am", c: "Lluvia" }
+    { season: "Peces Fluviales", fish: [
+        { n: "Pez sol", l: "Río", h: "6am - 7pm", c: "Soleado", lote: "Lote Peces Fluviales" },
+        { n: "Pez gato", l: "Río / Pantano", h: "6am - 12am", c: "Lluvia", lote: "Lote Peces Fluviales" },
+        { n: "Sábalo", l: "Río", h: "9am - 2am", c: "Lluvia", lote: "Lote Peces Fluviales" },
+        { n: "Trucha tigre", l: "Río", h: "6am - 7pm", c: "Cualquiera", lote: "Lote Peces Fluviales" }
     ]},
-    { season: "Verano", fish: [
-        { n: "Pez globo", l: "Océano", h: "12pm - 4pm", c: "Sol" },
-        { n: "Atún", l: "Océano", h: "6am - 7pm", c: "Cualquiera" },
-        { n: "Trucha arcoiris", l: "Río / Lago", h: "6am - 7pm", c: "Sol" },
-        { n: "Pulpo", l: "Océano", h: "6am - 1pm", c: "Cualquiera" },
-        { n: "Superpepino", l: "Océano", h: "6pm - 2am", c: "Cualquiera" },
-        { n: "Esturión", l: "Lago montaña", h: "6am - 7pm", c: "Cualquiera" },
-        { n: "Tilapia", l: "Océano", h: "6am - 2pm", c: "Cualquiera" },
-        { n: "Dorado", l: "Río", h: "6am - 7pm", c: "Sol" },
-        { n: "Pargo colorado", l: "Océano", h: "6am - 7pm", c: "Lluvia" }
+    { season: "Peces de Lago", fish: [
+        { n: "Perca", l: "Lago montaña", h: "6am - 7pm", c: "Cualquiera", lote: "Lote Peces de Lago" },
+        { n: "Carpa", l: "Lago / Cloacas", h: "Cualquiera", c: "Cualquiera", lote: "Lote Peces de Lago" },
+        { n: "Esturión", l: "Lago montaña", h: "6am - 7pm", c: "Cualquiera", lote: "Lote Peces de Lago" },
+        { n: "Siluro", l: "Lago montaña", h: "Cualquiera", c: "Cualquiera", lote: "Lote Peces de Lago" }
     ]},
-    { season: "Otoño", fish: [
-        { n: "Salmón", l: "Río", h: "6am - 7pm", c: "Cualquiera" },
-        { n: "Lucio", l: "Río / Lago", h: "Cualquiera", c: "Cualquiera" },
-        { n: "Trucha tigre", l: "Río", h: "6am - 7pm", c: "Cualquiera" },
-        { n: "Atún blanco", l: "Océano", h: "6am - 11am / 6pm - 2am", c: "Cualquiera" },
-        { n: "Pepino de mar", l: "Océano", h: "6am - 7pm", c: "Cualquiera" }
+    { season: "Peces Marinos", fish: [
+        { n: "Sardina", l: "Océano", h: "6am - 7pm", c: "Cualquiera", lote: "Lote Peces Marinos" },
+        { n: "Atún", l: "Océano", h: "6am - 7pm", c: "Cualquiera", lote: "Lote Peces Marinos" },
+        { n: "Pargo colorado", l: "Océano", h: "6am - 7pm", c: "Lluvia", lote: "Lote Peces Marinos" },
+        { n: "Tilapia", l: "Océano", h: "6am - 2pm", c: "Cualquiera", lote: "Lote Peces Marinos" }
     ]},
-    { season: "Invierno", fish: [
-        { n: "Calamar", l: "Océano", h: "6pm - 2am", c: "Cualquiera" },
-        { n: "Bacalao largo", l: "Río / Lago", h: "Cualquiera", c: "Cualquiera" },
-        { n: "Atún blanco", l: "Océano", h: "6am - 11am / 6pm - 2am", c: "Cualquiera" },
-        { n: "Esturión", l: "Lago montaña", h: "6am - 7pm", c: "Cualquiera" }
+    { season: "Peces Nocturnos", fish: [
+        { n: "Besugo", l: "Río", h: "6pm - 2am", c: "Cualquiera", lote: "Lote Peces Nocturnos" },
+        { n: "Anguila", l: "Océano", h: "4pm - 2am", c: "Lluvia", lote: "Lote Peces Nocturnos" },
+        { n: "Lucio", l: "Río / Lago / Estanque", h: "12pm - 2am", c: "Cualquiera", lote: "Lote Peces Nocturnos" }
     ]},
-    { season: "Especiales / Leyendas", fish: [
-        { n: "Pez fantasma", l: "Minas", h: "Cualquiera", c: "Cualquiera" },
-        { n: "Pez piedra", l: "Minas (Piso 20)", h: "Cualquiera", c: "Cualquiera" },
-        { n: "Anguila de lava", l: "Minas (Piso 100)", h: "Cualquiera", c: "Cualquiera" },
-        { n: "Lenguado", l: "Desierto", h: "6am - 8pm", c: "Cualquiera" },
-        { n: "Carpa escorpión", l: "Desierto", h: "6am - 8pm", c: "Cualquiera" },
-        { n: "Leyenda", l: "Lago montaña", h: "Cualquiera", c: "Primavera + Lluvia" },
-        { n: "Pez carmesí", l: "Océano", h: "Cualquiera", c: "Verano" },
-        { n: "Rape", l: "Pueblo Pelícano", h: "Cualquiera", c: "Otoño" },
-        { n: "Pez glacial", l: "Bosque Tizón", h: "Cualquiera", c: "Invierno" },
-        { n: "Carpa mutante", l: "Cloacas", h: "Cualquiera", c: "Cualquiera" }
+    { season: "Peces Especiales", fish: [
+        { n: "Pez globo", l: "Océano", h: "12pm - 4pm", c: "Sol", lote: "Lote Peces Especiales" },
+        { n: "Pez fantasma", l: "Minas", h: "Cualquiera", c: "Cualquiera", lote: "Lote Peces Especiales" },
+        { n: "Muyu", l: "Bosque secreto", h: "Cualquiera", c: "Cualquiera", lote: "Lote Peces Especiales" }
+    ]},
+    { season: "Otros Lotes", fish: [
+        { n: "Pulpo", l: "Océano", h: "6am - 1pm", c: "Cualquiera", lote: "Lote Maestro de Pesca" },
+        { n: "Anguila de lava", l: "Minas (Piso 100)", h: "Cualquiera", c: "Cualquiera", lote: "Lote Maestro de Pesca" },
+        { n: "Carpa escorpión", l: "Desierto", h: "6am - 8pm", c: "Cualquiera", lote: "Lote Maestro de Pesca" },
+        { n: "Pez gota", l: "Mercado Nocturno", h: "5pm - 2am", c: "Cualquiera", lote: "Lote Maestro de Pesca" },
+        { n: "Barbo", l: "Río / Lago", h: "Cualquiera", c: "Cualquiera", lote: "Lote Estudio de Campo" },
+        { n: "Salmón sombrío", l: "Pantano Bruja", h: "Cualquiera", c: "Cualquiera", lote: "Lote Extraviado" }
     ]}
 ];
 
 const app = {
-    progress: JSON.parse(localStorage.getItem('sdv_fish_v5_mobile')) || {},
+    progress: JSON.parse(localStorage.getItem('sdv_fish_lotes_v1')) || {},
 
     init() {
         const container = document.getElementById('main-container');
@@ -113,12 +99,13 @@ const app = {
                         const id = `${cIdx}-${fIdx}`;
                         const isDone = !!this.progress[id];
                         return `
-                        <div class="fish-row ${isDone ? 'completed' : ''}" data-fish-name="${f.n.toLowerCase()}" data-fish-loc="${f.l.toLowerCase()}">
+                        <div class="fish-row ${isDone ? 'completed' : ''}" data-search="${f.n.toLowerCase()} ${f.lote.toLowerCase()}">
                             <input class="form-check-input" type="checkbox" id="${id}" 
                                    ${isDone ? 'checked' : ''} onchange="app.updateFish('${id}')">
                             <div class="flex-grow-1">
                                 <label class="fw-bold d-block" for="${id}">${f.n}</label>
                                 <div class="fish-details">📍 ${f.l} | ⏰ ${f.h} | ☁️ ${f.c}</div>
+                                <div class="lote-tag">📦 ${f.lote}</div>
                             </div>
                         </div>`;
                     }).join('')}
@@ -131,10 +118,8 @@ const app = {
         const cb = document.getElementById(id);
         const row = cb.closest('.fish-row');
         const catIdx = id.split('-')[0];
-        
         this.progress[id] = cb.checked;
-        localStorage.setItem('sdv_fish_v5_mobile', JSON.stringify(this.progress));
-        
+        localStorage.setItem('sdv_fish_lotes_v1', JSON.stringify(this.progress));
         row.classList.toggle('completed', cb.checked);
         this.updateCatProgress(catIdx);
     },
@@ -155,12 +140,11 @@ const app = {
         document.querySelectorAll('.card-season').forEach(card => {
             let hasVisible = false;
             card.querySelectorAll('.fish-row').forEach(row => {
-                const visible = row.dataset.fishName.includes(q) || row.dataset.fishLoc.includes(q);
+                const visible = row.dataset.search.includes(q);
                 row.style.display = visible ? 'flex' : 'none';
                 if (visible) hasVisible = true;
             });
             card.style.display = hasVisible ? 'block' : 'none';
-            // Si hay búsqueda, expandir automáticamente
             if (q.length > 0 && hasVisible) card.querySelector('.cat-content').style.display = 'block';
         });
     },
@@ -175,9 +159,9 @@ const app = {
     },
 
     reset() {
-        if(confirm("¿Borrar progreso?")) {
+        if(confirm("¿Borrar progreso de lotes?")) {
             this.progress = {};
-            localStorage.removeItem('sdv_fish_v5_mobile');
+            localStorage.removeItem('sdv_fish_lotes_v1');
             location.reload();
         }
     }
