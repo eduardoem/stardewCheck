@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lotes por Temporada (Págs 1-6)</title>
+    <title>Lotes y Legendarios (Págs 1-6)</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         :root { --sv-bg: #fdf6e3; --sv-panel: #ffffff; --sv-text: #5d4037; --sv-border: #d7ccc8; --sv-accent: #7fb3d5; }
@@ -20,6 +20,7 @@
         .form-check-input { width: 24px; height: 24px; margin-right: 15px; cursor: pointer; }
         .fish-details { font-size: 0.8rem; opacity: 0.8; }
         .lote-tag { color: #d35400; font-weight: bold; font-size: 0.75rem; margin-top: 2px; }
+        .legend-tag { color: #8e44ad; font-weight: bold; font-size: 0.75rem; margin-top: 2px; }
         .sticky-tools { position: sticky; top: 0; z-index: 100; background: var(--sv-bg); padding: 10px 0; border-bottom: 1px solid var(--sv-border); }
     </style>
 </head>
@@ -27,7 +28,7 @@
 
 <nav class="navbar navbar-dark mb-2">
     <div class="container">
-        <span class="navbar-brand fw-bold">Lotes del Centro Cívico</span>
+        <span class="navbar-brand fw-bold">Wiki Pesca (Lotes y Legendarios)</span>
         <button class="btn btn-sm btn-outline-light" onclick="toggleTheme()">🌓 Modo</button>
     </div>
 </nav>
@@ -46,7 +47,6 @@
 <div class="container" id="main-container"></div>
 
 <script>
-// Solo peces con lote asignado en la columna "Se usa en" del PDF (Págs 1-6)
 const FISH_DATA = [
     { season: "Primavera", fish: [
         { n: "Besugo", l: "Río", h: "6pm - 2am", c: "Cualquiera", lote: "Lote Peces Nocturnos" },
@@ -72,18 +72,25 @@ const FISH_DATA = [
     { season: "Invierno", fish: [
         { n: "Pez gota", l: "Mercado Nocturno", h: "5pm - 2am", c: "Invierno 15-17", lote: "Lote Maestro de Pesca" }
     ]},
-    { season: "Especiales / Minas / Leyendas", fish: [
+    { season: "Especiales / Minas", fish: [
         { n: "Pez fantasma", l: "Minas", h: "Cualquiera", c: "Cualquiera", lote: "Lote Peces Especiales" },
         { n: "Muyu", l: "Bosque secreto", h: "Cualquiera", c: "Cualquiera", lote: "Lote Peces Especiales" },
         { n: "Anguila de lava", l: "Minas (Piso 100)", h: "Cualquiera", c: "Cualquiera", lote: "Lote Maestro de Pesca" },
         { n: "Carpa escorpión", l: "Desierto", h: "6am - 8pm", c: "Cualquiera", lote: "Lote Maestro de Pesca" },
         { n: "Salmón sombrío", l: "Pantano Bruja", h: "Cualquiera", c: "Cualquiera", lote: "Lote Extraviado" },
         { n: "Carpa mutante", l: "Cloacas", h: "Cualquiera", c: "Cualquiera", lote: "Lote Maestro de Pesca" }
+    ]},
+    { season: "Peces Legendarios", fish: [
+        { n: "Leyenda", l: "Lago montaña", h: "Cualquiera", c: "Primavera + Lluvia", lote: "Colección" },
+        { n: "Pez carmesí", l: "Océano (Muelle Este)", h: "Cualquiera", c: "Verano", lote: "Colección" },
+        { n: "Rape", l: "Río (Norte del Pueblo)", h: "Cualquiera", c: "Otoño", lote: "Colección" },
+        { n: "Pez glacial", l: "Bosque Tizón (Isla)", h: "Cualquiera", c: "Invierno", lote: "Colección" },
+        { n: "Carpa mutante", l: "Las Cloacas", h: "Cualquiera", c: "Cualquiera", lote: "Colección" }
     ]}
 ];
 
 const app = {
-    progress: JSON.parse(localStorage.getItem('sdv_fish_lotes_v2')) || {},
+    progress: JSON.parse(localStorage.getItem('sdv_fish_v6_final')) || {},
 
     init() {
         const container = document.getElementById('main-container');
@@ -97,6 +104,7 @@ const app = {
                     ${cat.fish.map((f, fIdx) => {
                         const id = `${cIdx}-${fIdx}`;
                         const isDone = !!this.progress[id];
+                        const isLegend = cat.season === "Peces Legendarios";
                         return `
                         <div class="fish-row ${isDone ? 'completed' : ''}" data-search="${f.n.toLowerCase()} ${f.lote.toLowerCase()}">
                             <input class="form-check-input" type="checkbox" id="${id}" 
@@ -104,7 +112,7 @@ const app = {
                             <div class="flex-grow-1">
                                 <label class="fw-bold d-block" for="${id}">${f.n}</label>
                                 <div class="fish-details">📍 ${f.l} | ⏰ ${f.h} | ☁️ ${f.c}</div>
-                                <div class="lote-tag">📦 ${f.lote}</div>
+                                <div class="${isLegend ? 'legend-tag' : 'lote-tag'}">${isLegend ? '🏆' : '📦'} ${f.lote}</div>
                             </div>
                         </div>`;
                     }).join('')}
@@ -118,7 +126,7 @@ const app = {
         const row = cb.closest('.fish-row');
         const catIdx = id.split('-')[0];
         this.progress[id] = cb.checked;
-        localStorage.setItem('sdv_fish_lotes_v2', JSON.stringify(this.progress));
+        localStorage.setItem('sdv_fish_v6_final', JSON.stringify(this.progress));
         row.classList.toggle('completed', cb.checked);
         this.updateCatProgress(catIdx);
     },
@@ -157,9 +165,9 @@ const app = {
     },
 
     reset() {
-        if(confirm("¿Borrar progreso de lotes?")) {
+        if(confirm("¿Borrar progreso?")) {
             this.progress = {};
-            localStorage.removeItem('sdv_fish_lotes_v2');
+            localStorage.removeItem('sdv_fish_v6_final');
             location.reload();
         }
     }
