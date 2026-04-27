@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lotes y Legendarios (Págs 1-6)</title>
+    <title>Wiki Pesca Stardew Valley - V2</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         :root { --sv-bg: #fdf6e3; --sv-panel: #ffffff; --sv-text: #5d4037; --sv-border: #d7ccc8; --sv-accent: #7fb3d5; }
@@ -11,16 +11,23 @@
         
         body { background-color: var(--sv-bg); color: var(--sv-text); font-family: system-ui, sans-serif; padding-bottom: 30px; }
         .navbar { background-color: var(--sv-accent) !important; border-bottom: 4px solid rgba(0,0,0,0.1); }
-        .card-season { background: var(--sv-panel); border: 2px solid var(--sv-border); border-radius: 12px; margin-bottom: 15px; overflow: hidden; }
-        .season-header { background: rgba(0,0,0,0.05); padding: 12px 18px; cursor: pointer; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+        
+        .mother-cat { border: 3px solid var(--sv-accent); border-radius: 15px; padding: 15px; margin-bottom: 25px; background: rgba(127, 179, 213, 0.05); }
+        .mother-title { font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--sv-accent); margin-bottom: 15px; border-bottom: 2px solid var(--sv-accent); }
+
+        .card-season { background: var(--sv-panel); border: 1px solid var(--sv-border); border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
+        .season-header { background: rgba(0,0,0,0.03); padding: 10px 15px; cursor: pointer; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
         
         .cat-content { display: none; border-top: 1px solid var(--sv-border); }
         .fish-row { display: flex; align-items: center; padding: 10px 15px; border-bottom: 1px solid var(--sv-border); transition: background 0.2s; }
         .fish-row.completed { background: rgba(40, 167, 69, 0.1); opacity: 0.7; }
-        .form-check-input { width: 24px; height: 24px; margin-right: 15px; cursor: pointer; }
+        .form-check-input { width: 22px; height: 22px; margin-right: 15px; cursor: pointer; }
         .fish-details { font-size: 0.8rem; opacity: 0.8; }
-        .lote-tag { color: #d35400; font-weight: bold; font-size: 0.75rem; margin-top: 2px; }
-        .legend-tag { color: #8e44ad; font-weight: bold; font-size: 0.75rem; margin-top: 2px; }
+        .tag { font-weight: bold; font-size: 0.75rem; margin-top: 2px; }
+        .lote-tag { color: #d35400; }
+        .common-tag { color: #27ae60; }
+        .legend-tag { color: #8e44ad; }
+        
         .sticky-tools { position: sticky; top: 0; z-index: 100; background: var(--sv-bg); padding: 10px 0; border-bottom: 1px solid var(--sv-border); }
     </style>
 </head>
@@ -28,17 +35,17 @@
 
 <nav class="navbar navbar-dark mb-2">
     <div class="container">
-        <span class="navbar-brand fw-bold">Wiki Pesca (Lotes y Legendarios)</span>
+        <span class="navbar-brand fw-bold">Wiki Pesca Pro</span>
         <button class="btn btn-sm btn-outline-light" onclick="toggleTheme()">🌓 Modo</button>
     </div>
 </nav>
 
 <div class="sticky-tools mb-3">
     <div class="container">
-        <input type="text" id="search" class="form-control mb-2" placeholder="Buscar pez o lote..." oninput="app.filter()">
+        <input type="text" id="search" class="form-control mb-2" placeholder="Buscar pez, lote o categoría..." oninput="app.filter()">
         <div class="d-flex gap-2">
-            <button class="btn btn-sm btn-secondary w-100" onclick="app.toggleAll(false)">Colapsar</button>
-            <button class="btn btn-sm btn-secondary w-100" onclick="app.toggleAll(true)">Expandir</button>
+            <button class="btn btn-sm btn-secondary w-100" onclick="app.toggleAll(false)">Colapsar todo</button>
+            <button class="btn btn-sm btn-secondary w-100" onclick="app.toggleAll(true)">Expandir todo</button>
             <button class="btn btn-sm btn-danger w-50" onclick="app.reset()">Reset</button>
         </div>
     </div>
@@ -48,115 +55,162 @@
 
 <script>
 const FISH_DATA = [
-    { season: "Primavera", fish: [
-        { n: "Besugo", l: "Río", h: "6pm - 2am", c: "Cualquiera", lote: "Lote Peces Nocturnos" },
-        { n: "Carpa", l: "Lago / Cloacas", h: "Cualquiera", c: "Cualquiera", lote: "Lote Peces de Lago" },
-        { n: "Pez gato", l: "Río / Pantano", h: "6am - 12am", c: "Lluvia", lote: "Lote Peces Fluviales" },
-        { n: "Pez sol", l: "Río", h: "6am - 7pm", c: "Soleado", lote: "Lote Peces Fluviales" },
-        { n: "Sardina", l: "Océano", h: "6am - 7pm", c: "Cualquiera", lote: "Lote Peces Marinos" },
-        { n: "Anguila", l: "Océano", h: "4pm - 2am", c: "Lluvia", lote: "Lote Peces Nocturnos" },
-        { n: "Sábalo", l: "Río", h: "9am - 2am", c: "Lluvia", lote: "Lote Peces Fluviales" }
-    ]},
-    { season: "Verano", fish: [
-        { n: "Pez globo", l: "Océano", h: "12pm - 4pm", c: "Sol", lote: "Lote Peces Especiales" },
-        { n: "Atún", l: "Océano", h: "6am - 7pm", c: "Cualquiera", lote: "Lote Peces Marinos" },
-        { n: "Esturión", l: "Lago montaña", h: "6am - 7pm", c: "Cualquiera", lote: "Lote Peces de Lago" },
-        { n: "Tilapia", l: "Océano", h: "6am - 2pm", c: "Cualquiera", lote: "Lote Peces Marinos" },
-        { n: "Pargo colorado", l: "Océano", h: "6am - 7pm", c: "Lluvia", lote: "Lote Peces Marinos" }
-    ]},
-    { season: "Otoño", fish: [
-        { n: "Lucio", l: "Río / Lago / Estanque", h: "12pm - 2am", c: "Cualquiera", lote: "Lote Peces Nocturnos" },
-        { n: "Trucha tigre", l: "Río", h: "6am - 7pm", c: "Cualquiera", lote: "Lote Peces Fluviales" },
-        { n: "Barbo", l: "Río / Lago", h: "Cualquiera", c: "Cualquiera", lote: "Lote Estudio de Campo" }
-    ]},
-    { season: "Invierno", fish: [
-        { n: "Pez gota", l: "Mercado Nocturno", h: "5pm - 2am", c: "Invierno 15-17", lote: "Lote Maestro de Pesca" }
-    ]},
-    { season: "Especiales / Minas", fish: [
-        { n: "Pez fantasma", l: "Minas", h: "Cualquiera", c: "Cualquiera", lote: "Lote Peces Especiales" },
-        { n: "Muyu", l: "Bosque secreto", h: "Cualquiera", c: "Cualquiera", lote: "Lote Peces Especiales" },
-        { n: "Anguila de lava", l: "Minas (Piso 100)", h: "Cualquiera", c: "Cualquiera", lote: "Lote Maestro de Pesca" },
-        { n: "Carpa escorpión", l: "Desierto", h: "6am - 8pm", c: "Cualquiera", lote: "Lote Maestro de Pesca" },
-        { n: "Salmón sombrío", l: "Pantano Bruja", h: "Cualquiera", c: "Cualquiera", lote: "Lote Extraviado" },
-        { n: "Carpa mutante", l: "Cloacas", h: "Cualquiera", c: "Cualquiera", lote: "Lote Maestro de Pesca" }
-    ]},
-    { season: "Peces Legendarios", fish: [
-        { n: "Leyenda", l: "Lago montaña", h: "Cualquiera", c: "Primavera + Lluvia", lote: "Colección" },
-        { n: "Pez carmesí", l: "Océano (Muelle Este)", h: "Cualquiera", c: "Verano", lote: "Colección" },
-        { n: "Rape", l: "Río (Norte del Pueblo)", h: "Cualquiera", c: "Otoño", lote: "Colección" },
-        { n: "Pez glacial", l: "Bosque Tizón (Isla)", h: "Cualquiera", c: "Invierno", lote: "Colección" },
-        { n: "Carpa mutante", l: "Las Cloacas", h: "Cualquiera", c: "Cualquiera", lote: "Colección" }
-    ]}
+    {
+        mother: "Peces de Lote",
+        tagClass: "lote-tag",
+        icon: "📦",
+        seasons: [
+            { name: "Primavera", fish: [
+                { n: "Besugo", l: "Río", h: "6pm - 2am", c: "Cualquiera", note: "Lote Peces Nocturnos" },
+                { n: "Carpa", l: "Lago / Cloacas", h: "Cualquiera", c: "Cualquiera", note: "Lote Peces de Lago" },
+                { n: "Pez gato", l: "Río / Pantano", h: "6am - 12am", c: "Lluvia", note: "Lote Peces Fluviales" },
+                { n: "Pez sol", l: "Río", h: "6am - 7pm", c: "Soleado", note: "Lote Peces Fluviales" },
+                { n: "Sardina", l: "Océano", h: "6am - 7pm", c: "Cualquiera", note: "Lote Peces Marinos" },
+                { n: "Sábalo", l: "Río", h: "9am - 2am", c: "Lluvia", note: "Lote Peces Fluviales" }
+            ]},
+            { name: "Verano", fish: [
+                { n: "Pez globo", l: "Océano", h: "12pm - 4pm", c: "Sol", note: "Lote Peces Especiales" },
+                { n: "Atún", l: "Océano", h: "6am - 7pm", c: "Cualquiera", note: "Lote Peces Marinos" },
+                { n: "Esturión", l: "Lago montaña", h: "6am - 7pm", c: "Cualquiera", note: "Lote Peces de Lago" },
+                { n: "Tilapia", l: "Océano", h: "6am - 2pm", c: "Cualquiera", note: "Lote Peces Marinos" },
+                { n: "Pargo colorado", l: "Océano", h: "6am - 7pm", c: "Lluvia", note: "Lote Peces Marinos" }
+            ]},
+            { name: "Otoño / Invierno", fish: [
+                { n: "Lucio", l: "Río / Lago", h: "12pm - 2am", c: "Cualquiera", note: "Lote Peces Nocturnos" },
+                { n: "Trucha tigre", l: "Río", h: "6am - 7pm", c: "Cualquiera", note: "Lote Peces Fluviales" }
+            ]}
+        ]
+    },
+    {
+        mother: "Peces Comunes",
+        tagClass: "common-tag",
+        icon: "🐟",
+        seasons: [
+            { name: "Aguas Dulces", fish: [
+                { n: "Cachuelo", l: "Río / Lago", h: "Cualquiera", c: "Cualquiera", note: "Común" },
+                { n: "Barbo", l: "Río / Lago", h: "Cualquiera", c: "Cualquiera", note: "Común" },
+                { n: "Perca", l: "Lago", h: "6am - 7pm", c: "Cualquiera", note: "Común" }
+            ]},
+            { name: "Aguas Saladas", fish: [
+                { n: "Anchoa", l: "Océano", h: "Cualquiera", c: "Cualquiera", note: "Común" },
+                { n: "Aranque", l: "Océano", h: "Cualquiera", c: "Cualquiera", note: "Común" },
+                { n: "Salmonete", l: "Océano", h: "6am - 7pm", c: "Cualquiera", note: "Común" }
+            ]}
+        ]
+    },
+    {
+        mother: "Peces Legendarios",
+        tagClass: "legend-tag",
+        icon: "🏆",
+        seasons: [
+            { name: "Colección Original", fish: [
+                { n: "Leyenda", l: "Lago montaña", h: "Cualquiera", c: "Primavera + Lluvia", note: "Legendario" },
+                { n: "Pez carmesí", l: "Océano (Muelle)", h: "Cualquiera", c: "Verano", note: "Legendario" },
+                { n: "Rape", l: "Pueblo (Norte)", h: "Cualquiera", c: "Otoño", note: "Legendario" },
+                { n: "Pez glacial", l: "Bosque (Isla)", h: "Cualquiera", c: "Invierno", note: "Legendario" },
+                { n: "Carpa mutante", l: "Cloacas", h: "Cualquiera", c: "Cualquiera", note: "Legendario" }
+            ]}
+        ]
+    }
 ];
 
 const app = {
-    progress: JSON.parse(localStorage.getItem('sdv_fish_v6_final')) || {},
+    progress: JSON.parse(localStorage.getItem('sdv_master_tracker')) || {},
 
     init() {
         const container = document.getElementById('main-container');
-        container.innerHTML = FISH_DATA.map((cat, cIdx) => `
-            <div class="card-season" data-cat-id="${cIdx}">
-                <div class="season-header" onclick="app.toggleCat(${cIdx})">
-                    <span>${cat.season}</span>
-                    <span class="badge bg-primary rounded-pill progress-text">0%</span>
+        container.innerHTML = FISH_DATA.map((mother, mIdx) => `
+            <div class="mother-cat" data-mother="${mother.mother.toLowerCase()}">
+                <div class="mother-title d-flex justify-content-between align-items-center">
+                    <span>${mother.mother}</span>
+                    <span class="badge bg-secondary rounded-pill mother-progress" id="mprog-${mIdx}">0%</span>
                 </div>
-                <div id="cat-${cIdx}" class="cat-content">
-                    ${cat.fish.map((f, fIdx) => {
-                        const id = `${cIdx}-${fIdx}`;
-                        const isDone = !!this.progress[id];
-                        const isLegend = cat.season === "Peces Legendarios";
-                        return `
-                        <div class="fish-row ${isDone ? 'completed' : ''}" data-search="${f.n.toLowerCase()} ${f.lote.toLowerCase()}">
-                            <input class="form-check-input" type="checkbox" id="${id}" 
-                                   ${isDone ? 'checked' : ''} onchange="app.updateFish('${id}')">
-                            <div class="flex-grow-1">
-                                <label class="fw-bold d-block" for="${id}">${f.n}</label>
-                                <div class="fish-details">📍 ${f.l} | ⏰ ${f.h} | ☁️ ${f.c}</div>
-                                <div class="${isLegend ? 'legend-tag' : 'lote-tag'}">${isLegend ? '🏆' : '📦'} ${f.lote}</div>
-                            </div>
-                        </div>`;
-                    }).join('')}
-                </div>
-            </div>`).join('');
+                ${mother.seasons.map((season, sIdx) => {
+                    const catId = `${mIdx}-${sIdx}`;
+                    return `
+                    <div class="card-season" data-cat-id="${catId}">
+                        <div class="season-header" onclick="app.toggleCat('${catId}')">
+                            <span>${season.name}</span>
+                            <span class="badge bg-primary rounded-pill progress-text">0%</span>
+                        </div>
+                        <div id="cat-${catId}" class="cat-content">
+                            ${season.fish.map((f, fIdx) => {
+                                const id = `${mIdx}-${sIdx}-${fIdx}`;
+                                const isDone = !!this.progress[id];
+                                return `
+                                <div class="fish-row ${isDone ? 'completed' : ''}" 
+                                     data-search="${mother.mother.toLowerCase()} ${f.n.toLowerCase()} ${f.note.toLowerCase()}">
+                                    <input class="form-check-input" type="checkbox" id="${id}" 
+                                           ${isDone ? 'checked' : ''} onchange="app.updateFish('${id}')">
+                                    <div class="flex-grow-1">
+                                        <label class="fw-bold d-block" for="${id}">${f.n}</label>
+                                        <div class="fish-details">📍 ${f.l} | ⏰ ${f.h} | ☁️ ${f.c}</div>
+                                        <div class="tag ${mother.tagClass}">${mother.icon} ${f.note}</div>
+                                    </div>
+                                </div>`;
+                            }).join('')}
+                        </div>
+                    </div>`;
+                }).join('')}
+            </div>
+        `).join('');
         this.updateAllProgress();
     },
 
     updateFish(id) {
         const cb = document.getElementById(id);
         const row = cb.closest('.fish-row');
-        const catIdx = id.split('-')[0];
+        const [mIdx, sIdx] = id.split('-');
+        
         this.progress[id] = cb.checked;
-        localStorage.setItem('sdv_fish_v6_final', JSON.stringify(this.progress));
+        localStorage.setItem('sdv_master_tracker', JSON.stringify(this.progress));
+        
         row.classList.toggle('completed', cb.checked);
-        this.updateCatProgress(catIdx);
+        this.updateCatProgress(`${mIdx}-${sIdx}`);
+        this.updateMotherProgress(mIdx);
     },
 
-    updateCatProgress(idx) {
-        const catEl = document.querySelector(`[data-cat-id="${idx}"]`);
+    updateCatProgress(catId) {
+        const catEl = document.querySelector(`[data-cat-id="${catId}"]`);
         const total = catEl.querySelectorAll('.form-check-input').length;
         const checked = catEl.querySelectorAll('.form-check-input:checked').length;
         catEl.querySelector('.progress-text').innerText = Math.round((checked / total) * 100) + '%';
     },
 
+    updateMotherProgress(mIdx) {
+        const motherEl = document.getElementsByClassName('mother-cat')[mIdx];
+        const total = motherEl.querySelectorAll('.form-check-input').length;
+        const checked = motherEl.querySelectorAll('.form-check-input:checked').length;
+        document.getElementById(`mprog-${mIdx}`).innerText = Math.round((checked / total) * 100) + '%';
+    },
+
     updateAllProgress() {
-        FISH_DATA.forEach((_, idx) => this.updateCatProgress(idx));
+        FISH_DATA.forEach((m, mIdx) => {
+            m.seasons.forEach((s, sIdx) => this.updateCatProgress(`${mIdx}-${sIdx}`));
+            this.updateMotherProgress(mIdx);
+        });
     },
 
     filter() {
         const q = document.getElementById('search').value.toLowerCase();
-        document.querySelectorAll('.card-season').forEach(card => {
-            let hasVisible = false;
-            card.querySelectorAll('.fish-row').forEach(row => {
-                const visible = row.dataset.search.includes(q);
-                row.style.display = visible ? 'flex' : 'none';
-                if (visible) hasVisible = true;
+        document.querySelectorAll('.mother-cat').forEach(mother => {
+            let motherVisible = false;
+            mother.querySelectorAll('.card-season').forEach(seasonCard => {
+                let seasonVisible = false;
+                seasonCard.querySelectorAll('.fish-row').forEach(row => {
+                    const match = row.dataset.search.includes(q);
+                    row.style.display = match ? 'flex' : 'none';
+                    if (match) seasonVisible = true;
+                });
+                seasonCard.style.display = seasonVisible ? 'block' : 'none';
+                if (seasonVisible) motherVisible = true;
             });
-            card.style.display = hasVisible ? 'block' : 'none';
+            mother.style.display = motherVisible ? 'block' : 'none';
         });
     },
 
-    toggleCat(idx) {
-        const el = document.getElementById(`cat-${idx}`);
+    toggleCat(id) {
+        const el = document.getElementById(`cat-${id}`);
         el.style.display = (el.style.display === 'block') ? 'none' : 'block';
     },
 
@@ -165,9 +219,9 @@ const app = {
     },
 
     reset() {
-        if(confirm("¿Borrar progreso?")) {
+        if(confirm("¿Estás seguro de borrar todo el progreso?")) {
             this.progress = {};
-            localStorage.removeItem('sdv_fish_v6_final');
+            localStorage.removeItem('sdv_master_tracker');
             location.reload();
         }
     }
