@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wiki Pesca Stardew - Estructura Final</title>
+    <title>Wiki Pesca - Multilingüe</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         :root { --sv-bg: #fdf6e3; --sv-panel: #ffffff; --sv-text: #5d4037; --sv-border: #d7ccc8; --sv-accent: #7fb3d5; }
@@ -34,19 +34,22 @@
 <body data-bs-theme="light">
 
 <nav class="navbar navbar-dark mb-2">
-    <div class="container">
-        <span class="navbar-brand fw-bold">Wiki Pesca - Estructura Final</span>
-        <button class="btn btn-sm btn-outline-light" onclick="toggleTheme()">🌓 Modo</button>
+    <div class="container d-flex justify-content-between">
+        <span class="navbar-brand fw-bold" id="ui-title">Wiki Pesca</span>
+        <div class="d-flex gap-1">
+            <button class="btn btn-sm btn-outline-light" onclick="app.toggleLang()" id="ui-lang">🇺🇸 EN</button>
+            <button class="btn btn-sm btn-outline-light" onclick="toggleTheme()">🌓</button>
+        </div>
     </div>
 </nav>
 
 <div class="sticky-tools mb-3">
     <div class="container">
-        <input type="text" id="search" class="form-control mb-2" placeholder="Buscar pez, estación o lote..." oninput="app.filter()">
+        <input type="text" id="search" class="form-control mb-2" oninput="app.filter()">
         <div class="d-flex gap-2">
-            <button class="btn btn-sm btn-secondary w-100" onclick="app.toggleAll(false)">Colapsar todo</button>
-            <button class="btn btn-sm btn-secondary w-100" onclick="app.toggleAll(true)">Expandir todo</button>
-            <button class="btn btn-sm btn-danger w-50" onclick="app.reset()">Reset</button>
+            <button class="btn btn-sm btn-secondary w-100" onclick="app.toggleAll(false)" id="ui-collapse">Colapsar</button>
+            <button class="btn btn-sm btn-secondary w-100" onclick="app.toggleAll(true)" id="ui-expand">Expandir</button>
+            <button class="btn btn-sm btn-danger w-50" onclick="app.reset()" id="ui-reset">Reset</button>
         </div>
     </div>
 </div>
@@ -56,81 +59,60 @@
 <script>
 const FISH_DATA = [
     {
-        mother: "Peces de Lote",
-        tagClass: "lote-tag",
-        icon: "📦",
+        mother: { es: "Peces de Lote", en: "Bundle Fish" },
+        tagClass: "lote-tag", icon: "📦",
         seasons: [
-            { name: "Lotes: Primavera", fish: [
-                { n: "Pez sol", l: "Río", h: "6am - 7pm", c: "Soleado", e: "Primavera, Verano", lote: "Lote Peces Fluviales" },
-                { n: "Pez gato", l: "Río", h: "6am - 12am", c: "Lluvia", e: "Primavera, Otoño", lote: "Lote Peces Fluviales" },
-                { n: "Sábalo", l: "Río", h: "9am - 2am", c: "Lluvia", e: "Primavera, Verano, Otoño", lote: "Lote Peces Fluviales" },
-                { n: "Sardina", l: "Océano", h: "6am - 7pm", c: "Cualquiera", e: "Prim., Oto., Inv.", lote: "Lote Peces Marinos" },
-                { n: "Anguila", l: "Océano", h: "4pm - 2am", c: "Lluvia", e: "Primavera, Otoño", lote: "Lote Peces Nocturnos" }
+            { name: { es: "Lotes: Primavera", en: "Bundles: Spring" }, fish: [
+                { n: { es: "Pez sol", en: "Sunfish" }, l: { es: "Río", en: "River" }, h: "6am - 7pm", c: { es: "Soleado", en: "Sunny" }, e: { es: "Primavera, Verano", en: "Spring, Summer" }, lote: { es: "Lote Peces Fluviales", en: "River Fish Bundle" } },
+                { n: { es: "Pez gato", en: "Catfish" }, l: { es: "Río", en: "River" }, h: "6am - 12am", c: { es: "Lluvia", en: "Rainy" }, e: { es: "Primavera, Otoño", en: "Spring, Fall" }, lote: { es: "Lote Peces Fluviales", en: "River Fish Bundle" } },
+                { n: { es: "Sábalo", en: "Shad" }, l: { es: "Río", en: "River" }, h: "9am - 2am", c: { es: "Lluvia", en: "Rainy" }, e: { es: "Prim., Ver., Oto.", en: "Spr., Sum., Fall" }, lote: { es: "Lote Peces Fluviales", en: "River Fish Bundle" } },
+                { n: { es: "Sardina", en: "Sardine" }, l: { es: "Océano", en: "Ocean" }, h: "6am - 7pm", c: { es: "Cualquiera", en: "Any" }, e: { es: "Prim., Oto., Inv.", en: "Spr., Fall, Win." }, lote: { es: "Lote Peces Marinos", en: "Ocean Fish Bundle" } },
+                { n: { es: "Anguila", en: "Eel" }, l: { es: "Océano", en: "Ocean" }, h: "4pm - 2am", c: { es: "Lluvia", en: "Rainy" }, e: { es: "Primavera, Otoño", en: "Spring, Fall" }, lote: { es: "Lote Peces Nocturnos", en: "Night Fishing Bundle" } }
             ]},
-            { name: "Lotes: Verano", fish: [
-                { n: "Pez globo", l: "Océano", h: "12pm - 4pm", c: "Sol", e: "Verano", lote: "Lote Peces Especiales" },
-                { n: "Atún", l: "Océano", h: "6am - 7pm", c: "Cualquiera", e: "Verano, Invierno", lote: "Lote Peces Marinos" },
-                { n: "Esturión", l: "Lago", h: "6am - 7pm", c: "Cualquiera", e: "Verano, Invierno", lote: "Lote Peces de Lago" },
-                { n: "Tilapia", l: "Océano", h: "6am - 2pm", c: "Cualquiera", e: "Verano, Otoño", lote: "Lote Peces Marinos" },
-                { n: "Pargo colorado", l: "Océano", h: "6am - 7pm", c: "Lluvia", e: "Verano, Otoño", lote: "Lote Peces Marinos" }
-            ]},
-            { name: "Lotes: Otoño / Invierno", fish: [
-                { n: "Trucha tigre", l: "Río", h: "6am - 7pm", c: "Cualquiera", e: "Otoño, Invierno", lote: "Lote Peces Fluviales" },
-                { n: "Lucio", l: "Río/Lago", h: "12pm - 2am", c: "Cualquiera", e: "Otoño, Invierno", lote: "Lote Peces Nocturnos" },
-                { n: "Pez gota", l: "Mercado Nocturno", h: "5pm - 2am", c: "Cualquiera", e: "Invierno", lote: "Lote Maestro de Pesca" }
-            ]},
-            { name: "Lotes: Todo el Año / Especiales", fish: [
-                { n: "Carpa", l: "Lago", h: "Cualquiera", c: "Cualquiera", e: "Prim., Ver., Oto.", lote: "Lote Peces de Lago" },
-                { n: "Besugo", l: "Río", h: "6pm - 2am", c: "Cualquiera", e: "Todo el año", lote: "Lote Peces Nocturnos" },
-                { n: "Pez fantasma", l: "Minas", h: "Cualquiera", c: "Cualquiera", e: "Todo el año", lote: "Lote Peces Especiales" },
-                { n: "Muyu", l: "Bosque secreto", h: "Cualquiera", c: "Cualquiera", e: "Todo el año", lote: "Lote Peces Especiales" }
+            { name: { es: "Lotes: Verano", en: "Bundles: Summer" }, fish: [
+                { n: { es: "Pez globo", en: "Pufferfish" }, l: { es: "Océano", en: "Ocean" }, h: "12pm - 4pm", c: { es: "Sol", en: "Sun" }, e: { es: "Verano", en: "Summer" }, lote: { es: "Lote Peces Especiales", en: "Specialty Fish Bundle" } },
+                { n: { es: "Atún", en: "Tuna" }, l: { es: "Océano", en: "Ocean" }, h: "6am - 7pm", c: { es: "Cualquiera", en: "Any" }, e: { es: "Verano, Invierno", en: "Summer, Winter" }, lote: { es: "Lote Peces Marinos", en: "Ocean Fish Bundle" } },
+                { n: { es: "Esturión", en: "Sturgeon" }, l: { es: "Lago", en: "Lake" }, h: "6am - 7pm", c: { es: "Cualquiera", en: "Any" }, e: { es: "Verano, Invierno", en: "Summer, Winter" }, lote: { es: "Lote Peces de Lago", en: "Lake Fish Bundle" } },
+                { n: { es: "Tilapia", en: "Tilapia" }, l: { es: "Océano", en: "Ocean" }, h: "6am - 2pm", c: { es: "Cualquiera", en: "Any" }, e: { es: "Verano, Otoño", en: "Summer, Fall" }, lote: { es: "Lote Peces Marinos", en: "Ocean Fish Bundle" } },
+                { n: { es: "Pargo colorado", en: "Red Snapper" }, l: { es: "Océano", en: "Ocean" }, h: "6am - 7pm", c: { es: "Lluvia", en: "Rainy" }, e: { es: "Verano, Otoño", en: "Summer, Fall" }, lote: { es: "Lote Peces Marinos", en: "Ocean Fish Bundle" } }
             ]}
         ]
     },
     {
-        mother: "Peces Comunes",
-        tagClass: "common-tag",
-        icon: "🐟",
+        mother: { es: "Peces Comunes", en: "Common Fish" },
+        tagClass: "common-tag", icon: "🐟",
         seasons: [
-            { name: "Comunes: Temporales", fish: [
-                { n: "Anchoa", l: "Océano", h: "Cualquiera", c: "Cualquiera", e: "Primavera, Otoño", lote: "Común" },
-                { n: "Salmonete", l: "Océano", h: "6am - 7pm", c: "Cualquiera", e: "Primavera, Verano", lote: "Común" },
-                { n: "Arenque", l: "Océano", h: "Cualquiera", c: "Cualquiera", e: "Primavera, Invierno", lote: "Común" },
-                { n: "Bacalao largo", l: "Río/Lago", h: "Cualquiera", c: "Cualquiera", e: "Invierno", lote: "Común" },
-                { n: "Calamar", l: "Océano", h: "6pm - 2am", c: "Cualquiera", e: "Invierno", lote: "Común" }
+            { name: { es: "Comunes: Temporales", en: "Common: Seasonal" }, fish: [
+                { n: { es: "Anchoa", en: "Anchovy" }, l: { es: "Océano", en: "Ocean" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Primavera, Otoño", en: "Spring, Fall" }, lote: { es: "Común", en: "Common" } },
+                { n: { es: "Salmonete", en: "Red Mullet" }, l: { es: "Océano", en: "Ocean" }, h: "6am - 7pm", c: { es: "Cualquiera", en: "Any" }, e: { es: "Primavera, Verano", en: "Spring, Summer" }, lote: { es: "Común", en: "Common" } }
             ]},
-            { name: "Comunes: Todo el Año", fish: [
-                { n: "Cachuelo", l: "Río/Lago", h: "Cualquiera", c: "Cualquiera", e: "Todo el año", lote: "Común" },
-                { n: "Barbo", l: "Río/Lago", h: "Cualquiera", c: "Cualquiera", e: "Todo el año", lote: "Común" },
-                { n: "Perca", l: "Lago", h: "6am - 7pm", c: "Cualquiera", e: "Todo el año", lote: "Común" }
+            { name: { es: "Comunes: Todo el Año", en: "Common: All Year" }, fish: [
+                { n: { es: "Barbo", en: "Chub" }, l: { es: "Río/Lago", en: "River/Lake" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Común", en: "Common" } }
             ]}
         ]
     },
     {
-        mother: "Peces Legendarios",
-        tagClass: "legend-tag",
-        icon: "🏆",
+        mother: { es: "Peces Legendarios", en: "Legendary Fish" },
+        tagClass: "legend-tag", icon: "🏆",
         seasons: [
-            { name: "Colección Legendaria", fish: [
-                { n: "Leyenda", l: "Lago montaña", h: "Cualquiera", c: "Prim. + Lluvia", e: "Primavera", lote: "Legendario" },
-                { n: "Pez carmesí", l: "Océano", h: "Cualquiera", c: "Cualquiera", e: "Verano", lote: "Legendario" },
-                { n: "Rape", l: "Pueblo (Norte)", h: "Cualquiera", c: "Cualquiera", e: "Otoño", lote: "Legendario" },
-                { n: "Pez glacial", l: "Bosque Tizón", h: "Cualquiera", c: "Cualquiera", e: "Invierno", lote: "Legendario" },
-                { n: "Carpa mutante", l: "Cloacas", h: "Cualquiera", c: "Cualquiera", e: "Todo el año", lote: "Legendario" }
+            { name: { es: "Colección Legendaria", en: "Legendary Collection" }, fish: [
+                { n: { es: "Leyenda", en: "Legend" }, l: { es: "Lago", en: "Lake" }, h: "Cualquiera", c: { es: "Lluvia", en: "Rain" }, e: { es: "Primavera", en: "Spring" }, lote: { es: "Legendario", en: "Legendary" } }
             ]}
         ]
     }
 ];
 
 const app = {
-    progress: JSON.parse(localStorage.getItem('sdv_master_v4_final')) || {},
+    lang: localStorage.getItem('sdv_lang') || 'es',
+    progress: JSON.parse(localStorage.getItem('sdv_master_v5')) || {},
 
     init() {
+        this.renderUI();
         const container = document.getElementById('main-container');
         container.innerHTML = FISH_DATA.map((mother, mIdx) => `
             <div class="mother-cat">
                 <div class="mother-title d-flex justify-content-between align-items-center">
-                    <span>${mother.mother}</span>
+                    <span>${mother.mother[this.lang]}</span>
                     <span class="badge bg-secondary rounded-pill" id="mprog-${mIdx}">0%</span>
                 </div>
                 ${mother.seasons.map((season, sIdx) => {
@@ -138,7 +120,7 @@ const app = {
                     return `
                     <div class="card-season" data-cat-id="${catId}">
                         <div class="season-header" onclick="app.toggleCat('${catId}')">
-                            <span>${season.name}</span>
+                            <span>${season.name[this.lang]}</span>
                             <span class="badge bg-primary rounded-pill progress-text">0%</span>
                         </div>
                         <div id="cat-${catId}" class="cat-content">
@@ -147,16 +129,16 @@ const app = {
                                 const isDone = !!this.progress[id];
                                 return `
                                 <div class="fish-row ${isDone ? 'completed' : ''}" 
-                                     data-search="${f.n.toLowerCase()} ${f.e.toLowerCase()} ${f.lote.toLowerCase()}">
+                                     data-search="${f.n.es.toLowerCase()} ${f.n.en.toLowerCase()} ${f.e[this.lang].toLowerCase()}">
                                     <input class="form-check-input" type="checkbox" id="${id}" 
                                            ${isDone ? 'checked' : ''} onchange="app.updateFish('${id}')">
                                     <div class="flex-grow-1">
-                                        <label class="fw-bold d-block" for="${id}">${f.n}</label>
+                                        <label class="fw-bold d-block" for="${id}">${f.n[this.lang]}</label>
                                         <div class="fish-details">
-                                            <strong>Estación:</strong> ${f.e}<br>
-                                            📍 ${f.l} | ⏰ ${f.h} | ☁️ ${f.c}
+                                            <strong>${this.lang === 'es' ? 'Estación' : 'Season'}:</strong> ${f.e[this.lang]}<br>
+                                            📍 ${f.l[this.lang]} | ⏰ ${f.h} | ☁️ ${f.c[this.lang]}
                                         </div>
-                                        <div class="tag ${mother.tagClass}">${mother.icon} ${f.lote}</div>
+                                        <div class="tag ${mother.tagClass}">${mother.icon} ${f.lote[this.lang]}</div>
                                     </div>
                                 </div>`;
                             }).join('')}
@@ -168,13 +150,33 @@ const app = {
         this.updateAllProgress();
     },
 
+    renderUI() {
+        const texts = {
+            es: { title: "Wiki Pesca", lang: "🇺🇸 EN", search: "Buscar pez, estación...", coll: "Colapsar", exp: "Expandir", reset: "Reset" },
+            en: { title: "Fishing Wiki", lang: "🇪🇸 ES", search: "Search fish, season...", coll: "Collapse", exp: "Expand", reset: "Reset" }
+        };
+        const t = texts[this.lang];
+        document.getElementById('ui-title').innerText = t.title;
+        document.getElementById('ui-lang').innerText = t.lang;
+        document.getElementById('search').placeholder = t.search;
+        document.getElementById('ui-collapse').innerText = t.coll;
+        document.getElementById('ui-expand').innerText = t.exp;
+        document.getElementById('ui-reset').innerText = t.reset;
+    },
+
+    toggleLang() {
+        this.lang = this.lang === 'es' ? 'en' : 'es';
+        localStorage.setItem('sdv_lang', this.lang);
+        this.init();
+    },
+
     updateFish(id) {
         const cb = document.getElementById(id);
         const row = cb.closest('.fish-row');
-        const [mIdx, sIdx] = id.split('-');
         this.progress[id] = cb.checked;
-        localStorage.setItem('sdv_master_v4_final', JSON.stringify(this.progress));
+        localStorage.setItem('sdv_master_v5', JSON.stringify(this.progress));
         row.classList.toggle('completed', cb.checked);
+        const [mIdx, sIdx] = id.split('-');
         this.updateCatProgress(`${mIdx}-${sIdx}`);
         this.updateMotherProgress(mIdx);
     },
@@ -202,19 +204,9 @@ const app = {
 
     filter() {
         const q = document.getElementById('search').value.toLowerCase();
-        document.querySelectorAll('.mother-cat').forEach(mother => {
-            let motherVisible = false;
-            mother.querySelectorAll('.card-season').forEach(seasonCard => {
-                let seasonVisible = false;
-                seasonCard.querySelectorAll('.fish-row').forEach(row => {
-                    const match = row.dataset.search.includes(q);
-                    row.style.display = match ? 'flex' : 'none';
-                    if (match) seasonVisible = true;
-                });
-                seasonCard.style.display = seasonVisible ? 'block' : 'none';
-                if (seasonVisible) motherVisible = true;
-            });
-            mother.style.display = motherVisible ? 'block' : 'none';
+        document.querySelectorAll('.fish-row').forEach(row => {
+            const match = row.dataset.search.includes(q);
+            row.style.display = match ? 'flex' : 'none';
         });
     },
 
@@ -228,9 +220,9 @@ const app = {
     },
 
     reset() {
-        if(confirm("¿Borrar todo el progreso?")) {
+        if(confirm(this.lang === 'es' ? "¿Borrar todo?" : "Clear all?")) {
             this.progress = {};
-            localStorage.removeItem('sdv_master_v4_final');
+            localStorage.removeItem('sdv_master_v5');
             location.reload();
         }
     }
