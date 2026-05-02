@@ -1,15 +1,17 @@
 {
-  "short_name": "Wiki Pesca",
-  "name": "Wiki Pesca - Stardew Valley",
+  "short_name": "SV Fish",
+  "name": "Stardew Valley Fish Tracker",
   "icons": [
     {
-      "src": "https://stardewvalleywiki.com/mediawiki/images/4/43/Fish.png",
+      "src": "https://cdn-icons-png.flaticon.com/512/1039/1039328.png",
       "type": "image/png",
-      "sizes": "48x48"
+      "sizes": "512x512",
+      "purpose": "any maskable"
     }
   ],
   "start_url": "./index.html",
   "background_color": "#fdf6e3",
+  "theme_color": "#7fb3d5",
   "display": "standalone",
-  "theme_color": "#7fb3d5"
+  "orientation": "portrait-primary"
 }
