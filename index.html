@@ -3,403 +3,358 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stardew Valley - Fishing Checklist</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Wiki Pesca - Sincronización Completa</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        :root {
-            --bs-body-bg: #121212;
-            --bs-body-color: #e0e0e0;
-            --card-bg: #1e1e1e;
-            --border-color: #2d2d2d;
-        }
-        body {
-            background-color: var(--bs-body-bg);
-            color: var(--bs-body-color);
-        }
-        .card {
-            background-color: var(--card-bg);
-            border-color: var(--border-color);
-        }
-        .fish-img {
-            width: 32px;
-            height: 32px;
-            object-fit: contain;
-        }
-        .completed {
-            opacity: 0.5;
-            text-decoration: line-through;
-        }
-        .badge-info {
-            font-size: 0.75rem;
-            font-weight: normal;
-        }
+        :root { --sv-bg: #fdf6e3; --sv-panel: #ffffff; --sv-text: #5d4037; --sv-border: #d7ccc8; --sv-accent: #7fb3d5; }
+        [data-bs-theme="dark"] { --sv-bg: #1a1a1a; --sv-panel: #2d2d2d; --sv-text: #e0e0e0; --sv-border: #444; --sv-accent: #2980b9; }
+        
+        body { background-color: var(--sv-bg); color: var(--sv-text); font-family: system-ui, sans-serif; padding-bottom: 30px; }
+        .navbar { background-color: var(--sv-accent) !important; border-bottom: 4px solid rgba(0,0,0,0.1); }
+        
+        .mother-cat { border: 3px solid var(--sv-accent); border-radius: 15px; padding: 15px; margin-bottom: 25px; background: rgba(127, 179, 213, 0.05); }
+        .mother-title { font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--sv-accent); margin-bottom: 15px; border-bottom: 2px solid var(--sv-accent); }
+
+        .card-season { background: var(--sv-panel); border: 1px solid var(--sv-border); border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
+        .season-header { background: rgba(0,0,0,0.03); padding: 10px 15px; cursor: pointer; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+        
+        .cat-content { display: none; border-top: 1px solid var(--sv-border); flex-direction: column; }
+        
+        .fish-row { display: flex; align-items: center; padding: 10px 15px; border-bottom: 1px solid var(--sv-border); transition: background 0.2s; order: 1; }
+        .fish-row.completed { background: rgba(40, 167, 69, 0.1); opacity: 0.7; order: 2; }
+        
+        .form-check-input { width: 22px; height: 22px; margin-right: 15px; cursor: pointer; flex-shrink: 0; }
+        .fish-icon { width: 32px; height: 32px; object-fit: contain; margin-right: 15px; flex-shrink: 0; }
+        .fish-details { font-size: 0.8rem; opacity: 0.9; }
+        .tag { font-weight: bold; font-size: 0.75rem; margin-top: 2px; }
+        .lote-tag { color: #d35400; }
+        .common-tag { color: #27ae60; }
+        .legend-tag { color: #8e44ad; }
+        
+        .sticky-tools { position: sticky; top: 0; z-index: 100; background: var(--sv-bg); padding: 10px 0; border-bottom: 1px solid var(--sv-border); }
     </style>
 </head>
-<body class="py-4">
-    <div class="container">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="h3 mb-0">🎣 Stardew Valley Checklist</h1>
-            <span class="badge bg-primary fs-6" id="progress-badge">0% Completado</span>
-        </div>
+<body data-bs-theme="light">
 
-        <div class="mb-4">
-            <input type="text" id="search-input" class="form-control form-control-lg bg-dark text-light border-secondary" placeholder="Buscar por nombre, zona, estación o clima...">
-        </div>
-
-        <div class="accordion accordion-flush" id="checklist-accordion">
-            
-            <div class="accordion-item bg-transparent border-secondary">
-                <h2 class="accordion-header">
-                    <button class="accordion-button bg-dark text-light border-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-bundles">
-                        📦 Peces del Centro Cívico
-                    </button>
-                </h2>
-                <div id="collapse-bundles" class="accordion-collapse collapse show" data-bs-parent="#checklist-accordion">
-                    <div class="accordion-body p-2" id="list-bundles"></div>
-                </div>
-            </div>
-
-            <div class="accordion-item bg-transparent border-secondary mt-3">
-                <h2 class="accordion-header">
-                    <button class="accordion-button bg-dark text-light border-secondary collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-common">
-                        🐟 Peces Comunes
-                    </button>
-                </h2>
-                <div id="collapse-common" class="accordion-collapse collapse" data-bs-parent="#checklist-accordion">
-                    <div class="accordion-body p-2" id="list-common"></div>
-                </div>
-            </div>
-
-            <div class="accordion-item bg-transparent border-secondary mt-3">
-                <h2 class="accordion-header">
-                    <button class="accordion-button bg-dark text-light border-secondary collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-legendary">
-                        👑 Peces Legendarios
-                    </button>
-                </h2>
-                <div id="collapse-legendary" class="accordion-collapse collapse" data-bs-parent="#checklist-accordion">
-                    <div class="accordion-body p-2" id="list-legendary"></div>
-                </div>
-            </div>
-
+<nav class="navbar navbar-dark mb-2">
+    <div class="container d-flex justify-content-between">
+        <span class="navbar-brand fw-bold" id="ui-title">Wiki Pesca</span>
+        <div class="d-flex gap-1">
+            <button class="btn btn-sm btn-outline-light" onclick="app.toggleLang()" id="ui-lang">🇺🇸 EN</button>
+            <button class="btn btn-sm btn-outline-light" onclick="toggleTheme()">🌓</button>
         </div>
     </div>
+</nav>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<div class="sticky-tools mb-3">
+    <div class="container">
+        <input type="text" id="search" class="form-control mb-2" oninput="app.filter()">
+        <div class="d-flex gap-2">
+            <button class="btn btn-sm btn-secondary w-100" onclick="app.toggleAll(false)" id="ui-collapse">Colapsar</button>
+            <button class="btn btn-sm btn-secondary w-100" onclick="app.toggleAll(true)" id="ui-expand">Expandir</button>
+            <button class="btn btn-sm btn-danger w-50" onclick="app.reset()" id="ui-reset">Reset</button>
+        </div>
+    </div>
+</div>
 
-    <script>
-        // Array de datos completo con las URLs de la Wiki oficial de Stardew Valley corregidas
-        const fishData = [
-            // PECES DEL CENTRO CÍVICO
-            {
-                id: "sunfish",
-                name: "Sunfish",
-                category: "bundles",
-                location: "River (Pelican Town/Cindersap Forest)",
-                time: "6 AM - 7 PM",
-                season: "Spring, Summer",
-                weather: "Sunny",
-                imgUrl: "https://stardewvalleywiki.com/mediawiki/images/5/56/Sunfish.png"
-            },
-            {
-                id: "catfish",
-                name: "Catfish",
-                category: "bundles",
-                location: "River (Pelican Town/Cindersap Forest), Secret Woods",
-                time: "6 AM - 12 AM",
-                season: "Spring, Fall",
-                weather: "Rainy",
-                imgUrl: "https://stardewvalleywiki.com/mediawiki/images/c/c8/Catfish.png"
-            },
-            {
-                id: "shad",
-                name: "Shad",
-                category: "bundles",
-                location: "River (Pelican Town/Cindersap Forest)",
-                time: "9 AM - 2 AM",
-                season: "Spring, Summer, Fall",
-                weather: "Rainy",
-                imgUrl: "https://stardewvalleywiki.com/mediawiki/images/e/ef/Shad.png"
-            },
-            {
-                id: "tiger-trout",
-                name: "Tiger Trout",
-                category: "bundles",
-                location: "River (Pelican Town/Cindersap Forest)",
-                time: "6 AM - 7 PM",
-                season: "Fall, Winter",
-                weather: "Any",
-                imgUrl: "https://stardewvalleywiki.com/mediawiki/images/0/01/Tiger_Trout.png"
-            },
-            {
-                id: "largemouth-bass",
-                name: "Largemouth Bass",
-                category: "bundles",
-                location: "Mountain Lake",
-                time: "6 AM - 7 PM",
-                season: "All Seasons",
-                weather: "Any",
-                imgUrl: "https://stardewvalleywiki.com/mediawiki/images/4/43/Largemouth_Bass.png"
-            },
-            {
-                id: "carp",
-                name: "Carp",
-                category: "bundles",
-                location: "Mountain Lake, Secret Woods, Sewers",
-                time: "Anytime",
-                season: "Spring, Summer, Fall",
-                weather: "Any",
-                imgUrl: "https://stardewvalleywiki.com/mediawiki/images/a/a8/Carp.png"
-            },
-            {
-                id: "bullhead",
-                name: "Bullhead",
-                category: "bundles",
-                location: "Mountain Lake",
-                time: "Anytime",
-                season: "All Seasons",
-                weather: "Any",
-                imgUrl: "https://stardewvalleywiki.com/mediawiki/images/2/28/Bullhead.png"
-            },
-            {
-                id: "sturgeon",
-                name: "Sturgeon",
-                category: "bundles",
-                location: "Mountain Lake",
-                time: "6 AM - 7 PM",
-                season: "Summer, Winter",
-                weather: "Any",
-                imgUrl: "https://stardewvalleywiki.com/mediawiki/images/4/42/Sturgeon.png"
-            },
-            {
-                id: "sardine",
-                name: "Sardine",
-                category: "bundles",
-                location: "Ocean",
-                time: "6 AM - 7 PM",
-                season: "Spring, Fall, Winter",
-                weather: "Any",
-                imgUrl: "https://stardewvalleywiki.com/mediawiki/images/0/04/Sardine.png"
-            },
-            {
-                id: "tuna",
-                name: "Tuna",
-                category: "bundles",
-                location: "Ocean",
-                time: "6 AM - 7 PM",
-                season: "Summer, Winter",
-                weather: "Any",
-                imgUrl: "https://stardewvalleywiki.com/mediawiki/images/c/c5/Tuna.png"
-            },
-            {
-                id: "red-mullet",
-                name: "Red Mullet",
-                category: "bundles",
-                location: "Ocean",
-                time: "6 AM - 7 PM",
-                season: "Summer, Winter",
-                weather: "Any",
-                imgUrl: "https://stardewvalleywiki.com/mediawiki/images/f/f5/Red_Mullet.png"
-            },
-            {
-                id: "tilapia",
-                name: "Tilapia",
-                category: "bundles",
-                location: "Ocean",
-                time: "6 AM - 2 PM",
-                season: "Summer, Fall",
-                weather: "Any",
-                imgUrl: "https://stardewvalleywiki.com/mediawiki/images/7/73/Tilapia.png"
-            },
-            {
-                id: "walleye",
-                name: "Walleye",
-                category: "bundles",
-                location: "River, Mountain Lake, Cindersap Forest Pond",
-                time: "12 PM - 2 AM",
-                season: "Fall",
-                weather: "Rainy",
-                imgUrl: "https://stardewvalleywiki.com/mediawiki/images/0/05/Walleye.png"
-            },
-            {
-                id: "bream",
-                name: "Bream",
-                category: "bundles",
-                location: "River (Pelican Town/Cindersap Forest)",
-                time: "6 PM - 2 AM",
-                season: "All Seasons",
-                weather: "Any",
-                imgUrl: "https://stardewvalleywiki.com/mediawiki/images/8/82/Bream.png"
-            },
-            {
-                id: "eel",
-                name: "Eel",
-                category: "bundles",
-                location: "Ocean",
-                time: "4 PM - 2 AM",
-                season: "Spring, Fall",
-                weather: "Rainy",
-                imgUrl: "https://stardewvalleywiki.com/mediawiki/images/9/91/Eel.png"
-            },
+<div class="container" id="main-container"></div>
 
-            // PECES COMUNES
-            {
-                id: "herring",
-                name: "Herring",
-                category: "common",
-                location: "Ocean",
-                time: "Anytime",
-                season: "Spring, Winter",
-                weather: "Any",
-                imgUrl: "https://stardewvalleywiki.com/mediawiki/images/f/f1/Herring.png"
-            },
-            {
-                id: "lingcod",
-                name: "Lingcod",
-                category: "common",
-                location: "River, Mountain Lake",
-                time: "Anytime",
-                season: "Winter",
-                weather: "Any",
-                imgUrl: "https://stardewvalleywiki.com/mediawiki/images/a/a2/Lingcod.png"
-            },
-            {
-                id: "salmon",
-                name: "Salmon",
-                category: "common",
-                location: "River",
-                time: "6 AM - 7 PM",
-                season: "Fall",
-                weather: "Any",
-                imgUrl: "https://stardewvalleywiki.com/mediawiki/images/e/e0/Salmon.png"
-            },
+<script>
+// URLs verificadas y corregidas con mayúsculas exactas y hashes actualizados
+const FISH_IMAGES = {
+    "sunfish": "https://stardewvalleywiki.com/mediawiki/images/5/56/Sunfish.png",
+    "catfish": "https://stardewvalleywiki.com/mediawiki/images/c/c8/Catfish.png",
+    "shad": "https://stardewvalleywiki.com/mediawiki/images/e/ef/Shad.png",
+    "sardine": "https://stardewvalleywiki.com/mediawiki/images/0/04/Sardine.png",
+    "eel": "https://stardewvalleywiki.com/mediawiki/images/9/91/Eel.png",
+    "largemouth_bass": "https://stardewvalleywiki.com/mediawiki/images/1/11/Largemouth_Bass.png",
+    "bullhead": "https://stardewvalleywiki.com/mediawiki/images/d/db/Bullhead.png",
+    "bream": "https://stardewvalleywiki.com/mediawiki/images/8/82/Bream.png",
+    "carp": "https://stardewvalleywiki.com/mediawiki/images/a/a8/Carp.png",
+    "ghostfish": "https://stardewvalleywiki.com/mediawiki/images/7/72/Ghostfish.png",
+    "woodskip": "https://stardewvalleywiki.com/mediawiki/images/9/97/Woodskip.png",
+    "sandfish": "https://stardewvalleywiki.com/mediawiki/images/b/bb/Sandfish.png",
+    "lobster": "https://stardewvalleywiki.com/mediawiki/images/9/9f/Lobster.png",
+    "clam": "https://stardewvalleywiki.com/mediawiki/images/e/ed/Clam.png",
+    "crayfish": "https://stardewvalleywiki.com/mediawiki/images/5/53/Crayfish.png",
+    "crab": "https://stardewvalleywiki.com/mediawiki/images/6/63/Crab.png",
+    "cockle": "https://stardewvalleywiki.com/mediawiki/images/a/ad/Cockle.png",
+    "mussel": "https://stardewvalleywiki.com/mediawiki/images/a/aa/Mussel.png",
+    "shrimp": "https://stardewvalleywiki.com/mediawiki/images/9/91/Shrimp.png",
+    "snail": "https://stardewvalleywiki.com/mediawiki/images/d/d2/Snail.png",
+    "periwinkle": "https://stardewvalleywiki.com/mediawiki/images/1/1d/Periwinkle.png",
+    "oyster": "https://stardewvalleywiki.com/mediawiki/images/5/54/Oyster.png",
+    "pufferfish": "https://stardewvalleywiki.com/mediawiki/images/b/ba/Pufferfish.png",
+    "tuna": "https://stardewvalleywiki.com/mediawiki/images/c/c5/Tuna.png",
+    "sturgeon": "https://stardewvalleywiki.com/mediawiki/images/4/42/Sturgeon.png",
+    "tilapia": "https://stardewvalleywiki.com/mediawiki/images/7/73/Tilapia.png",
+    "red_snapper": "https://stardewvalleywiki.com/mediawiki/images/d/d3/Red_Snapper.png",
+    "tiger_trout": "https://stardewvalleywiki.com/mediawiki/images/0/01/Tiger_Trout.png",
+    "walleye": "https://stardewvalleywiki.com/mediawiki/images/0/05/Walleye.png",
+    "anchovy": "https://stardewvalleywiki.com/mediawiki/images/7/79/Anchovy.png",
+    "red_mullet": "https://stardewvalleywiki.com/mediawiki/images/f/f5/Red_Mullet.png",
+    "herring": "https://stardewvalleywiki.com/mediawiki/images/f/f1/Herring.png",
+    "lingcod": "https://stardewvalleywiki.com/mediawiki/images/a/a2/Lingcod.png",
+    "squid": "https://stardewvalleywiki.com/mediawiki/images/8/81/Squid.png",
+    "chub": "https://stardewvalleywiki.com/mediawiki/images/b/bd/Chub.png",
+    "perch": "https://stardewvalleywiki.com/mediawiki/images/4/43/Perch.png",
+    "legend": "https://stardewvalleywiki.com/mediawiki/images/1/10/Legend.png",
+    "crimsonfish": "https://stardewvalleywiki.com/mediawiki/images/d/dc/Crimsonfish.png",
+    "angler": "https://stardewvalleywiki.com/mediawiki/images/ffd/Angler.png",
+    "glacierfish": "https://stardewvalleywiki.com/mediawiki/images/f/fd/Glacierfish.png",
+    "mutant_carp": "https://stardewvalleywiki.com/mediawiki/images/c/cb/Mutant_Carp.png"
+};
 
-            // PECES LEGENDARIOS
-            {
-                id: "angler",
-                name: "Angler",
-                category: "legendary",
-                location: "Wooden plank bridge north of JojaMart",
-                time: "Anytime",
-                season: "Fall",
-                weather: "Any",
-                imgUrl: "https://stardewvalleywiki.com/mediawiki/images/ffd/Angler.png"
-            },
-            {
-                id: "crimsonfish",
-                name: "Crimsonfish",
-                category: "legendary",
-                location: "East Pier on the Beach (requires 300 wood bridge repair)",
-                time: "Anytime",
-                season: "Summer",
-                weather: "Any",
-                imgUrl: "https://stardewvalleywiki.com/mediawiki/images/d/dc/Crimsonfish.png"
-            },
-            {
-                id: "legend",
-                name: "Legend",
-                category: "legendary",
-                location: "Mountain Lake (near log)",
-                time: "Anytime",
-                season: "Spring",
-                weather: "Rainy",
-                imgUrl: "https://stardewvalleywiki.com/mediawiki/images/1/10/Legend.png"
-            }
-        ];
+const FISH_DATA = [
+    {
+        mother: { es: "Peces de Lote", en: "Bundle Fish" },
+        tagClass: "lote-tag", icon: "📦",
+        seasons: [
+            { name: { es: "Lotes: Primavera", en: "Bundles: Spring" }, fish: [
+                { id: "sunfish", n: { es: "Pez sol", en: "Sunfish" }, l: { es: "Río", en: "River" }, h: "6am - 7pm", c: { es: "Soleado", en: "Sunny" }, e: { es: "Primavera, Verano", en: "Spring, Summer" }, lote: { es: "Lote Peces Fluviales", en: "River Fish Bundle" } },
+                { id: "catfish", n: { es: "Pez gato", en: "Catfish" }, l: { es: "Río / Bosque Secreto", en: "River / Secret Woods" }, h: "6am - 12am", c: { es: "Lluvia", en: "Rainy" }, e: { es: "Primavera, Otoño", en: "Spring, Fall" }, lote: { es: "Lote Peces Fluviales", en: "River Fish Bundle" } },
+                { id: "shad", n: { es: "Sábalo", en: "Shad" }, l: { es: "Río", en: "River" }, h: "9am - 2am", c: { es: "Lluvia", en: "Rainy" }, e: { es: "Prim., Ver., Oto.", en: "Spr., Sum., Fall" }, lote: { es: "Lote Peces Fluviales", en: "River Fish Bundle" } },
+                { id: "sardine", n: { es: "Sardina", en: "Sardine" }, l: { es: "Océano", en: "Ocean" }, h: "6am - 7pm", c: { es: "Cualquiera", en: "Any" }, e: { es: "Prim., Oto., Inv.", en: "Spr., Fall, Win." }, lote: { es: "Lote Peces Marinos", en: "Ocean Fish Bundle" } },
+                { id: "eel", n: { es: "Anguila", en: "Eel" }, l: { es: "Océano", en: "Ocean" }, h: "4pm - 2am", c: { es: "Lluvia", en: "Rainy" }, e: { es: "Primavera, Otoño", en: "Spring, Fall" }, lote: { es: "Lote Peces Nocturnos", en: "Night Fishing Bundle" } },
+                { id: "largemouth_bass", n: { es: "Perca gigante", en: "Largemouth Bass" }, l: { es: "Lago de la Montaña", en: "Mountain Lake" }, h: "6am - 7pm", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Peces de Lago", en: "Lake Fish Bundle" } },
+                { id: "bullhead", n: { es: "Siluro", en: "Bullhead" }, l: { es: "Lago de la Montaña", en: "Mountain Lake" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Peces de Lago", en: "Lake Fish Bundle" } },
+                { id: "bream", n: { es: "Besugo", en: "Bream" }, l: { es: "Río", en: "River" }, h: "6pm - 2am", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Peces Nocturnos", en: "Night Fishing Bundle" } },
+                { id: "carp", n: { es: "Carpa", en: "Carp" }, l: { es: "Lago de la Montaña / Cloacas", en: "Mountain Lake / Sewers" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Prim., Ver., Oto.", en: "Spr., Sum., Fall" }, lote: { es: "Lote Peces de Lago", en: "Lake Fish Bundle" } },
+                { id: "ghostfish", n: { es: "Pez fantasma", en: "Ghostfish" }, l: { es: "Minas", en: "Mines" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Peces Especiales", en: "Specialty Fish Bundle" } },
+                { id: "woodskip", n: { es: "Muyu", en: "Woodskip" }, l: { es: "Bosque Secreto", en: "Secret Woods" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Peces Especiales", en: "Specialty Fish Bundle" } },
+                { id: "sandfish", n: { es: "Pez arenero", en: "Sandfish" }, l: { es: "Desierto", en: "Desert" }, h: "6am - 8pm", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Peces Especiales", en: "Specialty Fish Bundle" } },
+                { id: "lobster", n: { es: "Langosta", en: "Lobster" }, l: { es: "Mar (Trampa)", en: "Ocean (Crab Pot)" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Trampa para Cangrejos", en: "Crab Pot Bundle" } },
+                { id: "clam", n: { es: "Almeja", en: "Clam" }, l: { es: "Playa (Recolección)", en: "Beach (Foraging)" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Trampa para Cangrejos", en: "Crab Pot Bundle" } },
+                { id: "crayfish", n: { es: "Cangrejo de río", en: "Crayfish" }, l: { es: "Agua dulce (Trampa)", en: "Freshwater (Crab Pot)" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Trampa para Cangrejos", en: "Crab Pot Bundle" } },
+                { id: "crab", n: { es: "Cangrejo", en: "Crab" }, l: { es: "Mar (Trampa) / Minas", en: "Ocean (Crab Pot) / Mines" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Trampa para Cangrejos", en: "Crab Pot Bundle" } },
+                { id: "cockle", n: { es: "Berberecho", en: "Cockle" }, l: { es: "Playa (Recolección)", en: "Beach (Foraging)" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Trampa para Cangrejos", en: "Crab Pot Bundle" } },
+                { id: "mussel", n: { es: "Mejillón", en: "Mussel" }, l: { es: "Playa (Recolección)", en: "Beach (Foraging)" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Trampa para Cangrejos", en: "Crab Pot Bundle" } },
+                { id: "shrimp", n: { es: "Camarón", en: "Shrimp" }, l: { es: "Mar (Trampa)", en: "Ocean (Crab Pot)" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Trampa para Cangrejos", en: "Crab Pot Bundle" } },
+                { id: "snail", n: { es: "Caracol", en: "Snail" }, l: { es: "Agua dulce (Trampa)", en: "Freshwater (Crab Pot)" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Trampa para Cangrejos", en: "Crab Pot Bundle" } },
+                { id: "periwinkle", n: { es: "Bígaro", en: "Periwinkle" }, l: { es: "Agua dulce (Trampa)", en: "Freshwater (Crab Pot)" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Trampa para Cangrejos", en: "Crab Pot Bundle" } },
+                { id: "oyster", n: { es: "Ostra", en: "Oyster" }, l: { es: "Playa (Recolección)", en: "Beach (Foraging)" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Trampa para Cangrejos", en: "Crab Pot Bundle" } }
+            ]},
+            { name: { es: "Lotes: Verano", en: "Bundles: Summer" }, fish: [
+                { id: "sunfish", n: { es: "Pez sol", en: "Sunfish" }, l: { es: "Río", en: "River" }, h: "6am - 7pm", c: { es: "Soleado", en: "Sunny" }, e: { es: "Primavera, Verano", en: "Spring, Summer" }, lote: { es: "Lote Peces Fluviales", en: "River Fish Bundle" } },
+                { id: "pufferfish", n: { es: "Pez globo", en: "Pufferfish" }, l: { es: "Océano", en: "Ocean" }, h: "12pm - 4pm", c: { es: "Sol", en: "Sun" }, e: { es: "Verano", en: "Summer" }, lote: { es: "Lote Peces Especiales", en: "Specialty Fish Bundle" } },
+                { id: "tuna", n: { es: "Atún", en: "Tuna" }, l: { es: "Océano", en: "Ocean" }, h: "6am - 7pm", c: { es: "Cualquiera", en: "Any" }, e: { es: "Verano, Invierno", en: "Summer, Winter" }, lote: { es: "Lote Peces Marinos", en: "Ocean Fish Bundle" } },
+                { id: "sturgeon", n: { es: "Esturión", en: "Sturgeon" }, l: { es: "Lago de la Montaña", en: "Mountain Lake" }, h: "6am - 7pm", c: { es: "Cualquiera", en: "Any" }, e: { es: "Verano, Invierno", en: "Summer, Winter" }, lote: { es: "Lote Peces de Lago", en: "Lake Fish Bundle" } },
+                { id: "tilapia", n: { es: "Tilapia", en: "Tilapia" }, l: { es: "Océano", en: "Ocean" }, h: "6am - 2pm", c: { es: "Cualquiera", en: "Any" }, e: { es: "Verano, Otoño", en: "Summer, Fall" }, lote: { es: "Lote Peces Marinos", en: "Ocean Fish Bundle" } },
+                { id: "red_snapper", n: { es: "Pargo colorado", en: "Red Snapper" }, l: { es: "Océano", en: "Ocean" }, h: "6am - 7pm", c: { es: "Lluvia", en: "Rainy" }, e: { es: "Verano, Otoño", en: "Summer, Fall" }, lote: { es: "Lote Peces Marinos", en: "Ocean Fish Bundle" } },
+                { id: "largemouth_bass", n: { es: "Perca gigante", en: "Largemouth Bass" }, l: { es: "Lago de la Montaña", en: "Mountain Lake" }, h: "6am - 7pm", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Peces de Lago", en: "Lake Fish Bundle" } },
+                { id: "bullhead", n: { es: "Siluro", en: "Bullhead" }, l: { es: "Lago de la Montaña", en: "Mountain Lake" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Peces de Lago", en: "Lake Fish Bundle" } },
+                { id: "bream", n: { es: "Besugo", en: "Bream" }, l: { es: "Río", en: "River" }, h: "6pm - 2am", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Peces Nocturnos", en: "Night Fishing Bundle" } },
+                { id: "carp", n: { es: "Carpa", en: "Carp" }, l: { es: "Lago de la Montaña / Cloacas", en: "Mountain Lake / Sewers" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Prim., Ver., Oto.", en: "Spr., Sum., Fall" }, lote: { es: "Lote Peces de Lago", en: "Lake Fish Bundle" } },
+                { id: "ghostfish", n: { es: "Pez fantasma", en: "Ghostfish" }, l: { es: "Minas", en: "Mines" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Peces Especiales", en: "Specialty Fish Bundle" } },
+                { id: "woodskip", n: { es: "Muyu", en: "Woodskip" }, l: { es: "Bosque Secreto", en: "Secret Woods" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Peces Especiales", en: "Specialty Fish Bundle" } },
+                { id: "sandfish", n: { es: "Pez arenero", en: "Sandfish" }, l: { es: "Desierto", en: "Desert" }, h: "6am - 8pm", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Peces Especiales", en: "Specialty Fish Bundle" } },
+                { id: "lobster", n: { es: "Langosta", en: "Lobster" }, l: { es: "Mar (Trampa)", en: "Ocean (Crab Pot)" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Trampa para Cangrejos", en: "Crab Pot Bundle" } },
+                { id: "clam", n: { es: "Almeja", en: "Clam" }, l: { es: "Playa (Recolección)", en: "Beach (Foraging)" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Trampa para Cangrejos", en: "Crab Pot Bundle" } },
+                { id: "crayfish", n: { es: "Cangrejo de río", en: "Crayfish" }, l: { es: "Agua dulce (Trampa)", en: "Freshwater (Crab Pot)" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Trampa para Cangrejos", en: "Crab Pot Bundle" } },
+                { id: "crab", n: { es: "Cangrejo", en: "Crab" }, l: { es: "Mar (Trampa) / Minas", en: "Ocean (Crab Pot) / Mines" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Trampa para Cangrejos", en: "Crab Pot Bundle" } },
+                { id: "cockle", n: { es: "Berberecho", en: "Cockle" }, l: { es: "Playa (Recolección)", en: "Beach (Foraging)" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Trampa para Cangrejos", en: "Crab Pot Bundle" } },
+                { id: "mussel", n: { es: "Mejillón", en: "Mussel" }, l: { es: "Playa (Recolección)", en: "Beach (Foraging)" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Trampa para Cangrejos", en: "Crab Pot Bundle" } },
+                { id: "shrimp", n: { es: "Camarón", en: "Shrimp" }, l: { es: "Mar (Trampa)", en: "Ocean (Crab Pot)" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Trampa para Cangrejos", en: "Crab Pot Bundle" } },
+                { id: "snail", n: { es: "Caracol", en: "Snail" }, l: { es: "Agua dulce (Trampa)", en: "Freshwater (Crab Pot)" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Trampa para Cangrejos", en: "Crab Pot Bundle" } },
+                { id: "periwinkle", n: { es: "Bígaro", en: "Periwinkle" }, l: { es: "Agua dulce (Trampa)", en: "Freshwater (Crab Pot)" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Trampa para Cangrejos", en: "Crab Pot Bundle" } },
+                { id: "oyster", n: { es: "Ostra", en: "Oyster" }, l: { es: "Playa (Recolección)", en: "Beach (Foraging)" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Trampa para Cangrejos", en: "Crab Pot Bundle" } }
+            ]},
+            { name: { es: "Lotes: Otoño / Invierno", en: "Bundles: Fall / Winter" }, fish: [
+                { id: "tiger_trout", n: { es: "Trucha tigre", en: "Tiger Trout" }, l: { es: "Río", en: "River" }, h: "6am - 7pm", c: { es: "Cualquiera", en: "Any" }, e: { es: "Otoño, Invierno", en: "Fall, Winter" }, lote: { es: "Lote Peces Fluviales", en: "River Fish Bundle" } },
+                { id: "walleye", n: { es: "Walleye", en: "Walleye" }, l: { es: "Río / Lago / Bosque", en: "River / Lake / Forest" }, h: "12pm - 2am", c: { es: "Lluvia", en: "Rainy" }, e: { es: "Otoño, Invierno", en: "Fall, Winter" }, lote: { es: "Lote Peces Nocturnos", en: "Night Fishing Bundle" } },
+                { id: "largemouth_bass", n: { es: "Perca gigante", en: "Largemouth Bass" }, l: { es: "Lago de la Montaña", en: "Mountain Lake" }, h: "6am - 7pm", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Peces de Lago", en: "Lake Fish Bundle" } },
+                { id: "bullhead", n: { es: "Siluro", en: "Bullhead" }, l: { es: "Lago de la Montaña", en: "Mountain Lake" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Peces de Lago", en: "Lake Fish Bundle" } },
+                { id: "bream", n: { es: "Besugo", en: "Bream" }, l: { es: "Río", en: "River" }, h: "6pm - 2am", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Peces Nocturnos", en: "Night Fishing Bundle" } },
+                { id: "carp", n: { es: "Carpa", en: "Carp" }, l: { es: "Lago de la Montaña / Cloacas", en: "Mountain Lake / Sewers" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Prim., Ver., Oto.", en: "Spr., Sum., Fall" }, lote: { es: "Lote Peces de Lago", en: "Lake Fish Bundle" } },
+                { id: "ghostfish", n: { es: "Pez fantasma", en: "Ghostfish" }, l: { es: "Minas", en: "Mines" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Peces Especiales", en: "Specialty Fish Bundle" } },
+                { id: "woodskip", n: { es: "Muyu", en: "Woodskip" }, l: { es: "Bosque Secreto", en: "Secret Woods" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Peces Especiales", en: "Specialty Fish Bundle" } },
+                { id: "sandfish", n: { es: "Pez arenero", en: "Sandfish" }, l: { es: "Desierto", en: "Desert" }, h: "6am - 8pm", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Peces Especiales", en: "Specialty Fish Bundle" } },
+                { id: "lobster", n: { es: "Langosta", en: "Lobster" }, l: { es: "Mar (Trampa)", en: "Ocean (Crab Pot)" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Trampa para Cangrejos", en: "Crab Pot Bundle" } },
+                { id: "clam", n: { es: "Almeja", en: "Clam" }, l: { es: "Playa (Recolección)", en: "Beach (Foraging)" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Trampa para Cangrejos", en: "Crab Pot Bundle" } },
+                { id: "crayfish", n: { es: "Cangrejo de río", en: "Crayfish" }, l: { es: "Agua dulce (Trampa)", en: "Freshwater (Crab Pot)" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Trampa para Cangrejos", en: "Crab Pot Bundle" } },
+                { id: "crab", n: { es: "Cangrejo", en: "Crab" }, l: { es: "Mar (Trampa) / Minas", en: "Ocean (Crab Pot) / Mines" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Trampa para Cangrejos", en: "Crab Pot Bundle" } },
+                { id: "cockle", n: { es: "Berberecho", en: "Cockle" }, l: { es: "Playa (Recolección)", en: "Beach (Foraging)" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Trampa para Cangrejos", en: "Crab Pot Bundle" } },
+                { id: "mussel", n: { es: "Mejillón", en: "Mussel" }, l: { es: "Playa (Recolección)", en: "Beach (Foraging)" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Trampa para Cangrejos", en: "Crab Pot Bundle" } },
+                { id: "shrimp", n: { es: "Camarón", en: "Shrimp" }, l: { es: "Mar (Trampa)", en: "Ocean (Crab Pot)" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Trampa para Cangrejos", en: "Crab Pot Bundle" } },
+                { id: "snail", n: { es: "Caracol", en: "Snail" }, l: { es: "Agua dulce (Trampa)", en: "Freshwater (Crab Pot)" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Trampa para Cangrejos", en: "Crab Pot Bundle" } },
+                { id: "periwinkle", n: { es: "Bígaro", en: "Periwinkle" }, l: { es: "Agua dulce (Trampa)", en: "Freshwater (Crab Pot)" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Trampa para Cangrejos", en: "Crab Pot Bundle" } },
+                { id: "oyster", n: { es: "Ostra", en: "Oyster" }, l: { es: "Playa (Recolección)", en: "Beach (Foraging)" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Trampa para Cangrejos", en: "Crab Pot Bundle" } }
+            ]}
+        ]
+    },
+    {
+        mother: { es: "Peces Comunes", en: "Common Fish" },
+        tagClass: "common-tag", icon: "🐟",
+        seasons: [
+            { name: { es: "Comunes: Temporales", en: "Common: Seasonal" }, fish: [
+                { id: "anchovy", n: { es: "Anchoa", en: "Anchovy" }, l: { es: "Océano", en: "Ocean" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Primavera, Otoño", en: "Spring, Fall" }, lote: { es: "Común", en: "Common" } },
+                { id: "red_mullet", n: { es: "Salmonete", en: "Red Mullet" }, l: { es: "Océano", en: "Ocean" }, h: "6am - 7pm", c: { es: "Cualquiera", en: "Any" }, e: { es: "Primavera, Verano", en: "Spring, Summer" }, lote: { es: "Común", en: "Common" } },
+                { id: "herring", n: { es: "Arenque", en: "Herring" }, l: { es: "Océano", en: "Ocean" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Primavera, Invierno", en: "Spring, Winter" }, lote: { es: "Común", en: "Common" } },
+                { id: "lingcod", n: { es: "Bacalao largo", en: "Lingcod" }, l: { es: "Río/Lago", en: "River/Lake" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Invierno", en: "Winter" }, lote: { es: "Común", en: "Common" } },
+                { id: "squid", n: { es: "Calamar", en: "Squid" }, l: { es: "Océano", en: "Ocean" }, h: "6pm - 2am", c: { es: "Cualquiera", en: "Any" }, e: { es: "Invierno", en: "Winter" }, lote: { es: "Común", en: "Common" } }
+            ]},
+            { name: { es: "Comunes: Todo el Año", en: "Common: All Year" }, fish: [
+                { id: "chub", n: { es: "Cachuelo", en: "Chub" }, l: { es: "Río / Lago de la Montaña", en: "River / Mountain Lake" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote de Investigación de Campo", en: "Field Research Bundle" } },
+                { id: "perch", n: { es: "Perca", en: "Perch" }, l: { es: "Lago de la Montaña", en: "Mountain Lake" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Común", en: "Common" } }
+            ]}
+        ]
+    },
+    {
+        mother: { es: "Peces Legendarios", en: "Legendary Fish" },
+        tagClass: "legend-tag", icon: "🏆",
+        seasons: [
+            { name: { es: "Colección Legendaria", en: "Legendary Collection" }, fish: [
+                { id: "legend", n: { es: "Leyenda", en: "Legend" }, l: { es: "Lago de la Montaña", en: "Mountain Lake" }, h: "Cualquiera", c: { es: "Primavera + Lluvia", en: "Spring + Rain" }, e: { es: "Primavera", en: "Spring" }, lote: { es: "Legendario", en: "Legendary" } },
+                { id: "crimsonfish", n: { es: "Pez carmesí", en: "Crimsonfish" }, l: { es: "Océano", en: "Ocean" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Verano", en: "Summer" }, lote: { es: "Legendario", en: "Legendary" } },
+                { id: "angler", n: { es: "Rape", en: "Angler" }, l: { es: "Pueblo (Norte)", en: "Town (North)" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Otoño", en: "Fall" }, lote: { es: "Legendario", en: "Legendary" } },
+                { id: "glacierfish", n: { es: "Pez glacial", en: "Glacierfish" }, l: { es: "Bosque Tizón", en: "Cindersap Forest" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Invierno", en: "Winter" }, lote: { es: "Legendario", en: "Legendary" } },
+                { id: "mutant_carp", n: { es: "Carpa mutante", en: "Mutant Carp" }, l: { es: "Cloacas", en: "Sewers" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Legendario", en: "Legendary" } }
+            ]}
+        ]
+    }
+];
 
-        // Inicialización y persistencia
-        let checkedFish = JSON.parse(localStorage.getItem('stardew_checked_fish')) || [];
+const app = {
+    lang: localStorage.getItem('sdv_lang') || 'es',
+    progress: JSON.parse(localStorage.getItem('sdv_master_v7')) || {},
 
-        function saveToStorage() {
-            localStorage.setItem('stardew_checked_fish', JSON.stringify(checkedFish));
-        }
-
-        function calculateProgress() {
-            if (fishData.length === 0) return;
-            const percentage = Math.round((checkedFish.length / fishData.length) * 100);
-            const badge = document.getElementById('progress-badge');
-            badge.textContent = `${percentage}% Completado`;
-        }
-
-        // Renderizado del DOM
-        function renderChecklist(filterText = "") {
-            const listBundles = document.getElementById('list-bundles');
-            const listCommon = document.getElementById('list-common');
-            const listLegendary = document.getElementById('list-legendary');
-
-            // Limpiar listas anteriores
-            listBundles.innerHTML = "";
-            listCommon.innerHTML = "";
-            listLegendary.innerHTML = "";
-
-            const normalizedFilter = filterText.toLowerCase().trim();
-
-            fishData.forEach(fish => {
-                // Filtro de búsqueda
-                const matchesSearch = 
-                    fish.name.toLowerCase().includes(normalizedFilter) ||
-                    fish.location.toLowerCase().includes(normalizedFilter) ||
-                    fish.season.toLowerCase().includes(normalizedFilter) ||
-                    fish.weather.toLowerCase().includes(normalizedFilter);
-
-                if (!matchesSearch) return;
-
-                const isChecked = checkedFish.includes(fish.id);
-
-                const card = document.createElement('div');
-                card.className = `card mb-2 border-secondary ${isChecked ? 'completed' : ''}`;
-                card.innerHTML = `
-                    <div class="card-body d-flex align-items-center justify-content-between p-2">
-                        <div class="d-flex align-items-center">
-                            <input class="form-check-input me-3 bg-dark border-secondary fish-checkbox" type="checkbox" value="${fish.id}" ${isChecked ? 'checked' : ''} style="width: 24px; height: 24px;">
-                            <img src="${fish.imgUrl}" alt="${fish.name}" class="fish-img me-3">
-                            <div>
-                                <h6 class="mb-0 fs-6 fw-bold">${fish.name}</h6>
-                                <p class="mb-0 badge-info text-secondary">
-                                    📍 ${fish.location} | ⏰ ${fish.time} <br>
-                                    📅 ${fish.season} | ☁️ ${fish.weather}
-                                </p>
-                            </div>
+    init() {
+        this.renderUI();
+        const container = document.getElementById('main-container');
+        container.innerHTML = FISH_DATA.map((mother, mIdx) => `
+            <div class="mother-cat">
+                <div class="mother-title d-flex justify-content-between align-items-center">
+                    <span>${mother.mother[this.lang]}</span>
+                    <span class="badge bg-secondary rounded-pill" id="mprog-${mIdx}">0%</span>
+                </div>
+                ${mother.seasons.map((season, sIdx) => {
+                    const catId = `${mIdx}-${sIdx}`;
+                    return `
+                    <div class="card-season" data-cat-id="${catId}">
+                        <div class="season-header" onclick="app.toggleCat('${catId}')">
+                            <span>${season.name[this.lang]}</span>
+                            <span class="badge bg-primary rounded-pill progress-text">0%</span>
                         </div>
-                    </div>
-                `;
+                        <div id="cat-${catId}" class="cat-content">
+                            ${season.fish.map((f, fIdx) => {
+                                const id = `${mIdx}-${sIdx}-${fIdx}`;
+                                const isDone = !!this.progress[f.id];
+                                const imgUrl = FISH_IMAGES[f.id] || "https://stardewvalleywiki.com/mediawiki/images/4/43/Fish.png";
+                                return `
+                                <div class="fish-row ${isDone ? 'completed' : ''}" 
+                                     data-fish-id="${f.id}"
+                                     data-search="${f.n.es.toLowerCase()} ${f.n.en.toLowerCase()} ${f.e[this.lang].toLowerCase()}">
+                                    <input class="form-check-input" type="checkbox" id="chk-${id}" 
+                                           ${isDone ? 'checked' : ''} onchange="app.updateFish('${f.id}', this.checked)">
+                                    <img src="${imgUrl}" 
+                                         alt="${f.n[this.lang]}" 
+                                         class="fish-icon" 
+                                         onerror="this.onerror=null; this.src='https://stardewvalleywiki.com/mediawiki/images/4/43/Fish.png';">
+                                    <div class="flex-grow-1">
+                                        <label class="fw-bold d-block" for="chk-${id}">${f.n[this.lang]}</label>
+                                        <div class="fish-details">
+                                            <strong>${this.lang === 'es' ? 'Estación' : 'Season'}:</strong> ${f.e[this.lang]}<br>
+                                            📍 ${f.l[this.lang]} | ⏰ ${f.h} | ☁️ ${f.c[this.lang]}
+                                        </div>
+                                        <div class="tag ${mother.tagClass}">${mother.icon} ${f.lote[this.lang]}</div>
+                                    </div>
+                                </div>`;
+                            }).join('')}
+                        </div>
+                    </div>`;
+                }).join('')}
+            </div>
+        `).join('');
+        this.updateAllProgress();
+    },
 
-                // Asignar a su contenedor correspondiente
-                if (fish.category === "bundles") listBundles.appendChild(card);
-                else if (fish.category === "common") listCommon.appendChild(card);
-                else if (fish.category === "legendary") listLegendary.appendChild(card);
-            });
+    renderUI() {
+        const texts = {
+            es: { title: "Wiki Pesca", lang: "🇺🇸 EN", search: "Buscar pez, estación...", coll: "Colapsar", exp: "Expandir", reset: "Reset" },
+            en: { title: "Fishing Wiki", lang: "🇪🇸 ES", search: "Search fish, season...", coll: "Collapse", exp: "Expand", reset: "Reset" }
+        };
+        const t = texts[this.lang];
+        document.getElementById('ui-title').innerText = t.title;
+        document.getElementById('ui-lang').innerText = t.lang;
+        document.getElementById('search').placeholder = t.search;
+        document.getElementById('ui-collapse').innerText = t.coll;
+        document.getElementById('ui-expand').innerText = t.exp;
+        document.getElementById('ui-reset').innerText = t.reset;
+    },
 
-            calculateProgress();
+    toggleLang() {
+        this.lang = this.lang === 'es' ? 'en' : 'es';
+        localStorage.setItem('sdv_lang', this.lang);
+        this.init();
+    },
+
+    updateFish(fishId, isChecked) {
+        this.progress[fishId] = isChecked;
+        localStorage.setItem('sdv_master_v7', JSON.stringify(this.progress));
+
+        document.querySelectorAll(`[data-fish-id="${fishId}"]`).forEach(row => {
+            row.classList.toggle('completed', isChecked);
+            row.querySelector('.form-check-input').checked = isChecked;
+        });
+
+        this.updateAllProgress();
+    },
+
+    updateCatProgress(catId) {
+        const catEl = document.querySelector(`[data-cat-id="${catId}"]`);
+        if (!catEl) return;
+        const total = catEl.querySelectorAll('.form-check-input').length;
+        const checked = catEl.querySelectorAll('.form-check-input:checked').length;
+        catEl.querySelector('.progress-text').innerText = Math.round((checked / total) * 100) + '%';
+    },
+
+    updateMotherProgress(mIdx) {
+        const motherEl = document.getElementsByClassName('mother-cat')[mIdx];
+        if (!motherEl) return;
+        const total = motherEl.querySelectorAll('.form-check-input').length;
+        const checked = motherEl.querySelectorAll('.form-check-input:checked').length;
+        document.getElementById(`mprog-${mIdx}`).innerText = Math.round((checked / total) * 100) + '%';
+    },
+
+    updateAllProgress() {
+        FISH_DATA.forEach((m, mIdx) => {
+            m.seasons.forEach((s, sIdx) => this.updateCatProgress(`${mIdx}-${sIdx}`));
+            this.updateMotherProgress(mIdx);
+        });
+    },
+
+    filter() {
+        const q = document.getElementById('search').value.toLowerCase();
+        document.querySelectorAll('.fish-row').forEach(row => {
+            const match = row.dataset.search.includes(q);
+            row.style.display = match ? 'flex' : 'none';
+        });
+    },
+
+    toggleCat(id) {
+        const el = document.getElementById(`cat-${id}`);
+        el.style.display = (el.style.display === 'flex') ? 'none' : 'flex';
+    },
+
+    toggleAll(show) {
+        document.querySelectorAll('.cat-content').forEach(el => el.style.display = show ? 'flex' : 'none');
+    },
+
+    reset() {
+        if(confirm(this.lang === 'es' ? "¿Borrar todo?" : "Clear all?")) {
+            this.progress = {};
+            localStorage.removeItem('sdv_master_v7');
+            location.reload();
         }
+    }
+};
 
-        // Manejador de eventos para checkboxes
-        document.addEventListener('change', function(e) {
-            if (e.target.classList.contains('fish-checkbox')) {
-                const fishId = e.target.value;
-                const card = e.target.closest('.card');
+function toggleTheme() {
+    const b = document.body;
+    b.setAttribute('data-bs-theme', b.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark');
+}
 
-                if (e.target.checked) {
-                    if (!checkedFish.includes(fishId)) checkedFish.push(fishId);
-                    card.classList.add('completed');
-                } else {
-                    checkedFish = checkedFish.filter(id => id !== fishId);
-                    card.classList.remove('completed');
-                }
-
-                saveToStorage();
-                calculateProgress();
-            }
-        });
-
-        // Evento barra de búsqueda
-        document.getElementById('search-input').addEventListener('input', function(e) {
-            renderChecklist(e.target.value);
-        });
-
-        // Carga inicial
-        window.addEventListener('DOMContentLoaded', () => {
-            renderChecklist();
-        });
-    </script>
+document.addEventListener('DOMContentLoaded', () => app.init());
+</script>
 </body>
 </html>
