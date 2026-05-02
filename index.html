@@ -1,163 +1,43 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wiki Pesca</title>
-
-<link rel="manifest" href="manifest.json">
-
-<style>
-body{font-family:sans-serif;background:#fdf6e3;margin:0}
-nav{background:#7fb3d5;color:#fff;padding:10px;display:flex;justify-content:space-between}
-input{width:100%;padding:10px;margin:10px 0}
-
-.mother{padding:10px}
-.season{border:1px solid #ccc;margin-bottom:10px;border-radius:8px}
-.header{padding:10px;background:#eee;cursor:pointer;font-weight:bold}
-.content{display:none}
-
-.fish{display:flex;align-items:center;padding:8px;border-bottom:1px solid #ddd}
-.fish.done{background:#d4edda}
-.fish img{width:32px;margin-right:10px}
-.meta{font-size:12px;color:#555}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wiki Pesca - Stardew Valley</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
 </head>
+<body data-bs-theme="light">
 
-<body>
+    <nav class="navbar navbar-dark mb-3">
+        <div class="container d-flex justify-content-between align-items-center">
+            <span class="navbar-brand fw-bold" id="ui-title">Wiki Pesca</span>
+            <div class="d-flex gap-2">
+                <button class="btn btn-sm btn-outline-light fw-bold" onclick="app.toggleLang()" id="ui-lang">🇺🇸 EN</button>
+                <button class="btn btn-sm btn-outline-light" onclick="app.toggleTheme()">🌓</button>
+            </div>
+        </div>
+    </nav>
 
-<nav>
-<span>Wiki Pesca</span>
-<div>
-<button onclick="app.toggleLang()">🌐</button>
-</div>
-</nav>
+    <div class="sticky-tools mb-4">
+        <div class="container">
+            <input type="text" id="search" class="form-control mb-3" oninput="app.filter()" placeholder="Buscar pez, estación o ubicación...">
+            <div class="row g-2">
+                <div class="col">
+                    <button class="btn btn-sm btn-secondary w-100 fw-semibold" onclick="app.toggleAll(false)" id="ui-collapse">Colapsar</button>
+                </div>
+                <div class="col">
+                    <button class="btn btn-sm btn-secondary w-100 fw-semibold" onclick="app.toggleAll(true)" id="ui-expand">Expandir</button>
+                </div>
+                <div class="col-3 col-sm-2">
+                    <button class="btn btn-sm btn-danger w-100 fw-semibold" onclick="app.reset()" id="ui-reset">Reset</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<div style="padding:10px">
-<input placeholder="Buscar..." oninput="app.filter(this.value)">
-</div>
+    <main class="container" id="main-container"></main>
 
-<div id="app"></div>
-
-<script src="data.js"></script>
-
-<script>
-const IMG = id =>
-`https://stardewvalleywiki.com/mediawiki/images/${id.replace(/(^|_)(\w)/g,(_,p1,p2)=>p2.toUpperCase())}.png`;
-
-const app = {
-lang: localStorage.getItem("lang") || "es",
-progress: JSON.parse(localStorage.getItem("progress")||"{}"),
-
-init(){
-this.render();
-this.updateProgress();
-},
-
-render(){
-const root = document.getElementById("app");
-
-root.innerHTML = FISH_DATA.map((m,mIdx)=>`
-<div class="mother">
-
-<h3>${m.mother[this.lang]}</h3>
-
-${m.seasons.map((s,sIdx)=>`
-<div class="season">
-
-<div class="header" onclick="app.toggle('${mIdx}-${sIdx}')">
-${s.name[this.lang]}
-<span id="p-${mIdx}-${sIdx}">0%</span>
-</div>
-
-<div class="content" id="c-${mIdx}-${sIdx}">
-
-${s.fish.map(f=>`
-<div class="fish ${this.progress[f.id]?'done':''}"
-data-id="${f.id}"
-data-search="${[
-f.n?.es,f.n?.en,
-f.l?.es,f.l?.en,
-f.e?.es,f.e?.en,
-f.c?.es,f.c?.en
-].join(' ').toLowerCase()}">
-
-<input type="checkbox"
-${this.progress[f.id]?'checked':''}
-onchange="app.check('${f.id}',this.checked)">
-
-<img src="${IMG(f.id)}"
-onerror="this.src='https://via.placeholder.com/32'">
-
-<div>
-<strong>${f.n?.[this.lang] || f.id}</strong>
-<div class="meta">
-${f.l?.[this.lang] || ''} 
-${f.e?.[this.lang] ? ' | '+f.e[this.lang] : ''} 
-${f.c?.[this.lang] ? ' | '+f.c[this.lang] : ''}
-</div>
-</div>
-
-</div>
-`).join("")}
-
-</div>
-</div>
-`).join("")}
-
-</div>
-`).join("");
-},
-
-check(id,val){
-this.progress[id]=val;
-localStorage.setItem("progress",JSON.stringify(this.progress));
-
-document.querySelectorAll(`[data-id="${id}"]`).forEach(e=>{
-e.classList.toggle("done",val);
-e.querySelector("input").checked=val;
-});
-
-this.updateProgress();
-},
-
-toggle(id){
-const el=document.getElementById("c-"+id);
-el.style.display=el.style.display==="none"?"block":"none";
-},
-
-filter(q){
-q=q.toLowerCase();
-document.querySelectorAll(".fish").forEach(f=>{
-f.style.display=f.dataset.search.includes(q)?"flex":"none";
-});
-},
-
-updateProgress(){
-FISH_DATA.forEach((m,mIdx)=>{
-m.seasons.forEach((s,sIdx)=>{
-const el=document.getElementById(`p-${mIdx}-${sIdx}`);
-if(!el) return;
-
-const items=document.querySelectorAll(`#c-${mIdx}-${sIdx} input`);
-const checked=document.querySelectorAll(`#c-${mIdx}-${sIdx} input:checked`);
-
-const pct=items.length?Math.round((checked.length/items.length)*100):0;
-el.innerText=pct+"%";
-});
-});
-},
-
-toggleLang(){
-this.lang=this.lang==="es"?"en":"es";
-localStorage.setItem("lang",this.lang);
-this.render();
-this.updateProgress();
-}
-};
-
-document.addEventListener("DOMContentLoaded",()=>app.init());
-</script>
-
+    <script src="app.js"></script>
 </body>
 </html>
