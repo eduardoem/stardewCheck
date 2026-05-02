@@ -95,5 +95,165 @@ const FISH_DATA = [
         seasons: [
             { name: { es: "Comunes: Temporales", en: "Common: Seasonal" }, fish: [
                 { n: { es: "Anchoa", en: "Anchovy" }, l: { es: "Océano", en: "Ocean" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Primavera, Otoño", en: "Spring, Fall" }, lote: { es: "Común", en: "Common" } },
-                { n: { es: "Salmonete", en: "Red Mullet" }, l: { es: "Océano", en: "Ocean" }, h: "6am - 7pm", c: { es: "Cualquiera", en: "Any" }, e: { es: "Primavera, Verano", en: "Spring, Summer" }, lote: { es: "Común", en
-    
+                { n: { es: "Salmonete", en: "Red Mullet" }, l: { es: "Océano", en: "Ocean" }, h: "6am - 7pm", c: { es: "Cualquiera", en: "Any" }, e: { es: "Primavera, Verano", en: "Spring, Summer" }, lote: { es: "Común", en: "Common" } },
+                { n: { es: "Arenque", en: "Herring" }, l: { es: "Océano", en: "Ocean" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Primavera, Invierno", en: "Spring, Winter" }, lote: { es: "Común", en: "Common" } },
+                { n: { es: "Bacalao largo", en: "Lingcod" }, l: { es: "Río/Lago", en: "River/Lake" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Invierno", en: "Winter" }, lote: { es: "Común", en: "Common" } },
+                { n: { es: "Calamar", en: "Squid" }, l: { es: "Océano", en: "Ocean" }, h: "6pm - 2am", c: { es: "Cualquiera", en: "Any" }, e: { es: "Invierno", en: "Winter" }, lote: { es: "Común", en: "Common" } }
+            ]},
+            { name: { es: "Comunes: Todo el Año", en: "Common: All Year" }, fish: [
+                { n: { es: "Cachuelo", en: "Chub" }, l: { es: "Río/Lago", en: "River/Lake" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Común", en: "Common" } },
+                { n: { es: "Barbo", en: "Carp" }, l: { es: "Río/Lago", en: "River/Lake" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Común", en: "Common" } },
+                { n: { es: "Perca", en: "Perch" }, l: { es: "Lago", en: "Lake" }, h: "6am - 7pm", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Común", en: "Common" } }
+            ]}
+        ]
+    },
+    {
+        mother: { es: "Peces Legendarios", en: "Legendary Fish" },
+        tagClass: "legend-tag", icon: "🏆",
+        seasons: [
+            { name: { es: "Colección Legendaria", en: "Legendary Collection" }, fish: [
+                { n: { es: "Leyenda", en: "Legend" }, l: { es: "Lago montaña", en: "Mountain Lake" }, h: "Cualquiera", c: { es: "Primavera + Lluvia", en: "Spring + Rain" }, e: { es: "Primavera", en: "Spring" }, lote: { es: "Legendario", en: "Legendary" } },
+                { n: { es: "Pez carmesí", en: "Crimsonfish" }, l: { es: "Océano", en: "Ocean" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Verano", en: "Summer" }, lote: { es: "Legendario", en: "Legendary" } },
+                { n: { es: "Rape", en: "Angler" }, l: { es: "Pueblo (Norte)", en: "Town (North)" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Otoño", en: "Fall" }, lote: { es: "Legendario", en: "Legendary" } },
+                { n: { es: "Pez glacial", en: "Glacierfish" }, l: { es: "Bosque Tizón", en: "Cindersap Forest" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Invierno", en: "Winter" }, lote: { es: "Legendario", en: "Legendary" } },
+                { n: { es: "Carpa mutante", en: "Mutant Carp" }, l: { es: "Cloacas", en: "Sewers" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Legendario", en: "Legendary" } }
+            ]}
+        ]
+    }
+];
+
+const app = {
+    lang: localStorage.getItem('sdv_lang') || 'es',
+    progress: JSON.parse(localStorage.getItem('sdv_master_v5')) || {},
+
+    init() {
+        this.renderUI();
+        const container = document.getElementById('main-container');
+        container.innerHTML = FISH_DATA.map((mother, mIdx) => `
+            <div class="mother-cat">
+                <div class="mother-title d-flex justify-content-between align-items-center">
+                    <span>${mother.mother[this.lang]}</span>
+                    <span class="badge bg-secondary rounded-pill" id="mprog-${mIdx}">0%</span>
+                </div>
+                ${mother.seasons.map((season, sIdx) => {
+                    const catId = `${mIdx}-${sIdx}`;
+                    return `
+                    <div class="card-season" data-cat-id="${catId}">
+                        <div class="season-header" onclick="app.toggleCat('${catId}')">
+                            <span>${season.name[this.lang]}</span>
+                            <span class="badge bg-primary rounded-pill progress-text">0%</span>
+                        </div>
+                        <div id="cat-${catId}" class="cat-content">
+                            ${season.fish.map((f, fIdx) => {
+                                const id = `${mIdx}-${sIdx}-${fIdx}`;
+                                const isDone = !!this.progress[id];
+                                return `
+                                <div class="fish-row ${isDone ? 'completed' : ''}" 
+                                     data-search="${f.n.es.toLowerCase()} ${f.n.en.toLowerCase()} ${f.e[this.lang].toLowerCase()}">
+                                    <input class="form-check-input" type="checkbox" id="${id}" 
+                                           ${isDone ? 'checked' : ''} onchange="app.updateFish('${id}')">
+                                    <div class="flex-grow-1">
+                                        <label class="fw-bold d-block" for="${id}">${f.n[this.lang]}</label>
+                                        <div class="fish-details">
+                                            <strong>${this.lang === 'es' ? 'Estación' : 'Season'}:</strong> ${f.e[this.lang]}<br>
+                                            📍 ${f.l[this.lang]} | ⏰ ${f.h} | ☁️ ${f.c[this.lang]}
+                                        </div>
+                                        <div class="tag ${mother.tagClass}">${mother.icon} ${f.lote[this.lang]}</div>
+                                    </div>
+                                </div>`;
+                            }).join('')}
+                        </div>
+                    </div>`;
+                }).join('')}
+            </div>
+        `).join('');
+        this.updateAllProgress();
+    },
+
+    renderUI() {
+        const texts = {
+            es: { title: "Wiki Pesca", lang: "🇺🇸 EN", search: "Buscar pez, estación...", coll: "Colapsar", exp: "Expandir", reset: "Reset" },
+            en: { title: "Fishing Wiki", lang: "🇪🇸 ES", search: "Search fish, season...", coll: "Collapse", exp: "Expand", reset: "Reset" }
+        };
+        const t = texts[this.lang];
+        document.getElementById('ui-title').innerText = t.title;
+        document.getElementById('ui-lang').innerText = t.lang;
+        document.getElementById('search').placeholder = t.search;
+        document.getElementById('ui-collapse').innerText = t.coll;
+        document.getElementById('ui-expand').innerText = t.exp;
+        document.getElementById('ui-reset').innerText = t.reset;
+    },
+
+    toggleLang() {
+        this.lang = this.lang === 'es' ? 'en' : 'es';
+        localStorage.setItem('sdv_lang', this.lang);
+        this.init();
+    },
+
+    updateFish(id) {
+        const cb = document.getElementById(id);
+        const row = cb.closest('.fish-row');
+        this.progress[id] = cb.checked;
+        localStorage.setItem('sdv_master_v5', JSON.stringify(this.progress));
+        row.classList.toggle('completed', cb.checked);
+        const [mIdx, sIdx] = id.split('-');
+        this.updateCatProgress(`${mIdx}-${sIdx}`);
+        this.updateMotherProgress(mIdx);
+    },
+
+    updateCatProgress(catId) {
+        const catEl = document.querySelector(`[data-cat-id="${catId}"]`);
+        const total = catEl.querySelectorAll('.form-check-input').length;
+        const checked = catEl.querySelectorAll('.form-check-input:checked').length;
+        catEl.querySelector('.progress-text').innerText = Math.round((checked / total) * 100) + '%';
+    },
+
+    updateMotherProgress(mIdx) {
+        const motherEl = document.getElementsByClassName('mother-cat')[mIdx];
+        const total = motherEl.querySelectorAll('.form-check-input').length;
+        const checked = motherEl.querySelectorAll('.form-check-input:checked').length;
+        document.getElementById(`mprog-${mIdx}`).innerText = Math.round((checked / total) * 100) + '%';
+    },
+
+    updateAllProgress() {
+        FISH_DATA.forEach((m, mIdx) => {
+            m.seasons.forEach((s, sIdx) => this.updateCatProgress(`${mIdx}-${sIdx}`));
+            this.updateMotherProgress(mIdx);
+        });
+    },
+
+    filter() {
+        const q = document.getElementById('search').value.toLowerCase();
+        document.querySelectorAll('.fish-row').forEach(row => {
+            const match = row.dataset.search.includes(q);
+            row.style.display = match ? 'flex' : 'none';
+        });
+    },
+
+    toggleCat(id) {
+        const el = document.getElementById(`cat-${id}`);
+        el.style.display = (el.style.display === 'block') ? 'none' : 'block';
+    },
+
+    toggleAll(show) {
+        document.querySelectorAll('.cat-content').forEach(el => el.style.display = show ? 'block' : 'none');
+    },
+
+    reset() {
+        if(confirm(this.lang === 'es' ? "¿Borrar todo?" : "Clear all?")) {
+            this.progress = {};
+            localStorage.removeItem('sdv_master_v5');
+            location.reload();
+        }
+    }
+};
+
+function toggleTheme() {
+    const b = document.body;
+    b.setAttribute('data-bs-theme', b.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark');
+}
+
+document.addEventListener('DOMContentLoaded', () => app.init());
+</script>
+</body>
+</html>
