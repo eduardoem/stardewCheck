@@ -11,6 +11,7 @@ const FISH_IMAGES = {
     "ghostfish": "https://stardewvalleywiki.com/mediawiki/images/7/72/Ghostfish.png",
     "woodskip": "https://stardewvalleywiki.com/mediawiki/images/9/97/Woodskip.png",
     "sandfish": "https://stardewvalleywiki.com/mediawiki/images/b/bb/Sandfish.png",
+    "chub": "https://stardewvalleywiki.com/mediawiki/images/b/bd/Chub.png",
     "lobster": "https://stardewvalleywiki.com/mediawiki/images/9/9f/Lobster.png",
     "clam": "https://stardewvalleywiki.com/mediawiki/images/e/ed/Clam.png",
     "crayfish": "https://stardewvalleywiki.com/mediawiki/images/5/53/Crayfish.png",
@@ -33,7 +34,6 @@ const FISH_IMAGES = {
     "herring": "https://stardewvalleywiki.com/mediawiki/images/f/f1/Herring.png",
     "lingcod": "https://stardewvalleywiki.com/mediawiki/images/8/87/Lingcod.png",
     "squid": "https://stardewvalleywiki.com/mediawiki/images/8/81/Squid.png",
-    "chub": "https://stardewvalleywiki.com/mediawiki/images/b/bd/Chub.png",
     "perch": "https://stardewvalleywiki.com/mediawiki/images/4/43/Perch.png",
     "legend": "https://stardewvalleywiki.com/mediawiki/images/1/10/Legend.png",
     "crimsonfish": "https://stardewvalleywiki.com/mediawiki/images/d/dc/Crimsonfish.png",
@@ -42,9 +42,8 @@ const FISH_IMAGES = {
     "mutant_carp": "https://stardewvalleywiki.com/mediawiki/images/c/cb/Mutant_Carp.png"
 };
 
-// Base de datos maestra única de peces
 const MASTER_FISH_LIST = [
-    // PECES DE LOTE
+    // === PECES DE LOTE ===
     { id: "sunfish", n: { es: "Pez sol", en: "Sunfish" }, l: { es: "Río", en: "River" }, h: "6am - 7pm", c: { es: "Soleado", en: "Sunny" }, seasons: ["spring", "summer"], mother: { es: "Peces de Lote", en: "Bundle Fish" }, tagClass: "lote-tag", icon: "📦", lote: { es: "Lote Peces Fluviales", en: "River Fish Bundle" } },
     { id: "catfish", n: { es: "Pez gato", en: "Catfish" }, l: { es: "Río / Bosque Secreto", en: "River / Secret Woods" }, h: "6am - 12am", c: { es: "Lluvia", en: "Rainy" }, seasons: ["spring", "fall"], mother: { es: "Peces de Lote", en: "Bundle Fish" }, tagClass: "lote-tag", icon: "📦", lote: { es: "Lote Peces Fluviales", en: "River Fish Bundle" } },
     { id: "shad", n: { es: "Sábalo", en: "Shad" }, l: { es: "Río", en: "River" }, h: "9am - 2am", c: { es: "Lluvia", en: "Rainy" }, seasons: ["spring", "summer", "fall"], mother: { es: "Peces de Lote", en: "Bundle Fish" }, tagClass: "lote-tag", icon: "📦", lote: { es: "Lote Peces Fluviales", en: "River Fish Bundle" } },
@@ -57,8 +56,9 @@ const MASTER_FISH_LIST = [
     { id: "ghostfish", n: { es: "Pez fantasma", en: "Ghostfish" }, l: { es: "Minas", en: "Mines" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, seasons: ["spring", "summer", "fall", "winter"], mother: { es: "Peces de Lote", en: "Bundle Fish" }, tagClass: "lote-tag", icon: "📦", lote: { es: "Lote Peces Especiales", en: "Specialty Fish Bundle" } },
     { id: "woodskip", n: { es: "Muyu", en: "Woodskip" }, l: { es: "Bosque Secreto", en: "Secret Woods" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, seasons: ["spring", "summer", "fall", "winter"], mother: { es: "Peces de Lote", en: "Bundle Fish" }, tagClass: "lote-tag", icon: "📦", lote: { es: "Lote Peces Especiales", en: "Specialty Fish Bundle" } },
     { id: "sandfish", n: { es: "Pez arenero", en: "Sandfish" }, l: { es: "Desierto", en: "Desert" }, h: "6am - 8pm", c: { es: "Cualquiera", en: "Any" }, seasons: ["spring", "summer", "fall", "winter"], mother: { es: "Peces de Lote", en: "Bundle Fish" }, tagClass: "lote-tag", icon: "📦", lote: { es: "Lote Peces Especiales", en: "Specialty Fish Bundle" } },
+    { id: "chub", n: { es: "Cachuelo", en: "Chub" }, l: { es: "Río / Lago", en: "River / Mountain Lake" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, seasons: ["spring", "summer", "fall", "winter"], mother: { es: "Peces de Lote", en: "Bundle Fish" }, tagClass: "lote-tag", icon: "📦", lote: { es: "Lote Investigación Campo", en: "Field Research Bundle" } },
     
-    // TRAMPA PARA CANGREJOS (Disponibles todo el año)
+    // TRAMPA PARA CANGREJOS (Centro Cívico - Todo el año)
     { id: "lobster", n: { es: "Langosta", en: "Lobster" }, l: { es: "Mar (Trampa)", en: "Ocean (Crab Pot)" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, seasons: ["spring", "summer", "fall", "winter"], mother: { es: "Peces de Lote", en: "Bundle Fish" }, tagClass: "lote-tag", icon: "📦", lote: { es: "Lote Trampa para Cangrejos", en: "Crab Pot Bundle" } },
     { id: "clam", n: { es: "Almeja", en: "Clam" }, l: { es: "Playa (Recolección)", en: "Beach (Foraging)" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, seasons: ["spring", "summer", "fall", "winter"], mother: { es: "Peces de Lote", en: "Bundle Fish" }, tagClass: "lote-tag", icon: "📦", lote: { es: "Lote Trampa para Cangrejos", en: "Crab Pot Bundle" } },
     { id: "crayfish", n: { es: "Cangrejo de río", en: "Crayfish" }, l: { es: "Agua dulce (Trampa)", en: "Freshwater (Crab Pot)" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, seasons: ["spring", "summer", "fall", "winter"], mother: { es: "Peces de Lote", en: "Bundle Fish" }, tagClass: "lote-tag", icon: "📦", lote: { es: "Lote Trampa para Cangrejos", en: "Crab Pot Bundle" } },
@@ -81,16 +81,15 @@ const MASTER_FISH_LIST = [
     { id: "tiger_trout", n: { es: "Trucha tigre", en: "Tiger Trout" }, l: { es: "Río", en: "River" }, h: "6am - 7pm", c: { es: "Cualquiera", en: "Any" }, seasons: ["fall", "winter"], mother: { es: "Peces de Lote", en: "Bundle Fish" }, tagClass: "lote-tag", icon: "📦", lote: { es: "Lote Peces Fluviales", en: "River Fish Bundle" } },
     { id: "walleye", n: { es: "Walleye", en: "Walleye" }, l: { es: "Río / Lago / Bosque", en: "River / Lake / Forest" }, h: "12pm - 2am", c: { es: "Lluvia", en: "Rainy" }, seasons: ["fall", "winter"], mother: { es: "Peces de Lote", en: "Bundle Fish" }, tagClass: "lote-tag", icon: "📦", lote: { es: "Lote Peces Nocturnos", en: "Night Fishing Bundle" } },
 
-    // PECES COMUNES
+    // === PECES COMUNES ===
     { id: "anchovy", n: { es: "Anchoa", en: "Anchovy" }, l: { es: "Océano", en: "Ocean" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, seasons: ["spring", "fall"], mother: { es: "Peces Comunes", en: "Common Fish" }, tagClass: "common-tag", icon: "🐟", lote: { es: "Común", en: "Common" } },
     { id: "red_mullet", n: { es: "Salmonete", en: "Red Mullet" }, l: { es: "Océano", en: "Ocean" }, h: "6am - 7pm", c: { es: "Cualquiera", en: "Any" }, seasons: ["spring", "summer"], mother: { es: "Peces Comunes", en: "Common Fish" }, tagClass: "common-tag", icon: "🐟", lote: { es: "Común", en: "Common" } },
     { id: "herring", n: { es: "Arenque", en: "Herring" }, l: { es: "Océano", en: "Ocean" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, seasons: ["spring", "winter"], mother: { es: "Peces Comunes", en: "Common Fish" }, tagClass: "common-tag", icon: "🐟", lote: { es: "Común", en: "Common" } },
     { id: "lingcod", n: { es: "Bacalao largo", en: "Lingcod" }, l: { es: "Río/Lago", en: "River/Lake" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, seasons: ["winter"], mother: { es: "Peces Comunes", en: "Common Fish" }, tagClass: "common-tag", icon: "🐟", lote: { es: "Común", en: "Common" } },
     { id: "squid", n: { es: "Calamar", en: "Squid" }, l: { es: "Océano", en: "Ocean" }, h: "6pm - 2am", c: { es: "Cualquiera", en: "Any" }, seasons: ["winter"], mother: { es: "Peces Comunes", en: "Common Fish" }, tagClass: "common-tag", icon: "🐟", lote: { es: "Común", en: "Common" } },
-    { id: "chub", n: { es: "Cachuelo", en: "Chub" }, l: { es: "Río / Lago de la Montaña", en: "River / Mountain Lake" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, seasons: ["spring", "summer", "fall", "winter"], mother: { es: "Peces Comunes", en: "Common Fish" }, tagClass: "common-tag", icon: "🐟", lote: { es: "Lote Investigación Campo", en: "Field Research Bundle" } },
-    { id: "perch", n: { es: "Perca", en: "Perch" }, l: { es: "Lago de la Montaña", en: "Mountain Lake" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, seasons: ["spring", "summer", "fall", "winter"], mother: { es: "Peces Comunes", en: "Common Fish" }, tagClass: "common-tag", icon: "🐟", lote: { es: "Común", en: "Common" } },
+    { id: "perch", n: { es: "Perca", en: "Perch" }, l: { es: "Lago de la Montaña", en: "Mountain Lake" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, seasons: ["winter"], mother: { es: "Peces Comunes", en: "Common Fish" }, tagClass: "common-tag", icon: "🐟", lote: { es: "Común", en: "Common" } },
 
-    // PECES LEGENDARIOS
+    // === PECES LEGENDARIOS ===
     { id: "legend", n: { es: "Leyenda", en: "Legend" }, l: { es: "Lago de la Montaña", en: "Mountain Lake" }, h: "Cualquiera", c: { es: "Primavera + Lluvia", en: "Spring + Rain" }, seasons: ["spring"], mother: { es: "Peces Legendarios", en: "Legendary Fish" }, tagClass: "legend-tag", icon: "🏆", lote: { es: "Legendario", en: "Legendary" } },
     { id: "crimsonfish", n: { es: "Pez carmesí", en: "Crimsonfish" }, l: { es: "Océano", en: "Ocean" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, seasons: ["summer"], mother: { es: "Peces Legendarios", en: "Legendary Fish" }, tagClass: "legend-tag", icon: "🏆", lote: { es: "Legendario", en: "Legendary" } },
     { id: "angler", n: { es: "Rape", en: "Angler" }, l: { es: "Pueblo (Norte)", en: "Town (North)" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, seasons: ["fall"], mother: { es: "Peces Legendarios", en: "Legendary Fish" }, tagClass: "legend-tag", icon: "🏆", lote: { es: "Legendario", en: "Legendary" } },
@@ -98,7 +97,6 @@ const MASTER_FISH_LIST = [
     { id: "mutant_carp", n: { es: "Carpa mutante", en: "Mutant Carp" }, l: { es: "Cloacas", en: "Sewers" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, seasons: ["spring", "summer", "fall", "winter"], mother: { es: "Peces Legendarios", en: "Legendary Fish" }, tagClass: "legend-tag", icon: "🏆", lote: { es: "Legendario", en: "Legendary" } }
 ];
 
-// Estructura de navegación para el renderizado
 const SEASONS_CONFIG = [
     { id: "spring", name: { es: "Primavera", en: "Spring" } },
     { id: "summer", name: { es: "Verano", en: "Summer" } },
@@ -114,7 +112,6 @@ const app = {
         this.renderUI();
         const container = document.getElementById('main-container');
 
-        // Agrupación dinámica por "Categoría Madre"
         const mothers = [
             { es: "Peces de Lote", en: "Bundle Fish" },
             { es: "Peces Comunes", en: "Common Fish" },
@@ -133,12 +130,11 @@ const app = {
                 ${SEASONS_CONFIG.map((season, sIdx) => {
                     const catId = `${mIdx}-${sIdx}`;
                     
-                    // Filtrado de peces vinculados a la categoría madre y estación
                     const seasonFish = MASTER_FISH_LIST.filter(f => 
                         f.mother[this.lang] === mName && f.seasons.includes(season.id)
                     );
 
-                    if (seasonFish.length === 0) return ''; // No renderiza si está vacío
+                    if (seasonFish.length === 0) return '';
 
                     return `
                     <div class="card-season" data-cat-id="${catId}">
@@ -199,11 +195,9 @@ const app = {
     },
 
     updateFish(fishId, isChecked) {
-        // Guarda el estado basado únicamente en el ID único del pez
         this.progress[fishId] = isChecked;
         localStorage.setItem('sdv_master_v7', JSON.stringify(this.progress));
 
-        // Sincroniza visualmente todas las instancias del mismo pez en diferentes estaciones
         document.querySelectorAll(`[data-fish-id="${fishId}"]`).forEach(row => {
             row.classList.toggle('completed', isChecked);
             row.querySelector('.form-check-input').checked = isChecked;
@@ -224,10 +218,8 @@ const app = {
         const motherEl = document.getElementsByClassName('mother-cat')[mIdx];
         if (!motherEl) return;
 
-        // Para evitar duplicación de datos en las barras de progreso generales por categoría
-        // calculamos el progreso basado en IDs únicos de peces pertenecientes a esa categoría
         const inputs = Array.from(motherEl.querySelectorAll('.fish-row'));
-        const uniqueIds = [...new Set(inputs.map(el => el.dataset.fish-id))];
+        const uniqueIds = [...new Set(inputs.map(el => el.dataset.fishId))];
         
         const total = uniqueIds.length;
         const checked = uniqueIds.filter(id => this.progress[id] === true).length;
