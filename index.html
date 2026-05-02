@@ -64,7 +64,7 @@ const FISH_DATA = [
         seasons: [
             { name: { es: "Lotes: Primavera", en: "Bundles: Spring" }, fish: [
                 { n: { es: "Pez sol", en: "Sunfish" }, l: { es: "Río", en: "River" }, h: "6am - 7pm", c: { es: "Soleado", en: "Sunny" }, e: { es: "Primavera, Verano", en: "Spring, Summer" }, lote: { es: "Lote Peces Fluviales", en: "River Fish Bundle" } },
-                { n: { es: "Pez gato", en: "Catfish" }, l: { es: "Río", en: "River" }, h: "6am - 12am", c: { es: "Lluvia", en: "Rainy" }, e: { es: "Primavera, Otoño", en: "Spring, Fall" }, lote: { es: "Lote Peces Fluviales", en: "River Fish Bundle" } },
+                { n: { es: "Pez gato", en: "Catfish" }, l: { es: "Río / Bosque Secreto", en: "River / Secret Woods" }, h: "6am - 12am", c: { es: "Lluvia", en: "Rainy" }, e: { es: "Primavera, Otoño", en: "Spring, Fall" }, lote: { es: "Lote Peces Fluviales", en: "River Fish Bundle" } },
                 { n: { es: "Sábalo", en: "Shad" }, l: { es: "Río", en: "River" }, h: "9am - 2am", c: { es: "Lluvia", en: "Rainy" }, e: { es: "Prim., Ver., Oto.", en: "Spr., Sum., Fall" }, lote: { es: "Lote Peces Fluviales", en: "River Fish Bundle" } },
                 { n: { es: "Sardina", en: "Sardine" }, l: { es: "Océano", en: "Ocean" }, h: "6am - 7pm", c: { es: "Cualquiera", en: "Any" }, e: { es: "Prim., Oto., Inv.", en: "Spr., Fall, Win." }, lote: { es: "Lote Peces Marinos", en: "Ocean Fish Bundle" } },
                 { n: { es: "Anguila", en: "Eel" }, l: { es: "Océano", en: "Ocean" }, h: "4pm - 2am", c: { es: "Lluvia", en: "Rainy" }, e: { es: "Primavera, Otoño", en: "Spring, Fall" }, lote: { es: "Lote Peces Nocturnos", en: "Night Fishing Bundle" } }
@@ -72,20 +72,22 @@ const FISH_DATA = [
             { name: { es: "Lotes: Verano", en: "Bundles: Summer" }, fish: [
                 { n: { es: "Pez globo", en: "Pufferfish" }, l: { es: "Océano", en: "Ocean" }, h: "12pm - 4pm", c: { es: "Sol", en: "Sun" }, e: { es: "Verano", en: "Summer" }, lote: { es: "Lote Peces Especiales", en: "Specialty Fish Bundle" } },
                 { n: { es: "Atún", en: "Tuna" }, l: { es: "Océano", en: "Ocean" }, h: "6am - 7pm", c: { es: "Cualquiera", en: "Any" }, e: { es: "Verano, Invierno", en: "Summer, Winter" }, lote: { es: "Lote Peces Marinos", en: "Ocean Fish Bundle" } },
-                { n: { es: "Esturión", en: "Sturgeon" }, l: { es: "Lago", en: "Lake" }, h: "6am - 7pm", c: { es: "Cualquiera", en: "Any" }, e: { es: "Verano, Invierno", en: "Summer, Winter" }, lote: { es: "Lote Peces de Lago", en: "Lake Fish Bundle" } },
+                { n: { es: "Esturión", en: "Sturgeon" }, l: { es: "Lago de la Montaña", en: "Mountain Lake" }, h: "6am - 7pm", c: { es: "Cualquiera", en: "Any" }, e: { es: "Verano, Invierno", en: "Summer, Winter" }, lote: { es: "Lote Peces de Lago", en: "Lake Fish Bundle" } },
                 { n: { es: "Tilapia", en: "Tilapia" }, l: { es: "Océano", en: "Ocean" }, h: "6am - 2pm", c: { es: "Cualquiera", en: "Any" }, e: { es: "Verano, Otoño", en: "Summer, Fall" }, lote: { es: "Lote Peces Marinos", en: "Ocean Fish Bundle" } },
                 { n: { es: "Pargo colorado", en: "Red Snapper" }, l: { es: "Océano", en: "Ocean" }, h: "6am - 7pm", c: { es: "Lluvia", en: "Rainy" }, e: { es: "Verano, Otoño", en: "Summer, Fall" }, lote: { es: "Lote Peces Marinos", en: "Ocean Fish Bundle" } }
             ]},
             { name: { es: "Lotes: Otoño / Invierno", en: "Bundles: Fall / Winter" }, fish: [
                 { n: { es: "Trucha tigre", en: "Tiger Trout" }, l: { es: "Río", en: "River" }, h: "6am - 7pm", c: { es: "Cualquiera", en: "Any" }, e: { es: "Otoño, Invierno", en: "Fall, Winter" }, lote: { es: "Lote Peces Fluviales", en: "River Fish Bundle" } },
-                { n: { es: "Lucio", en: "Walleye" }, l: { es: "Río/Lago", en: "River/Lake" }, h: "12pm - 2am", c: { es: "Cualquiera", en: "Any" }, e: { es: "Otoño, Invierno", en: "Fall, Winter" }, lote: { es: "Lote Peces Nocturnos", en: "Night Fishing Bundle" } },
-                { n: { es: "Pez gota", en: "Blobfish" }, l: { es: "Mercado Nocturno", en: "Night Market" }, h: "5pm - 2am", c: { es: "Cualquiera", en: "Any" }, e: { es: "Invierno", en: "Winter" }, lote: { es: "Lote Maestro de Pesca", en: "Master Fisher's Bundle" } }
+                { n: { es: "Perca gigante", en: "Largemouth Bass" }, l: { es: "Lago de la Montaña", en: "Mountain Lake" }, h: "6am - 7pm", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Peces de Lago", en: "Lake Fish Bundle" } },
+                { n: { es: "Bagre", en: "Bullhead" }, l: { es: "Lago de la Montaña", en: "Mountain Lake" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Peces de Lago", en: "Lake Fish Bundle" } },
+                { n: { es: "Walleye", en: "Walleye" }, l: { es: "Río / Lago / Bosque", en: "River / Lake / Forest" }, h: "12pm - 2am", c: { es: "Lluvia", en: "Rainy" }, e: { es: "Otoño, Invierno", en: "Fall, Winter" }, lote: { es: "Lote Peces Nocturnos", en: "Night Fishing Bundle" } }
             ]},
             { name: { es: "Lotes: Todo el Año / Especiales", en: "Bundles: All Year / Specialty" }, fish: [
-                { n: { es: "Carpa", en: "Carp" }, l: { es: "Lago", en: "Lake" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Prim., Ver., Oto.", en: "Spr., Sum., Fall" }, lote: { es: "Lote Peces de Lago", en: "Lake Fish Bundle" } },
+                { n: { es: "Carpa", en: "Carp" }, l: { es: "Lago de la Montaña / Cloacas", en: "Mountain Lake / Sewers" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Prim., Ver., Oto.", en: "Spr., Sum., Fall" }, lote: { es: "Lote Peces de Lago", en: "Lake Fish Bundle" } },
                 { n: { es: "Besugo", en: "Bream" }, l: { es: "Río", en: "River" }, h: "6pm - 2am", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Peces Nocturnos", en: "Night Fishing Bundle" } },
                 { n: { es: "Pez fantasma", en: "Ghostfish" }, l: { es: "Minas", en: "Mines" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Peces Especiales", en: "Specialty Fish Bundle" } },
-                { n: { es: "Muyu", en: "Woodskip" }, l: { es: "Bosque secreto", en: "Secret Woods" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Peces Especiales", en: "Specialty Fish Bundle" } }
+                { n: { es: "Muyu", en: "Woodskip" }, l: { es: "Bosque Secreto", en: "Secret Woods" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Peces Especiales", en: "Specialty Fish Bundle" } },
+                { n: { es: "Pez arenero", en: "Sandfish" }, l: { es: "Desierto", en: "Desert" }, h: "6am - 8pm", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote Peces Especiales", en: "Specialty Fish Bundle" } }
             ]}
         ]
     },
@@ -101,9 +103,8 @@ const FISH_DATA = [
                 { n: { es: "Calamar", en: "Squid" }, l: { es: "Océano", en: "Ocean" }, h: "6pm - 2am", c: { es: "Cualquiera", en: "Any" }, e: { es: "Invierno", en: "Winter" }, lote: { es: "Común", en: "Common" } }
             ]},
             { name: { es: "Comunes: Todo el Año", en: "Common: All Year" }, fish: [
-                { n: { es: "Cachuelo", en: "Chub" }, l: { es: "Río/Lago", en: "River/Lake" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Común", en: "Common" } },
-                { n: { es: "Barbo", en: "Carp" }, l: { es: "Río/Lago", en: "River/Lake" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Común", en: "Common" } },
-                { n: { es: "Perca", en: "Perch" }, l: { es: "Lago", en: "Lake" }, h: "6am - 7pm", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Común", en: "Common" } }
+                { n: { es: "Cachuelo", en: "Chub" }, l: { es: "Río / Lago de la Montaña", en: "River / Mountain Lake" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Todo el año", en: "All Year" }, lote: { es: "Lote de Investigación de Campo", en: "Field Research Bundle" } },
+                { n: { es: "Perca", en: "Perch" }, l: { es: "Lago de la Montaña", en: "Mountain Lake" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Invierno", en: "Winter" }, lote: { es: "Común", en: "Common" } }
             ]}
         ]
     },
@@ -112,7 +113,7 @@ const FISH_DATA = [
         tagClass: "legend-tag", icon: "🏆",
         seasons: [
             { name: { es: "Colección Legendaria", en: "Legendary Collection" }, fish: [
-                { n: { es: "Leyenda", en: "Legend" }, l: { es: "Lago montaña", en: "Mountain Lake" }, h: "Cualquiera", c: { es: "Primavera + Lluvia", en: "Spring + Rain" }, e: { es: "Primavera", en: "Spring" }, lote: { es: "Legendario", en: "Legendary" } },
+                { n: { es: "Leyenda", en: "Legend" }, l: { es: "Lago de la Montaña", en: "Mountain Lake" }, h: "Cualquiera", c: { es: "Primavera + Lluvia", en: "Spring + Rain" }, e: { es: "Primavera", en: "Spring" }, lote: { es: "Legendario", en: "Legendary" } },
                 { n: { es: "Pez carmesí", en: "Crimsonfish" }, l: { es: "Océano", en: "Ocean" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Verano", en: "Summer" }, lote: { es: "Legendario", en: "Legendary" } },
                 { n: { es: "Rape", en: "Angler" }, l: { es: "Pueblo (Norte)", en: "Town (North)" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Otoño", en: "Fall" }, lote: { es: "Legendario", en: "Legendary" } },
                 { n: { es: "Pez glacial", en: "Glacierfish" }, l: { es: "Bosque Tizón", en: "Cindersap Forest" }, h: "Cualquiera", c: { es: "Cualquiera", en: "Any" }, e: { es: "Invierno", en: "Winter" }, lote: { es: "Legendario", en: "Legendary" } },
@@ -124,7 +125,7 @@ const FISH_DATA = [
 
 const app = {
     lang: localStorage.getItem('sdv_lang') || 'es',
-    progress: JSON.parse(localStorage.getItem('sdv_master_v5')) || {},
+    progress: JSON.parse(localStorage.getItem('sdv_master_v6')) || {},
 
     init() {
         this.renderUI();
@@ -194,7 +195,7 @@ const app = {
         const cb = document.getElementById(id);
         const row = cb.closest('.fish-row');
         this.progress[id] = cb.checked;
-        localStorage.setItem('sdv_master_v5', JSON.stringify(this.progress));
+        localStorage.setItem('sdv_master_v6', JSON.stringify(this.progress));
         row.classList.toggle('completed', cb.checked);
         const [mIdx, sIdx] = id.split('-');
         this.updateCatProgress(`${mIdx}-${sIdx}`);
@@ -242,7 +243,7 @@ const app = {
     reset() {
         if(confirm(this.lang === 'es' ? "¿Borrar todo?" : "Clear all?")) {
             this.progress = {};
-            localStorage.removeItem('sdv_master_v5');
+            localStorage.removeItem('sdv_master_v6');
             location.reload();
         }
     }
