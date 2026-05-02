@@ -18,15 +18,13 @@
         .card-season { background: var(--sv-panel); border: 1px solid var(--sv-border); border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
         .season-header { background: rgba(0,0,0,0.03); padding: 10px 15px; cursor: pointer; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
         
-        /* Flexbox habilitado para permitir el reordenamiento visual */
         .cat-content { display: none; border-top: 1px solid var(--sv-border); flex-direction: column; }
         
         .fish-row { display: flex; align-items: center; padding: 10px 15px; border-bottom: 1px solid var(--sv-border); transition: background 0.2s; order: 1; }
-        
-        /* Los elementos completados se van al final de la lista visualmente */
         .fish-row.completed { background: rgba(40, 167, 69, 0.1); opacity: 0.7; order: 2; }
         
-        .form-check-input { width: 22px; height: 22px; margin-right: 15px; cursor: pointer; }
+        .form-check-input { width: 22px; height: 22px; margin-right: 15px; cursor: pointer; flex-shrink: 0; }
+        .fish-icon { width: 32px; height: 32px; object-fit: contain; margin-right: 15px; flex-shrink: 0; }
         .fish-details { font-size: 0.8rem; opacity: 0.9; }
         .tag { font-weight: bold; font-size: 0.75rem; margin-top: 2px; }
         .lote-tag { color: #d35400; }
@@ -196,12 +194,18 @@ const app = {
                             ${season.fish.map((f, fIdx) => {
                                 const id = `${mIdx}-${sIdx}-${fIdx}`;
                                 const isDone = !!this.progress[f.id];
+                                // Transformación simple del nombre en inglés para la URL oficial
+                                const imgName = f.n.en.replace(/ /g, '_');
                                 return `
                                 <div class="fish-row ${isDone ? 'completed' : ''}" 
                                      data-fish-id="${f.id}"
                                      data-search="${f.n.es.toLowerCase()} ${f.n.en.toLowerCase()} ${f.e[this.lang].toLowerCase()}">
                                     <input class="form-check-input" type="checkbox" id="chk-${id}" 
                                            ${isDone ? 'checked' : ''} onchange="app.updateFish('${f.id}', this.checked)">
+                                    <img src="https://stardewvalleywiki.com/mediawiki/images/thumb/a/a3/${imgName}.png/32px-${imgName}.png" 
+                                         alt="${f.n[this.lang]}" 
+                                         class="fish-icon" 
+                                         onerror="this.onerror=null; this.src='https://stardewvalleywiki.com/mediawiki/images/4/43/Fish.png';">
                                     <div class="flex-grow-1">
                                         <label class="fw-bold d-block" for="chk-${id}">${f.n[this.lang]}</label>
                                         <div class="fish-details">
