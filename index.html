@@ -60,6 +60,51 @@
 <div class="container" id="main-container"></div>
 
 <script>
+// Diccionario de URLs fijas para garantizar que los iconos carguen correctamente
+const FISH_IMAGES = {
+    "sunfish": "https://stardewvalleywiki.com/mediawiki/images/5/56/Sunfish.png",
+    "catfish": "https://stardewvalleywiki.com/mediawiki/images/2/2e/Catfish.png",
+    "shad": "https://stardewvalleywiki.com/mediawiki/images/e/ef/Shad.png",
+    "sardine": "https://stardewvalleywiki.com/mediawiki/images/0/04/Sardine.png",
+    "eel": "https://stardewvalleywiki.com/mediawiki/images/9/91/Eel.png",
+    "largemouth_bass": "https://stardewvalleywiki.com/mediawiki/images/1/11/Largemouth_Bass.png",
+    "bullhead": "https://stardewvalleywiki.com/mediawiki/images/d/db/Bullhead.png",
+    "bream": "https://stardewvalleywiki.com/mediawiki/images/8/82/Bream.png",
+    "carp": "https://stardewvalleywiki.com/mediawiki/images/a/a8/Carp.png",
+    "ghostfish": "https://stardewvalleywiki.com/mediawiki/images/7/72/Ghostfish.png",
+    "woodskip": "https://stardewvalleywiki.com/mediawiki/images/9/97/Woodskip.png",
+    "sandfish": "https://stardewvalleywiki.com/mediawiki/images/b/bb/Sandfish.png",
+    "lobster": "https://stardewvalleywiki.com/mediawiki/images/9/9f/Lobster.png",
+    "clam": "https://stardewvalleywiki.com/mediawiki/images/e/ed/Clam.png",
+    "crayfish": "https://stardewvalleywiki.com/mediawiki/images/5/53/Crayfish.png",
+    "crab": "https://stardewvalleywiki.com/mediawiki/images/6/63/Crab.png",
+    "cockle": "https://stardewvalleywiki.com/mediawiki/images/a/ad/Cockle.png",
+    "mussel": "https://stardewvalleywiki.com/mediawiki/images/a/aa/Mussel.png",
+    "shrimp": "https://stardewvalleywiki.com/mediawiki/images/9/91/Shrimp.png",
+    "snail": "https://stardewvalleywiki.com/mediawiki/images/d/d2/Snail.png",
+    "periwinkle": "https://stardewvalleywiki.com/mediawiki/images/1/1d/Periwinkle.png",
+    "oyster": "https://stardewvalleywiki.com/mediawiki/images/5/54/Oyster.png",
+    "pufferfish": "https://stardewvalleywiki.com/mediawiki/images/b/ba/Pufferfish.png",
+    "tuna": "https://stardewvalleywiki.com/mediawiki/images/c/c5/Tuna.png",
+    "sturgeon": "https://stardewvalleywiki.com/mediawiki/images/4/42/Sturgeon.png",
+    "tilapia": "https://stardewvalleywiki.com/mediawiki/images/7/73/Tilapia.png",
+    "red_snapper": "https://stardewvalleywiki.com/mediawiki/images/d/d3/Red_Snapper.png",
+    "tiger_trout": "https://stardewvalleywiki.com/mediawiki/images/0/01/Tiger_Trout.png",
+    "walleye": "https://stardewvalleywiki.com/mediawiki/images/0/05/Walleye.png",
+    "anchovy": "https://stardewvalleywiki.com/mediawiki/images/7/79/Anchovy.png",
+    "red_mullet": "https://stardewvalleywiki.com/mediawiki/images/9/9b/Red_Mullet.png",
+    "herring": "https://stardewvalleywiki.com/mediawiki/images/f/f1/Herring.png",
+    "lingcod": "https://stardewvalleywiki.com/mediawiki/images/a/a1/Lingcod.png",
+    "squid": "https://stardewvalleywiki.com/mediawiki/images/8/81/Squid.png",
+    "chub": "https://stardewvalleywiki.com/mediawiki/images/b/bd/Chub.png",
+    "perch": "https://stardewvalleywiki.com/mediawiki/images/4/43/Perch.png",
+    "legend": "https://stardewvalleywiki.com/mediawiki/images/1/10/Legend.png",
+    "crimsonfish": "https://stardewvalleywiki.com/mediawiki/images/d/dc/Crimsonfish.png",
+    "angler": "https://stardewvalleywiki.com/mediawiki/images/c/c1/Angler.png",
+    "glacierfish": "https://stardewvalleywiki.com/mediawiki/images/f/fd/Glacierfish.png",
+    "mutant_carp": "https://stardewvalleywiki.com/mediawiki/images/c/cb/Mutant_Carp.png"
+};
+
 const FISH_DATA = [
     {
         mother: { es: "Peces de Lote", en: "Bundle Fish" },
@@ -194,15 +239,14 @@ const app = {
                             ${season.fish.map((f, fIdx) => {
                                 const id = `${mIdx}-${sIdx}-${fIdx}`;
                                 const isDone = !!this.progress[f.id];
-                                // Transformación simple del nombre en inglés para la URL oficial
-                                const imgName = f.n.en.replace(/ /g, '_');
+                                const imgUrl = FISH_IMAGES[f.id] || "https://stardewvalleywiki.com/mediawiki/images/4/43/Fish.png";
                                 return `
                                 <div class="fish-row ${isDone ? 'completed' : ''}" 
                                      data-fish-id="${f.id}"
                                      data-search="${f.n.es.toLowerCase()} ${f.n.en.toLowerCase()} ${f.e[this.lang].toLowerCase()}">
                                     <input class="form-check-input" type="checkbox" id="chk-${id}" 
                                            ${isDone ? 'checked' : ''} onchange="app.updateFish('${f.id}', this.checked)">
-                                    <img src="https://stardewvalleywiki.com/mediawiki/images/thumb/a/a3/${imgName}.png/32px-${imgName}.png" 
+                                    <img src="${imgUrl}" 
                                          alt="${f.n[this.lang]}" 
                                          class="fish-icon" 
                                          onerror="this.onerror=null; this.src='https://stardewvalleywiki.com/mediawiki/images/4/43/Fish.png';">
